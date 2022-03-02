@@ -2,6 +2,37 @@
   text-align: center;
 }
 
+.white-cell{
+  background-color: khaki;
+}
+
+.black-cell{
+  background-color: brown;
+}
+
+.castling-cell{
+  background-color: #A18BF0;
+}
+
+.last-move-cell{
+  background-color: #27B34F;
+}
+
+.cell-properties{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50px;
+  height: 50px;
+}
+
+.rowBoard{
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  width: 400px;
+  height: 50px;
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;
