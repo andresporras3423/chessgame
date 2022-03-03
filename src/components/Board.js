@@ -26,15 +26,32 @@ class Board extends React.Component {
       "wk": "/assets/white-king.svg",
       "": ""},
       cellColor: ["white-cell", "black-cell"],
-      model: "Mustang",
-      color: "red",
-      year: 1964
+      selectedColor: "white",
+      updateColorToPlay: ()=>{
+        let reverseCells = [];
+        this.state.cells.reverse().forEach(row => {
+          reverseCells.push(row.reverse());
+        });
+        this.setState({
+         cells: reverseCells,
+         selectedColor: this.state.selectedColor==="white" ? "black" : "white"
+       });
+
+     }
     };
   }
 
   displayContent = ()=>{
       return (
         <>
+          <div>
+            <input type="radio" value="white" name="color"
+            checked={this.state.selectedColor === "white"}
+              onChange={this.state.updateColorToPlay} /> Play with white
+            <input type="radio" value="black" name="color" 
+            checked={this.state.selectedColor === "black"}
+            onChange={this.state.updateColorToPlay}  /> Play with black
+          </div>
           <div className="board">
             {
               this.state.cells.map(
