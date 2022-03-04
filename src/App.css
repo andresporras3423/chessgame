@@ -1,5 +1,13 @@
 .App {
   text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.boardContent > * {
+  margin: 10px;
+  padding: 10px;
 }
 
 .white-cell{

@@ -1,4 +1,5 @@
 import React from 'react';
+import { nanoid } from 'nanoid';
 
 class Board extends React.Component {
   constructor(props) {
@@ -43,27 +44,33 @@ class Board extends React.Component {
 
   displayContent = ()=>{
       return (
-        <>
-          <div>
-            <input type="radio" value="white" name="color"
+        <div className="boardContent">
+          <div className="form-check">
+            <div>
+            <input type="radio" value="white" name="color" className="form-check-input"
             checked={this.state.selectedColor === "white"}
-              onChange={this.state.updateColorToPlay} /> Play with white
-            <input type="radio" value="black" name="color" 
+              onChange={this.state.updateColorToPlay} /> 
+              <label className="form-check-label">Play with white</label>
+            </div>
+            <div>
+            <input type="radio" value="black" name="color" className="form-check-input"
             checked={this.state.selectedColor === "black"}
-            onChange={this.state.updateColorToPlay}  /> Play with black
+            onChange={this.state.updateColorToPlay}  /> 
+            <label className="form-check-label">Play with black</label>
+            </div>
           </div>
           <div className="board">
             {
               this.state.cells.map(
                 (row, i)=>{
                   return(
-                    <div className="rowBoard">
+                    <div className="rowBoard" key={nanoid()}>
                       {
                         row.map(
                           (cell, j)=>{
                             return(
-                              <div className={"cell-properties "+this.state.cellColor[(i+j)%2]}>
-                                <img className="" src={this.state.pieces[cell]} height="40px" width="40px" className={cell==="" ? "invisible" : ""} />
+                              <div className={"cell-properties "+this.state.cellColor[(i+j)%2]} key={nanoid()}>
+                                <img src={this.state.pieces[cell]} height="40px" width="40px" className={cell==="" ? "invisible" : ""} />
                               </div>
                             )
                           }
@@ -75,7 +82,7 @@ class Board extends React.Component {
               )
             }
           </div>
-        </>
+        </div>
       )
   }
 
