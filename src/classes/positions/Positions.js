@@ -99,9 +99,168 @@ class Positions {
       wr2: Cell.new(7, 7),
     };
   }
+
+  white_king_attacked = (king)=>{
+
+  }
+
+  black_king_attacked = (king)=>{
+
+  }
+
+  available_black_moves = ()=>{
+
+  }
+
+  available_black_king_moves = ()=>{
+
+  }
+
+  available_black_knight_moves = (piece, knight)=>{
+
+  }
+
+  available_black_pawn_moves = (piece, pawn)=>{
+    
+  }
+
+  can_black_en_passant = (y, x)=>{
+
+  }
+
+  can_white_en_passant = (y, x)=>{
+
+  }
+
+  available_black_bishop_moves = (piece, bishop)=>{
+
+  }
+
+  available_black_rock_moves = (piece, rock)=>{
+
+  }
+
+  available_black_queen_moves = (piece, queen)=>{
+
+  }
+
+  available_white_moves = ()=>{
+
+  }
+
+  available_white_king_moves = ()=>{
+    
+  }
+
+  available_white_knight_moves = (piece, knight)=>{
+
+  }
+
+  available_white_pawn_moves = (piece, pawn)=>{
+
+  }
+
+  available_promotion_moves = (piece, y0, x0, y, x, available_movements)=>{
+
+  }
+
+  available_white_bishop_moves = (piece, bishop)=>{
+
+  }
+
+  available_white_rock_moves = (piece, rock)=>{
+
+  }
+
+  available_white_queen_moves = (piece, queen)=>{
+
+  }
+
+  attacked_by_black_pawn = (y, x)=>{
+
+  }
+
+  attacked_by_black_knight = (y, x)=>{
+
+  }
+
+  attacked_by_black_king = (y, x)=>{
+
+  }
+
+  attacked_by_black_in_diagonals = (y, x)=>{
+
+  }
+
+  attacked_by_black_in_rowcolumns = (y, x)=>{
+
+  }
+
+  attacked_by_white_pawn = (y, x)=>{
+
+  }
+
+  attacked_by_white_knight = (y, x)=>{
+
+  }
+
+  attacked_by_white_king = (y, x)=>{
+
+  }
+
+  attacked_by_white_in_diagonals = (y, x)=>{
+
+  }
+
+  attacked_by_white_in_rowcolumns = (y, x)=>{
+
+  }
+
+  valid_temp_position = (y, x)=>{
+
+  }
+
+  valid_temp_piece = (y, x, init, length)=>{
+
+  }
+
+  valid_position = (y, x)=>{
+
+  }
+
+  set_initial_board = ()=>{
+
+  }
+
+  update_board_details_after_white_move = (last_move)=>{
+
+  }
+
+  update_board_details_after_black_move = (last_move)=>{
+
+  }
+
+  update_white_promotion = (white_promoted)=>{
+    
+  }
+
+  update_black_promotion = (black_promoted)=>{
+
+  }
+
+  checkmate_still_possible = ()=>{
+
+  }
+
+  can_black_checkmate = ()=>{
+
+  }
+
+  can_white_checkmate = ()=>{
+
+  }
 }
 export default Positions;
-
 
 // def white_king_attacked(king)
 //   return true if ((attacked_by_black_pawn(king.y, king.x)) || (attacked_by_black_knight(king.y, king.x)) || (attacked_by_black_king(king.y, king.x)) || (attacked_by_black_in_diagonals(king.y, king.x)) || (attacked_by_black_in_rowcolumns(king.y, king.x)))
