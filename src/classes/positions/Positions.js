@@ -1,3 +1,4 @@
+const lodash = require("lodash");
 import Cell from "./Cell";
 
 class Positions {
@@ -58,8 +59,8 @@ class Positions {
     this.next_white_rock = 3;
     this.next_white_bishop = 3;
     this.next_white_knight = 3;
-    this.cells = Array(8).fill(Array(8).fill(""));
-    this.temp_cells = Array(8).fill(Array(8).fill(""));
+    this.cells = [...Array(8)].map((x) => (x = Array(8).fill("x")));
+    this.temp_cells = [...Array(8)].map((x) => (x = Array(8).fill("x")));
 
     this.black_pieces = {
       br1: new Cell(0, 0),
@@ -100,238 +101,222 @@ class Positions {
     };
   }
 
-  white_king_attacked = (king)=>{
+  white_king_attacked = (king) => {
+    if (
+      attacked_by_black_pawn(king.y, king.x) ||
+      attacked_by_black_knight(king.y, king.x) ||
+      attacked_by_black_king(king.y, king.x) ||
+      attacked_by_black_in_diagonals(king.y, king.x) ||
+      attacked_by_black_in_rowcolumns(king.y, king.x)
+    )
+      return true;
+    return false;
+  };
+
+  black_king_attacked = (king) => {
+    if (
+      attacked_by_white_pawn(king.y, king.x) ||
+      attacked_by_white_knight(king.y, king.x) ||
+      attacked_by_white_king(king.y, king.x) ||
+      attacked_by_white_in_diagonals(king.y, king.x) ||
+      attacked_by_white_in_rowcolumns(king.y, king.x)
+    )
+      return true;
+    return false;
+  };
+
+  available_black_moves = () => {
+    let moves = available_black_king_moves();
+    this.black_pieces.forEach((piece, position) => {
+      if (piece.match(/^(bn)/))
+        moves = new Set([
+          ...moves,
+          ...available_black_knight_moves(piece, position),
+        ]);
+      else if (piece.match(/^(bb)/))
+        moves = new Set([
+          ...moves,
+          ...available_black_bishop_moves(piece, position),
+        ]);
+      else if (piece.match(/^(br)/))
+        moves = new Set([
+          ...moves,
+          ...available_black_rock_moves(piece, position),
+        ]);
+      else if (piece.match(/^(bq)/))
+        moves = new Set([
+          ...moves,
+          ...available_black_queen_moves(piece, position),
+        ]);
+      else if ((piece = ~/^(bp)/))
+        moves = new Set([
+          ...moves,
+          ...available_black_pawn_moves(piece, position),
+        ]);
+    });
+  };
+
+  available_black_king_moves = () => {
+    let king = this.black_pieces["bk"];
+    let available_movements = new Set();
+    this.king_movements.forEach((king_movement) => {
+      let n_cell = valid_position(
+        king.y + king_movement.y,
+        king.x + king_movement.x
+      );
+      if (n_cell == "" || n_cell.match(/^[w]/)) {
+        this.temp_cells = lodash.cloneDeep(this.cells);
+        this.temp_cells[king.y][king.x] = "";
+        this.temp_cells[king.y + king_movement.y][king.x + king_movement.x] =
+          "bk";
+        if (
+          !black_king_attacked(
+            new Cell(king.y + king_movement.y, king.x + king_movement.x)
+          )
+        ) {
+          available_movements.add(
+            `bk,${king.y},${king.x},bk,${king.y + king_movement.y},${
+              king.x + king_movement.x
+            },${this.cells[king.y + king_movement.y][king.x + king_movement.x]}`
+          );
+        }
+      }
+    });
+    this.temp_cells = lodash.cloneDeep(this.cells);
+    const king_on_check = black_king_attacked(new Cell(king.y, king.x));
+    if (
+      this.black_long_castling &&
+      this.cells[0][1] == "" &&
+      this.cells[0][2] == "" &&
+      this.cells[0][3] == "" &&
+      !king_on_check &&
+      !black_king_attacked(new Cell(king.y, king.x - 1)) &&
+      !black_king_attacked(new Cell(king.y, king.x - 2))
+    ) {
+      available_movements.add(
+        `bk,${king.y},${king.x},bk,${king.y},${king.x - 2},${
+          cells[king.y][king.x - 2]
+        }`
+      );
+    }
+    if (
+      this.black_short_castling &&
+      this.cells[0][5] == "" &&
+      this.cells[0][6] == "" &&
+      !king_on_check &&
+      !black_king_attacked(new Cell(king.y, king.x + 1)) &&
+      !black_king_attacked(new Cell(king.y, king.x + 2))
+    ) {
+      available_movements.add(
+        `bk,${king.y},${king.x},bk,${king.y},${king.x + 2},${
+          cells[king.y][king.x + 2]
+        }`
+      );
+    }
+    return available_movements;
+  };
 
-  }
+  available_black_knight_moves = (piece, knight) => {
+    const king = this.black_pieces["bk"];
+    let available_movements = new Set();
+    this.knight_movements.forEach((knight_movement) => {
+      cell_ = valid_position(
+        knight.y + knight_movement.y,
+        knight.x + knight_movement.x
+      );
+      if (cell_ == "" || cell_[0] == "w") {
+        this.temp_cells = lodash.cloneDeep(this.cells);
+        this.temp_cells[knight.y][knight.x] = "";
+        this.temp_cells[knight.y + knight_movement.y][
+          knight.x + knight_movement.x
+        ] = this.cells[knight.y][knight.x];
+        if (!black_king_attacked(new Cell(king.y, king.x))) {
+          available_movements.add(
+            `${piece},${knight.y},${knight.x},${piece},${
+              knight.y + knight_movement.y
+            },${knight.x + knight_movement.x},${
+              this.cells[knight.y + knight_movement.y][
+                knight.x + knight_movement.x
+              ]
+            }`
+          );
+        }
+      }
+    });
+    return available_movements;
+  };
 
-  black_king_attacked = (king)=>{
+  available_black_pawn_moves = (piece, pawn) => {};
 
-  }
+  can_black_en_passant = (y, x) => {};
 
-  available_black_moves = ()=>{
+  can_white_en_passant = (y, x) => {};
 
-  }
+  available_black_bishop_moves = (piece, bishop) => {};
 
-  available_black_king_moves = ()=>{
+  available_black_rock_moves = (piece, rock) => {};
 
-  }
+  available_black_queen_moves = (piece, queen) => {};
 
-  available_black_knight_moves = (piece, knight)=>{
+  available_white_moves = () => {};
 
-  }
+  available_white_king_moves = () => {};
 
-  available_black_pawn_moves = (piece, pawn)=>{
-    
-  }
+  available_white_knight_moves = (piece, knight) => {};
 
-  can_black_en_passant = (y, x)=>{
+  available_white_pawn_moves = (piece, pawn) => {};
 
-  }
+  available_promotion_moves = (piece, y0, x0, y, x, available_movements) => {};
 
-  can_white_en_passant = (y, x)=>{
+  available_white_bishop_moves = (piece, bishop) => {};
 
-  }
+  available_white_rock_moves = (piece, rock) => {};
 
-  available_black_bishop_moves = (piece, bishop)=>{
+  available_white_queen_moves = (piece, queen) => {};
 
-  }
+  attacked_by_black_pawn = (y, x) => {};
 
-  available_black_rock_moves = (piece, rock)=>{
+  attacked_by_black_knight = (y, x) => {};
 
-  }
+  attacked_by_black_king = (y, x) => {};
 
-  available_black_queen_moves = (piece, queen)=>{
+  attacked_by_black_in_diagonals = (y, x) => {};
 
-  }
+  attacked_by_black_in_rowcolumns = (y, x) => {};
 
-  available_white_moves = ()=>{
+  attacked_by_white_pawn = (y, x) => {};
 
-  }
+  attacked_by_white_knight = (y, x) => {};
 
-  available_white_king_moves = ()=>{
-    
-  }
+  attacked_by_white_king = (y, x) => {};
 
-  available_white_knight_moves = (piece, knight)=>{
+  attacked_by_white_in_diagonals = (y, x) => {};
 
-  }
+  attacked_by_white_in_rowcolumns = (y, x) => {};
 
-  available_white_pawn_moves = (piece, pawn)=>{
+  valid_temp_position = (y, x) => {};
 
-  }
+  valid_temp_piece = (y, x, init, length) => {};
 
-  available_promotion_moves = (piece, y0, x0, y, x, available_movements)=>{
+  valid_position = (y, x) => {};
 
-  }
+  set_initial_board = () => {};
 
-  available_white_bishop_moves = (piece, bishop)=>{
+  update_board_details_after_white_move = (last_move) => {};
 
-  }
+  update_board_details_after_black_move = (last_move) => {};
 
-  available_white_rock_moves = (piece, rock)=>{
+  update_white_promotion = (white_promoted) => {};
 
-  }
+  update_black_promotion = (black_promoted) => {};
 
-  available_white_queen_moves = (piece, queen)=>{
+  checkmate_still_possible = () => {};
 
-  }
+  can_black_checkmate = () => {};
 
-  attacked_by_black_pawn = (y, x)=>{
-
-  }
-
-  attacked_by_black_knight = (y, x)=>{
-
-  }
-
-  attacked_by_black_king = (y, x)=>{
-
-  }
-
-  attacked_by_black_in_diagonals = (y, x)=>{
-
-  }
-
-  attacked_by_black_in_rowcolumns = (y, x)=>{
-
-  }
-
-  attacked_by_white_pawn = (y, x)=>{
-
-  }
-
-  attacked_by_white_knight = (y, x)=>{
-
-  }
-
-  attacked_by_white_king = (y, x)=>{
-
-  }
-
-  attacked_by_white_in_diagonals = (y, x)=>{
-
-  }
-
-  attacked_by_white_in_rowcolumns = (y, x)=>{
-
-  }
-
-  valid_temp_position = (y, x)=>{
-
-  }
-
-  valid_temp_piece = (y, x, init, length)=>{
-
-  }
-
-  valid_position = (y, x)=>{
-
-  }
-
-  set_initial_board = ()=>{
-
-  }
-
-  update_board_details_after_white_move = (last_move)=>{
-
-  }
-
-  update_board_details_after_black_move = (last_move)=>{
-
-  }
-
-  update_white_promotion = (white_promoted)=>{
-    
-  }
-
-  update_black_promotion = (black_promoted)=>{
-
-  }
-
-  checkmate_still_possible = ()=>{
-
-  }
-
-  can_black_checkmate = ()=>{
-
-  }
-
-  can_white_checkmate = ()=>{
-
-  }
+  can_white_checkmate = () => {};
 }
 export default Positions;
-
-// def white_king_attacked(king)
-//   return true if ((attacked_by_black_pawn(king.y, king.x)) || (attacked_by_black_knight(king.y, king.x)) || (attacked_by_black_king(king.y, king.x)) || (attacked_by_black_in_diagonals(king.y, king.x)) || (attacked_by_black_in_rowcolumns(king.y, king.x)))
-//   false
-// end
-
-// def black_king_attacked(king)
-//   return true if (attacked_by_white_pawn(king.y, king.x)) || (attacked_by_white_knight(king.y, king.x)) || (attacked_by_white_king(king.y, king.x)) || (attacked_by_white_in_diagonals(king.y, king.x)) || (attacked_by_white_in_rowcolumns(king.y, king.x))
-//   false
-// end
-
-// def available_black_moves
-//   moves = Set.new
-//   moves.merge(available_black_king_moves)
-//   @black_pieces.each do |piece, position|
-//     if (piece =~ /^(bn)/)
-//       moves.merge(available_black_knight_moves(piece, position))
-//     elsif (piece =~ /^(bb)/)
-//       moves.merge(available_black_bishop_moves(piece, position))
-//     elsif (piece =~ /^(br)/)
-//       moves.merge(available_black_rock_moves(piece, position))
-//     elsif (piece =~ /^(bq)/)
-//       moves.merge(available_black_queen_moves(piece, position))
-//     elsif (piece =~ /^(bp)/)
-//       moves.merge(available_black_pawn_moves(piece, position))
-//     end
-//   end
-//   moves
-// end
-
-// def available_black_king_moves()
-//   king = @black_pieces["bk"]
-//   available_movements = Set.new
-//   @king_movements.each do |king_movement|
-//     n_cell = valid_position(king.y + king_movement.y, king.x + king_movement.x)
-//     if (n_cell == "" || n_cell =~ /^[w]/)
-//       @temp_cells = DeepClone.clone(@cells)
-//       @temp_cells[king.y][king.x] = ""
-//       @temp_cells[king.y + king_movement.y][king.x + king_movement.x] = "bk"
-//       unless (black_king_attacked(Cell.new(king.y + king_movement.y, king.x + king_movement.x)))
-//         available_movements.add("bk,#{king.y},#{king.x},bk,#{king.y + king_movement.y},#{king.x + king_movement.x},#{@cells[king.y + king_movement.y][king.x + king_movement.x]}")
-//       end
-//     end
-//   end
-
-//   @temp_cells = DeepClone.clone(@cells)
-//   if (@black_long_castling && @cells[0][1] == "" && @cells[0][2] == "" && @cells[0][3] == "" && !black_king_attacked(Cell.new(king.y, king.x)) && !black_king_attacked(Cell.new(king.y, king.x - 1)) && !black_king_attacked(Cell.new(king.y, king.x - 2)))
-//     available_movements.add("bk,#{king.y},#{king.x},bk,#{king.y},#{king.x - 2},#{cells[king.y][king.x - 2]}")
-//   end
-//   if (@black_short_castling && @cells[0][5] == "" && @cells[0][6] == "" && !black_king_attacked(Cell.new(king.y, king.x)) && !black_king_attacked(Cell.new(king.y, king.x + 1)) && !black_king_attacked(Cell.new(king.y, king.x + 2)))
-//     available_movements.add("bk,#{king.y},#{king.x},bk,#{king.y},#{king.x + 2},#{cells[king.y][king.x + 2]}")
-//   end
-//   available_movements
-// end
-
-// def available_black_knight_moves(piece, knight)
-//   king = @black_pieces["bk"]
-//   available_movements = Set.new
-//   knight_movements.each do |knight_movement|
-//     cell_ = valid_position(knight.y + knight_movement.y, knight.x + knight_movement.x)
-//     if (cell_ == "" || cell_[0] == "w")
-//       @temp_cells = DeepClone.clone(@cells)
-//       @temp_cells[knight.y][knight.x] = ""
-//       @temp_cells[knight.y + knight_movement.y][knight.x + knight_movement.x] = @cells[knight.y][knight.x]
-//       unless (black_king_attacked(Cell.new(king.y, king.x)))
-//         available_movements.add("#{piece},#{knight.y},#{knight.x},#{piece},#{knight.y + knight_movement.y},#{knight.x + knight_movement.x},#{@cells[knight.y + knight_movement.y][knight.x + knight_movement.x]}")
-//       end
-//     end
-//   end
-//   available_movements
-// end
 
 // def available_black_pawn_moves(piece, pawn)
 //   king = @black_pieces["bk"]
