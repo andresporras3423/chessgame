@@ -246,7 +246,115 @@ class Positions {
     return available_movements;
   };
 
-  available_black_pawn_moves = (piece, pawn) => {};
+  available_black_pawn_moves = (piece, pawn) => {
+    let king = this.black_pieces["bk"];
+    let available_movements = new Set();
+    let cell_ = valid_position(pawn.y + 1, pawn.x);
+    if (cell_ === "") {
+      this.temp_cells = lodash.cloneDeep(this.cells);
+      this.temp_cells[pawn.y][pawn.x] = "";
+      this.temp_cells[pawn.y + 1][pawn.x] = this.cells[pawn.y][pawn.x];
+      if (!black_king_attacked(new Cell(king.y, king.x))) {
+        if (pawn.y + 1 < 7)
+          available_movements.add(
+            `${piece},${pawn.y},${pawn.x},${piece},${pawn.y + 1},${pawn.x},`
+          );
+        else
+          available_promotion_moves(
+            piece,
+            pawn.y,
+            pawn.x,
+            pawn.y + 1,
+            pawn.x,
+            available_movements
+          );
+      }
+    }
+    if (pawn.y === 1) {
+      let cell_ = valid_position(pawn.y + 1, pawn.x);
+      let cell2_ = valid_position(pawn.y + 2, pawn.x);
+      if (cell_ === "" && cell2_ === "") {
+        this.temp_cells = lodash.cloneDeep(this.cells);
+        this.temp_cells[pawn.y][pawn.x] = "";
+        this.temp_cells[pawn.y + 2][pawn.x] = this.cells[pawn.y][pawn.x];
+        if (!black_king_attacked(new Cell(king.y, king.x)))
+          available_movements.add(
+            `${piece},${pawn.y},${pawn.x},${piece},${pawn.y + 2},${pawn.x},`
+          );
+      }
+    }
+    cell_ = valid_position(pawn.y + 1, pawn.x + 1);
+    if (cell_[0] === "w") {
+      this.temp_cells = lodash.cloneDeep(this.cells);
+      this.temp_cells[pawn.y][pawn.x] = "";
+      this.temp_cells[pawn.y + 1][pawn.x + 1] = this.cells[pawn.y][pawn.x];
+      if (!black_king_attacked(new Cell(king.y, king.x))) {
+        if (pawn.y + 1 < 7)
+          available_movements.add(
+            `${piece},${pawn.y},${pawn.x},${piece},${pawn.y + 1},${
+              pawn.x + 1
+            },${this.cells[pawn.y + 1][pawn.x + 1]}`
+          );
+        else
+          available_promotion_moves(
+            piece,
+            pawn.y,
+            pawn.x,
+            pawn.y + 1,
+            pawn.x + 1,
+            available_movements
+          );
+      }
+    }
+    cell_ = valid_position(pawn.y + 1, pawn.x - 1);
+    if (cell_[0] === "w") {
+      this.temp_cells = lodash.cloneDeep(this.cells);
+      this.temp_cells[pawn.y][pawn.x] = "";
+      this.temp_cells[pawn.y + 1][pawn.x - 1] = this.cells[pawn.y][pawn.x];
+      if (!black_king_attacked(new Cell(king.y, king.x))) {
+        if (pawn.y + 1 < 7)
+          available_movements.add(
+            `${piece},${pawn.y},${pawn.x},${piece},${pawn.y + 1},${
+              pawn.x - 1
+            },${this.cells[pawn.y + 1][pawn.x - 1]}`
+          );
+        else
+          available_promotion_moves(
+            piece,
+            pawn.y,
+            pawn.x,
+            pawn.y + 1,
+            pawn.x - 1,
+            available_movements
+          );
+      }
+    }
+    if (can_black_en_passant(pawn.y, pawn.x + 1)) {
+      this.temp_cells = lodash.cloneDeep(this.cells);
+      this.temp_cells[pawn.y][pawn.x] = "";
+      this.temp_cells[pawn.y][pawn.x + 1] = "";
+      this.temp_cells[pawn.y + 1][pawn.x + 1] = this.cells[pawn.y][pawn.x];
+      if (!black_king_attacked(new Cell(king.y, king.x)))
+        available_movements.add(
+          `${piece},${pawn.y},${pawn.x},${piece},${pawn.y + 1},${pawn.x + 1},${
+            this.cells[pawn.y][pawn.x + 1]
+          }`
+        );
+    }
+    if (can_black_en_passant(pawn.y, pawn.x - 1)) {
+      this.temp_cells = lodash.cloneDeep(this.cells);
+      this.temp_cells[pawn.y][pawn.x] = "";
+      this.temp_cells[pawn.y][pawn.x - 1] = "";
+      this.temp_cells[pawn.y + 1][pawn.x - 1] = this.cells[pawn.y][pawn.x];
+      if (black_king_attacked(new Cell(king.y, king.x)))
+        available_movements.add(
+          `${piece},${pawn.y},${pawn.x},${piece},${pawn.y + 1},${pawn.x - 1},${
+            this.cells[pawn.y][pawn.x - 1]
+          }`
+        );
+    }
+    return available_movements;
+  };
 
   can_black_en_passant = (y, x) => {};
 
@@ -317,66 +425,6 @@ class Positions {
   can_white_checkmate = () => {};
 }
 export default Positions;
-
-// def available_black_pawn_moves(piece, pawn)
-//   king = @black_pieces["bk"]
-//   available_movements = Set.new
-//   cell_ = valid_position(pawn.y + 1, pawn.x)
-//   if (cell_ == "")
-//     @temp_cells = DeepClone.clone(@cells)
-//     @temp_cells[pawn.y][pawn.x] = ""
-//     @temp_cells[pawn.y + 1][pawn.x] = @cells[pawn.y][pawn.x]
-//     unless (black_king_attacked(Cell.new(king.y, king.x)))
-//       if (pawn.y + 1 < 7) then available_movements.add("#{piece},#{pawn.y},#{pawn.x},#{piece},#{pawn.y + 1},#{pawn.x},") else available_promotion_moves(piece, pawn.y, pawn.x, pawn.y + 1, pawn.x, available_movements) end
-//     end
-//   end
-//   if (pawn.y == 1)
-//     cell_ = valid_position(pawn.y + 1, pawn.x)
-//     cell2_ = valid_position(pawn.y + 2, pawn.x)
-//     if (cell_ == "" && cell2_ == "")
-//       @temp_cells = DeepClone.clone(@cells)
-//       @temp_cells[pawn.y][pawn.x] = ""
-//       @temp_cells[pawn.y + 2][pawn.x] = @cells[pawn.y][pawn.x]
-//       available_movements.add("#{piece},#{pawn.y},#{pawn.x},#{piece},#{pawn.y + 2},#{pawn.x},") unless black_king_attacked(Cell.new(king.y, king.x))
-//     end
-//   end
-//   cell_ = valid_position(pawn.y + 1, pawn.x + 1)
-//   if (cell_[0] == "w")
-//     @temp_cells = DeepClone.clone(@cells)
-//     @temp_cells[pawn.y][pawn.x] = ""
-//     @temp_cells[pawn.y + 1][pawn.x + 1] = @cells[pawn.y][pawn.x]
-//     unless (black_king_attacked(Cell.new(king.y, king.x)))
-//       if (pawn.y + 1 < 7) then available_movements.add("#{piece},#{pawn.y},#{pawn.x},#{piece},#{pawn.y + 1},#{pawn.x + 1},#{@cells[pawn.y + 1][pawn.x + 1]}") else available_promotion_moves(piece, pawn.y, pawn.x, pawn.y + 1, pawn.x + 1, available_movements) end
-//     end
-//   end
-
-//   cell_ = valid_position(pawn.y + 1, pawn.x - 1)
-//   if (cell_[0] == "w")
-//     @temp_cells = DeepClone.clone(@cells)
-//     @temp_cells[pawn.y][pawn.x] = ""
-//     @temp_cells[pawn.y + 1][pawn.x - 1] = @cells[pawn.y][pawn.x]
-//     unless black_king_attacked(Cell.new(king.y, king.x))
-//       if (pawn.y + 1 < 7) then available_movements.add("#{piece},#{pawn.y},#{pawn.x},#{piece},#{pawn.y + 1},#{pawn.x - 1},#{@cells[pawn.y + 1][pawn.x - 1]}") else available_promotion_moves(piece, pawn.y, pawn.x, pawn.y + 1, pawn.x - 1, available_movements) end
-//     end
-//   end
-
-//   if (can_black_en_passant(pawn.y, pawn.x + 1))
-//     @temp_cells = DeepClone.clone(@cells)
-//     @temp_cells[pawn.y][pawn.x] = ""
-//     @temp_cells[pawn.y][pawn.x + 1] = ""
-//     @temp_cells[pawn.y + 1][pawn.x + 1] = @cells[pawn.y][pawn.x]
-//     available_movements.add("#{piece},#{pawn.y},#{pawn.x},#{piece},#{pawn.y + 1},#{pawn.x + 1},#{@cells[pawn.y][pawn.x + 1]}") unless black_king_attacked(Cell.new(king.y, king.x))
-//   end
-
-//   if (can_black_en_passant(pawn.y, pawn.x - 1))
-//     @temp_cells = DeepClone.clone(@cells)
-//     @temp_cells[pawn.y][pawn.x] = ""
-//     @temp_cells[pawn.y][pawn.x - 1] = ""
-//     @temp_cells[pawn.y + 1][pawn.x - 1] = @cells[pawn.y][pawn.x]
-//     available_movements.add("#{piece},#{pawn.y},#{pawn.x},#{piece},#{pawn.y + 1},#{pawn.x - 1},#{@cells[pawn.y][pawn.x - 1]}") unless black_king_attacked(Cell.new(king.y, king.x))
-//   end
-//   available_movements
-// end
 
 // def can_black_en_passant(y, x)
 //   move_details = @last_movement.split(",",-1)
