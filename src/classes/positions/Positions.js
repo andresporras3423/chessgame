@@ -356,9 +356,40 @@ class Positions {
     return available_movements;
   };
 
-  can_black_en_passant = (y, x) => {};
+  can_black_en_passant = (y, x) => {
+    let move_details = this.last_movement.split(",", -1);
+    if (
+      move_details[0].match(/^w/) &&
+      parseInt(move_details[1]) == y + 2 &&
+      parseInt(move_details[2]) == x &&
+      move_details[3].match(/^w/) &&
+      parseInt(move_details[4]) == y &&
+      parseInt(move_details[5]) == x &&
+      move_details[6] == ""
+    )
+      return true;
+    return false;
+  };
 
-  can_white_en_passant = (y, x) => {};
+  can_white_en_passant = (y, x) => {
+    let move_details = this.last_movement.split(",", -1);
+    if (
+      move_details[0].match(/^b/) &&
+      parseInt(move_details[1]) == y - 2 &&
+      parseInt(move_details[2]) == x &&
+      move_details[3].match(/^b/) &&
+      parseInt(move_details[4]) == y &&
+      parseparseInt(move_details[5]) == x &&
+      move_details[6] == ""
+    )
+      return true;
+    return false;
+  };
+
+  // def can_white_en_passant(y, x)
+  //
+
+  // end
 
   available_black_bishop_moves = (piece, bishop) => {};
 
@@ -425,34 +456,6 @@ class Positions {
   can_white_checkmate = () => {};
 }
 export default Positions;
-
-// def can_black_en_passant(y, x)
-//   move_details = @last_movement.split(",",-1)
-//   if (move_details[0] =~ /^w/ &&
-//       move_details[1].to_i == y + 2 &&
-//       move_details[2].to_i == x &&
-//       move_details[3] =~ /^w/ &&
-//       move_details[4].to_i == y &&
-//       move_details[5].to_i == x &&
-//       move_details[6] == "")
-//     return true
-//   end
-//   false
-// end
-
-// def can_white_en_passant(y, x)
-//   move_details = @last_movement.split(",",-1)
-//   if (move_details[0] =~ /^b/ &&
-//       move_details[1].to_i == y - 2 &&
-//       move_details[2].to_i == x &&
-//       move_details[3] =~ /^b/ &&
-//       move_details[4].to_i == y &&
-//       move_details[5].to_i == x &&
-//       move_details[6] == "")
-//     return true
-//   end
-//   false
-// end
 
 // def available_black_bishop_moves(piece, bishop)
 //   king = @black_pieces["bk"]
