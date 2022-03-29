@@ -604,15 +604,247 @@ class Positions {
     return available_movements;
   };
 
-  available_white_pawn_moves = (piece, pawn) => {};
+  available_white_pawn_moves = (piece, pawn) => {
+    let king = white_pieces["wk"];
+    let available_movements = new Set();
+    let cell_ = valid_position(pawn.y - 1, pawn.x);
+    if (cell_ == "") {
+      this.temp_cells = lodash.cloneDeep(this.cells);
+      this.temp_cells[pawn.y][pawn.x] = "";
+      this.temp_cells[pawn.y - 1][pawn.x] = this.cells[pawn.y][pawn.x];
+      if (!white_king_attacked(new Cell(king.y, king.x))) {
+        if (pawn.y - 1 > 0)
+          available_movements.add(
+            `${piece},${pawn.y},${pawn.x},${piece},${pawn.y - 1},${pawn.x},`
+          );
+        else
+          available_promotion_moves(
+            piece,
+            pawn.y,
+            pawn.x,
+            pawn.y - 1,
+            pawn.x,
+            available_movements
+          );
+      }
+    }
+    if (pawn.y == 6) {
+      let cell_ = valid_position(pawn.y - 1, pawn.x);
+      let cell2_ = valid_position(pawn.y - 1, pawn.x);
+      if (cell_ == "" && cell2_ == "") {
+        this.temp_cells = lodash.cloneDeep(this.cells);
+        this.temp_cells[pawn.y][pawn.x] = "";
+        this.temp_cells[pawn.y - 2][pawn.x] = this.cells[pawn.y][pawn.x];
+        if (!white_king_attacked(new Cell(king.y, king.x)))
+          available_movements.add(
+            `${piece},${pawn.y},${pawn.x},${piece},${pawn.y - 2},${pawn.x},`
+          );
+      }
+    }
+    cell_ = valid_position(pawn.y - 1, pawn.x + 1);
+    if (cell_.match(/^b/)) {
+      this.temp_cells = DeepClone.clone(this.cells);
+      this.temp_cells[pawn.y][pawn.x] = "";
+      this.temp_cells[pawn.y - 1][pawn.x + 1] = this.cells[pawn.y][pawn.x];
+      if (!white_king_attacked(new Cell(king.y, king.x))) {
+        if (pawn.y - 1 > 0)
+          available_movements.add(
+            `${piece},${pawn.y},${pawn.x},${piece},${pawn.y - 1},${
+              pawn.x + 1
+            },${this.cells[pawn.y - 1][pawn.x + 1]}`
+          );
+        else
+          available_promotion_moves(
+            piece,
+            pawn.y,
+            pawn.x,
+            pawn.y - 1,
+            pawn.x + 1,
+            available_movements
+          );
+      }
+    }
+    cell_ = valid_position(pawn.y - 1, pawn.x - 1);
+    if (cell_.match(/^b/)) {
+      this.temp_cells = lodash.cloneDeep(this.cells);
+      this.temp_cells[pawn.y][pawn.x] = "";
+      this.temp_cells[pawn.y - 1][pawn.x - 1] = this.cells[pawn.y][pawn.x];
+      if (!white_king_attacked(new Cell(king.y, king.x))) {
+        if (pawn.y - 1 > 0)
+          available_movements.add(
+            `${piece},${pawn.y},${pawn.x},${piece},${pawn.y - 1},${
+              pawn.x - 1
+            },${this.cells[pawn.y - 1][pawn.x - 1]}`
+          );
+        else
+          available_promotion_moves(
+            piece,
+            pawn.y,
+            pawn.x,
+            pawn.y - 1,
+            pawn.x - 1,
+            available_movements
+          );
+      }
+    }
+    if (can_white_en_passant(pawn.y, pawn.x + 1)) {
+      this.temp_cells = lodash.cloneDeep(this.cells);
+      this.temp_cells[pawn.y][pawn.x] = "";
+      this.temp_cells[pawn.y][pawn.x + 1] = "";
+      this.temp_cells[pawn.y - 1][pawn.x + 1] = this.cells[pawn.y][pawn.x];
+      if (!white_king_attacked(new Cell(king.y, king.x)))
+        available_movements.add(
+          `${piece},${pawn.y},${pawn.x},${piece},${pawn.y - 1},${pawn.x + 1},${
+            this.cells[pawn.y][pawn.x + 1]
+          }`
+        );
+    }
+    if (can_white_en_passant(pawn.y, pawn.x - 1)) {
+      this.temp_cells = lodash.cloneDeep(this.cells);
+      this.temp_cells[pawn.y][pawn.x] = "";
+      this.temp_cells[pawn.y][pawn.x - 1] = "";
+      this.temp_cells[pawn.y - 1][pawn.x - 1] = this.cells[pawn.y][pawn.x];
+      if (!white_king_attacked(new Cell(king.y, king.x)))
+        available_movements.add(
+          `${piece},${pawn.y},${pawn.x},${piece},${pawn.y - 1},${pawn.x - 1},${
+            this.cells[pawn.y][pawn.x - 1]
+          }`
+        );
+    }
+    return available_movements;
+  };
 
-  available_promotion_moves = (piece, y0, x0, y, x, available_movements) => {};
+  available_promotion_moves = (piece, y0, x0, y, x, available_movements) => {
+    if (y == 0) {
+      available_movements.add(
+        `${piece},${y0},${x0},wq${next_white_queen},${y},${x},${this.cells[y][x]}`
+      );
+      available_movements.add(
+        `${piece},${y0},${x0},wr${next_white_rock},${y},${x},${this.cells[y][x]}`
+      );
+      available_movements.add(
+        `${piece},${y0},${x0},wb${next_white_bishop},${y},${x},${this.cells[y][x]}`
+      );
+      available_movements.add(
+        `${piece},${y0},${x0},wn${next_white_knight},${y},${x},${this.cells[y][x]}`
+      );
+    } else if (y == 7) {
+      available_movements.add(
+        `${piece},${y0},${x0},bq${next_black_queen},${y},${x},${this.cells[y][x]}`
+      );
+      available_movements.add(
+        `${piece},${y0},${x0},br${next_black_rock},${y},${x},${this.cells[y][x]}`
+      );
+      available_movements.add(
+        `${piece},${y0},${x0},bb${next_black_bishop},${y},${x},${this.cells[y][x]}`
+      );
+      available_movements.add(
+        `${piece},${y0},${x0},bn${next_black_knight},${y},${x},${this.cells[y][x]}`
+      );
+    }
+  };
 
-  available_white_bishop_moves = (piece, bishop) => {};
+  available_white_bishop_moves = (piece, bishop) => {
+    let king = this.white_pieces["wk"];
+    let available_movements = new Set();
+    this.bishop_movements.forEach((bishop_movement) => {
+      position_ = new Cell(bishop.y, bishop.x);
+      while (true) {
+        position_.x += bishop_movement.x;
+        position_.y += bishop_movement.y;
+        cell_ = valid_position(position_.y, position_.x);
+        if (cell_ == "" || cell_.match(/^b/)) {
+          this.temp_cells = lodash.cloneDeep(this.cells);
+          this.temp_cells[bishop.y][bishop.x] = "";
+          this.temp_cells[position_.y][position_.x] =
+            this.cells[bishop.y][bishop.x];
+          if (!white_king_attacked(new Cell(king.y, king.x)))
+            available_movements.add(
+              `${piece},${bishop.y},${bishop.x},${piece},${position_.y},${
+                position_.x
+              },${this.cells[position_.y][position_.x]}`
+            );
+        }
+        if (cell_ != "") break;
+      }
+    });
+    return available_movements;
+  };
 
-  available_white_rock_moves = (piece, rock) => {};
+  available_white_rock_moves = (piece, rock) => {
+    let king = this.white_pieces["wk"];
+    let available_movements = new Set();
+    this.rock_movements.forEach((rock_movement) => {
+      let position_ = new Cell(rock.y, rock.x);
+      while (true) {
+        position_.x += rock_movement.x;
+        position_.y += rock_movement.y;
+        let cell_ = valid_position(position_.y, position_.x);
+        if (cell_ == "" || cell_.match(/^b/)) {
+          this.temp_cells = lodash.cloneDeep(this.cells);
+          this.temp_cells[rock.y][rock.x] = "";
+          this.temp_cells[position_.y][position_.x] =
+            this.cells[rock.y][rock.x];
+          if (!white_king_attacked(new Cell(king.y, king.x)))
+            available_movements.add(
+              `${piece},${rock.y},${rock.x},${piece},${position_.y},${
+                position_.x
+              },${this.cells[position_.y][position_.x]}`
+            );
+        }
+        if (cell_ != "") break;
+      }
+    });
+    return available_movements;
+  };
 
-  available_white_queen_moves = (piece, queen) => {};
+  available_white_queen_moves = (piece, queen) => {
+    let king = this.white_pieces["wk"];
+    let available_movements = new Set();
+    this.rock_movements.forEach((rock_movement) => {
+      let position_ = new Cell(queen.y, queen.x);
+      while (true) {
+        position_.x += rock_movement.x;
+        position_.y += rock_movement.y;
+        let cell_ = valid_position(position_.y, position_.x);
+        if (cell_ == "" || cell_.match(/^b/)) {
+          this.temp_cells = lodash.cloneDeep(this.cells);
+          this.temp_cells[queen.y][queen.x] = "";
+          this.temp_cells[position_.y][position_.x] =
+            this.cells[queen.y][queen.x];
+          if (!white_king_attacked(new Cell(king.y, king.x)))
+            available_movements.add(
+              `${piece},${queen.y},${queen.x},${piece},${position_.y},${
+                position_.x
+              },${this.cells[position_.y][position_.x]}`
+            );
+        }
+        if (cell_ != "") break;
+      }
+    });
+    this.bishop_movements.forEach((bishop_movement) => {
+      let position_ = new Cell(queen.y, queen.x);
+      while (true) {
+        position_.x += bishop_movement.x;
+        position_.y += bishop_movement.y;
+        let cell_ = valid_position(position_.y, position_.x);
+        if (cell_ == "" || cell_.match(/^b/)) {
+          this.temp_cells = lodash.cloneDeep(this.cells);
+          this.temp_cells[queen.y][queen.x] = "";
+          this.temp_cells[position_.y][position_.x] =
+            this.cells[queen.y][queen.x];
+          if (!white_king_attacked(new Cell(king.y, king.x)))
+            available_movements.add(
+              `${piece},${queen.y},${queen.x},${piece},${position_.y},${
+                position_.x
+              },${this.cells[position_.y][position_.x]}`
+            );
+        }
+        if (cell_ != "") break;
+      }
+    });
+    return available_movements;
+  };
 
   attacked_by_black_pawn = (y, x) => {};
 
@@ -657,172 +889,6 @@ class Positions {
   can_white_checkmate = () => {};
 }
 export default Positions;
-
-// def available_white_pawn_moves(piece, pawn)
-//   king = white_pieces["wk"]
-//   available_movements = Set.new
-//   cell_ = valid_position(pawn.y - 1, pawn.x)
-
-//   if (cell_ == "")
-//     @temp_cells = DeepClone.clone(@cells)
-//     @temp_cells[pawn.y][pawn.x] = ""
-//     @temp_cells[pawn.y - 1][pawn.x] = @cells[pawn.y][pawn.x]
-//     unless (white_king_attacked(Cell.new(king.y, king.x)))
-//       if (pawn.y - 1 > 0) then available_movements.add("#{piece},#{pawn.y},#{pawn.x},#{piece},#{pawn.y - 1},#{pawn.x},") else available_promotion_moves(piece, pawn.y, pawn.x, pawn.y - 1, pawn.x, available_movements) end
-//     end
-//   end
-
-//   if (pawn.y == 6)
-//     cell_ = valid_position(pawn.y - 1, pawn.x)
-//     cell2_ = valid_position(pawn.y - 1, pawn.x)
-//     if (cell_ == "" && cell2_ == "")
-//       @temp_cells = DeepClone.clone(@cells)
-//       @temp_cells[pawn.y][pawn.x] = ""
-//       @temp_cells[pawn.y - 2][pawn.x] = @cells[pawn.y][pawn.x]
-//       unless (white_king_attacked(Cell.new(king.y, king.x)))
-//         available_movements.add("#{piece},#{pawn.y},#{pawn.x},#{piece},#{pawn.y - 2},#{pawn.x},")
-//       end
-//     end
-//   end
-
-//   cell_ = valid_position(pawn.y - 1, pawn.x + 1)
-//   if (cell_ =~ /^b/)
-//     @temp_cells = DeepClone.clone(@cells)
-//     @temp_cells[pawn.y][pawn.x] = ""
-//     @temp_cells[pawn.y - 1][pawn.x + 1] = @cells[pawn.y][pawn.x]
-//     unless (white_king_attacked(Cell.new(king.y, king.x)))
-//       if (pawn.y - 1 > 0) then available_movements.add("#{piece},#{pawn.y},#{pawn.x},#{piece},#{pawn.y - 1},#{pawn.x + 1},#{@cells[pawn.y - 1][pawn.x + 1]}") else available_promotion_moves(piece, pawn.y, pawn.x, pawn.y - 1, pawn.x + 1, available_movements) end
-//     end
-//   end
-
-//   cell_ = valid_position(pawn.y - 1, pawn.x - 1)
-//   if (cell_ =~ /^b/)
-//     @temp_cells = DeepClone.clone(@cells)
-//     @temp_cells[pawn.y][pawn.x] = ""
-//     @temp_cells[pawn.y - 1][pawn.x - 1] = @cells[pawn.y][pawn.x]
-//     unless (white_king_attacked(Cell.new(king.y, king.x)))
-//       if (pawn.y - 1 > 0) then available_movements.add("#{piece},#{pawn.y},#{pawn.x},#{piece},#{pawn.y - 1},#{pawn.x - 1},#{@cells[pawn.y - 1][pawn.x - 1]}") else available_promotion_moves(piece, pawn.y, pawn.x, pawn.y - 1, pawn.x - 1, available_movements) end
-//     end
-//   end
-
-//   if (can_white_en_passant(pawn.y, pawn.x + 1))
-//     @temp_cells = DeepClone.clone(@cells)
-//     @temp_cells[pawn.y][pawn.x] = ""
-//     @temp_cells[pawn.y][pawn.x + 1] = ""
-//     @temp_cells[pawn.y - 1][pawn.x + 1] = @cells[pawn.y][pawn.x]
-//     available_movements.add("#{piece},#{pawn.y},#{pawn.x},#{piece},#{pawn.y - 1},#{pawn.x + 1},#{@cells[pawn.y][pawn.x + 1]}") unless (white_king_attacked(Cell.new(king.y, king.x)))
-//   end
-
-//   if (can_white_en_passant(pawn.y, pawn.x - 1))
-//     @temp_cells = DeepClone.clone(@cells)
-//     @temp_cells[pawn.y][pawn.x] = ""
-//     @temp_cells[pawn.y][pawn.x - 1] = ""
-//     @temp_cells[pawn.y - 1][pawn.x - 1] = @cells[pawn.y][pawn.x]
-//     available_movements.add("#{piece},#{pawn.y},#{pawn.x},#{piece},#{pawn.y - 1},#{pawn.x - 1},#{@cells[pawn.y][pawn.x - 1]}") unless (white_king_attacked(Cell.new(king.y, king.x)))
-//   end
-
-//   available_movements
-// end
-
-// def available_promotion_moves(piece, y0, x0, y, x, available_movements)
-//   if (y == 0)
-//     available_movements.add("#{piece},#{y0},#{x0},wq#{next_white_queen},#{y},#{x},#{@cells[y][x]}")
-//     available_movements.add("#{piece},#{y0},#{x0},wr#{next_white_rock},#{y},#{x},#{@cells[y][x]}")
-//     available_movements.add("#{piece},#{y0},#{x0},wb#{next_white_bishop},#{y},#{x},#{@cells[y][x]}")
-//     available_movements.add("#{piece},#{y0},#{x0},wn#{next_white_knight},#{y},#{x},#{@cells[y][x]}")
-//   elsif (y == 7)
-//     available_movements.add("#{piece},#{y0},#{x0},bq#{next_black_queen},#{y},#{x},#{@cells[y][x]}")
-//     available_movements.add("#{piece},#{y0},#{x0},br#{next_black_rock},#{y},#{x},#{@cells[y][x]}")
-//     available_movements.add("#{piece},#{y0},#{x0},bb#{next_black_bishop},#{y},#{x},#{@cells[y][x]}")
-//     available_movements.add("#{piece},#{y0},#{x0},bn#{next_black_knight},#{y},#{x},#{@cells[y][x]}")
-//   end
-// end
-
-// def available_white_bishop_moves(piece, bishop)
-//   king = @white_pieces["wk"]
-//   available_movements = Set.new
-//   @bishop_movements.each do |bishop_movement|
-//     position_ = Cell.new(bishop.y, bishop.x)
-//     loop do
-//       position_.x += bishop_movement.x
-//       position_.y += bishop_movement.y
-//       cell_ = valid_position(position_.y, position_.x)
-//       if (cell_ == "" || cell_ =~ /^b/)
-//         @temp_cells = DeepClone.clone(@cells)
-//         @temp_cells[bishop.y][bishop.x] = ""
-//         @temp_cells[position_.y][position_.x] = @cells[bishop.y][bishop.x]
-//         unless white_king_attacked(Cell.new(king.y, king.x))
-//           available_movements.add("#{piece},#{bishop.y},#{bishop.x},#{piece},#{position_.y},#{position_.x},#{@cells[position_.y][position_.x]}")
-//         end
-//       end
-//       break if (cell_ != "")
-//     end
-//   end
-//   available_movements
-// end
-
-// def available_white_rock_moves(piece, rock)
-//   king = @white_pieces["wk"]
-//   available_movements = Set.new
-//   @rock_movements.each do |rock_movement|
-//     position_ = Cell.new(rock.y, rock.x)
-//     loop do
-//       position_.x += rock_movement.x
-//       position_.y += rock_movement.y
-//       cell_ = valid_position(position_.y, position_.x)
-//       if (cell_ == "" || cell_ =~ /^b/)
-//         @temp_cells = DeepClone.clone(@cells)
-//         @temp_cells[rock.y][rock.x] = ""
-//         @temp_cells[position_.y][position_.x] = @cells[rock.y][rock.x]
-//         unless white_king_attacked(Cell.new(king.y, king.x))
-//           available_movements.add("#{piece},#{rock.y},#{rock.x},#{piece},#{position_.y},#{position_.x},#{@cells[position_.y][position_.x]}")
-//         end
-//       end
-//       break if (cell_ != "")
-//     end
-//   end
-//   available_movements
-// end
-
-// def available_white_queen_moves(piece, queen)
-//   king = @white_pieces["wk"]
-//   available_movements = Set.new
-//   @rock_movements.each do |rock_movement|
-//     position_ = Cell.new(queen.y, queen.x)
-//     loop do
-//       position_.x += rock_movement.x
-//       position_.y += rock_movement.y
-//       cell_ = valid_position(position_.y, position_.x)
-//       if (cell_ == "" || cell_ =~ /^b/)
-//         @temp_cells = DeepClone.clone(@cells)
-//         @temp_cells[queen.y][queen.x] = ""
-//         @temp_cells[position_.y][position_.x] = @cells[queen.y][queen.x]
-//         unless white_king_attacked(Cell.new(king.y, king.x))
-//           available_movements.add("#{piece},#{queen.y},#{queen.x},#{piece},#{position_.y},#{position_.x},#{@cells[position_.y][position_.x]}")
-//         end
-//       end
-//       break if (cell_ != "")
-//     end
-//   end
-//   @bishop_movements.each do |bishop_movement|
-//     position_ = Cell.new(queen.y, queen.x)
-//     loop do
-//       position_.x += bishop_movement.x
-//       position_.y += bishop_movement.y
-//       cell_ = valid_position(position_.y, position_.x)
-//       if (cell_ == "" || cell_ =~ /^b/)
-//         @temp_cells = DeepClone.clone(@cells)
-//         @temp_cells[queen.y][queen.x] = ""
-//         @temp_cells[position_.y][position_.x] = @cells[queen.y][queen.x]
-//         unless white_king_attacked(Cell.new(king.y, king.x))
-//           available_movements.add("#{piece},#{queen.y},#{queen.x},#{piece},#{position_.y},#{position_.x},#{@cells[position_.y][position_.x]}")
-//         end
-//       end
-//       break if (cell_ != "")
-//     end
-//   end
-//   available_movements
-// end
 
 // def attacked_by_black_pawn(y, x)
 //   return true if (valid_temp_piece(y - 1, x + 1, 0, 2) == "bp" || valid_temp_piece(y - 1, x - 1, 0, 2) == "bp")
