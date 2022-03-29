@@ -846,15 +846,88 @@ class Positions {
     return available_movements;
   };
 
-  attacked_by_black_pawn = (y, x) => {};
+  attacked_by_black_pawn = (y, x) => {
+    if (
+      valid_temp_piece(y - 1, x + 1, 0, 2) == "bp" ||
+      valid_temp_piece(y - 1, x - 1, 0, 2) == "bp"
+    )
+      return true;
+    return false;
+  };
 
-  attacked_by_black_knight = (y, x) => {};
+  attacked_by_black_knight = (y, x) => {
+    if (
+      valid_temp_piece(y - 2, x + 1, 0, 2) == "bn" ||
+      valid_temp_piece(y - 2, x - 1, 0, 2) == "bn" ||
+      valid_temp_piece(y + 2, x - 1, 0, 2) == "bn" ||
+      valid_temp_piece(y + 2, x + 1, 0, 2) == "bn" ||
+      valid_temp_piece(y - 1, x + 2, 0, 2) == "bn" ||
+      valid_temp_piece(y - 1, x - 2, 0, 2) == "bn" ||
+      valid_temp_piece(y + 1, x + 2, 0, 2) == "bn" ||
+      valid_temp_piece(y + 1, x - 2, 0, 2) == "bn"
+    )
+      return true;
+    return false;
+  };
 
-  attacked_by_black_king = (y, x) => {};
+  attacked_by_black_king = (y, x) => {
+    if (
+      valid_temp_position(y - 1, x - 1) == "bk" ||
+      valid_temp_position(y - 1, x) == "bk" ||
+      valid_temp_position(y - 1, x + 1) == "bk" ||
+      valid_temp_position(y, x - 1) == "bk" ||
+      valid_temp_position(y, x + 1) == "bk" ||
+      valid_temp_position(y + 1, x - 1) == "bk" ||
+      valid_temp_position(y + 1, x) == "bk" ||
+      valid_temp_position(y + 1, x + 1) == "bk"
+    )
+      return true;
+    return false;
+  };
 
-  attacked_by_black_in_diagonals = (y, x) => {};
+  attacked_by_black_in_diagonals = (y, x) => {
+    this.bishop_movements.forEach((bishop_movement) => {
+      let new_y = y;
+      let new_x = x;
+      while (true) {
+        new_y += bishop_movement.y;
+        new_x += bishop_movement.x;
+        if (
+          valid_temp_piece(new_y, new_x, 0, 2) == "bq" ||
+          valid_temp_piece(new_y, new_x, 0, 2) == "bb"
+        )
+          return true;
+        else if (
+          valid_temp_position(new_y, new_x) == "v" ||
+          valid_temp_position(new_y, new_x) != ""
+        )
+          break;
+      }
+    });
+    return false;
+  };
 
-  attacked_by_black_in_rowcolumns = (y, x) => {};
+  attacked_by_black_in_rowcolumns = (y, x) => {
+    this.rock_movements.forEach((rock_movement) => {
+      let new_y = y;
+      let new_x = x;
+      while (true) {
+        new_y += rock_movement.y;
+        new_x += rock_movement.x;
+        if (
+          valid_temp_piece(new_y, new_x, 0, 2) == "bq" ||
+          valid_temp_piece(new_y, new_x, 0, 2) == "br"
+        )
+          return true;
+        else if (
+          valid_temp_position(new_y, new_x) == "v" ||
+          valid_temp_position(new_y, new_x) != ""
+        )
+          break;
+      }
+    });
+    return false;
+  };
 
   attacked_by_white_pawn = (y, x) => {};
 
@@ -889,55 +962,6 @@ class Positions {
   can_white_checkmate = () => {};
 }
 export default Positions;
-
-// def attacked_by_black_pawn(y, x)
-//   return true if (valid_temp_piece(y - 1, x + 1, 0, 2) == "bp" || valid_temp_piece(y - 1, x - 1, 0, 2) == "bp")
-//   false
-// end
-
-// def attacked_by_black_knight(y, x)
-//   return true if (valid_temp_piece(y - 2, x + 1, 0, 2) == "bn" || valid_temp_piece(y - 2, x - 1, 0, 2) == "bn" || valid_temp_piece(y + 2, x - 1, 0, 2) == "bn" || valid_temp_piece(y + 2, x + 1, 0, 2) == "bn" || valid_temp_piece(y - 1, x + 2, 0, 2) == "bn" || valid_temp_piece(y - 1, x - 2, 0, 2) == "bn" || valid_temp_piece(y + 1, x + 2, 0, 2) == "bn" || valid_temp_piece(y + 1, x - 2, 0, 2) == "bn")
-//   false
-// end
-
-// def attacked_by_black_king(y, x)
-//   return true if (valid_temp_position(y - 1, x - 1) == "bk" || valid_temp_position(y - 1, x) == "bk" || valid_temp_position(y - 1, x + 1) == "bk" || valid_temp_position(y, x - 1) == "bk" || valid_temp_position(y, x + 1) == "bk" || valid_temp_position(y + 1, x - 1) == "bk" || valid_temp_position(y + 1, x) == "bk" || valid_temp_position(y + 1, x + 1) == "bk")
-//   false
-// end
-
-// def attacked_by_black_in_diagonals(y, x)
-//   @bishop_movements.each do |bishop_movement|
-//     new_y = y
-//     new_x = x
-//     loop do
-//       new_y += bishop_movement.y
-//       new_x += bishop_movement.x
-//       if (valid_temp_piece(new_y, new_x, 0, 2) == "bq" || valid_temp_piece(new_y, new_x, 0, 2) == "bb")
-//         return true
-//       elsif (valid_temp_position(new_y, new_x) == "v" || valid_temp_position(new_y, new_x) != "")
-//         break
-//       end
-//     end
-//   end
-//   false
-// end
-
-// def attacked_by_black_in_rowcolumns(y, x)
-//   @rock_movements.each do |rock_movement|
-//     new_y = y
-//     new_x = x
-//     loop do
-//       new_y += rock_movement.y
-//       new_x += rock_movement.x
-//       if (valid_temp_piece(new_y, new_x, 0, 2) == "bq" || valid_temp_piece(new_y, new_x, 0, 2) == "br")
-//         return true
-//       elsif (valid_temp_position(new_y, new_x) == "v" || valid_temp_position(new_y, new_x) != "")
-//         break
-//       end
-//     end
-//   end
-//   false
-// end
 
 // def attacked_by_white_pawn(y, x)
 //   return true if (valid_temp_piece(y + 1, x + 1, 0, 2) == "wp" || valid_temp_piece(y + 1, x - 1, 0, 2) == "wp")
