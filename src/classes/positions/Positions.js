@@ -929,15 +929,88 @@ class Positions {
     return false;
   };
 
-  attacked_by_white_pawn = (y, x) => {};
+  attacked_by_white_pawn = (y, x) => {
+    if (
+      valid_temp_piece(y + 1, x + 1, 0, 2) == "wp" ||
+      valid_temp_piece(y + 1, x - 1, 0, 2) == "wp"
+    )
+      return true;
+    return false;
+  };
 
-  attacked_by_white_knight = (y, x) => {};
+  attacked_by_white_knight = (y, x) => {
+    if (
+      valid_temp_piece(y - 2, x + 1, 0, 2) == "wn" ||
+      valid_temp_piece(y - 2, x - 1, 0, 2) == "wn" ||
+      valid_temp_piece(y + 2, x - 1, 0, 2) == "wn" ||
+      valid_temp_piece(y + 2, x + 1, 0, 2) == "wn" ||
+      valid_temp_piece(y - 1, x + 2, 0, 2) == "wn" ||
+      valid_temp_piece(y - 1, x - 2, 0, 2) == "wn" ||
+      valid_temp_piece(y + 1, x + 2, 0, 2) == "wn" ||
+      valid_temp_piece(y + 1, x - 2, 0, 2) == "wn"
+    )
+      return true;
+    return false;
+  };
 
-  attacked_by_white_king = (y, x) => {};
+  attacked_by_white_king = (y, x) => {
+    if (
+      valid_temp_position(y - 1, x - 1) == "wk" ||
+      valid_temp_position(y - 1, x) == "wk" ||
+      valid_temp_position(y - 1, x + 1) == "wk" ||
+      valid_temp_position(y, x - 1) == "wk" ||
+      valid_temp_position(y, x + 1) == "wk" ||
+      valid_temp_position(y + 1, x - 1) == "wk" ||
+      valid_temp_position(y + 1, x) == "wk" ||
+      valid_temp_position(y + 1, x + 1) == "wk"
+    )
+      return true;
+    return false;
+  };
 
-  attacked_by_white_in_diagonals = (y, x) => {};
+  attacked_by_white_in_diagonals = (y, x) => {
+    this.bishop_movements.forEach((bishop_movement) => {
+      let new_y = y;
+      let new_x = x;
+      while (true) {
+        new_y += bishop_movement.y;
+        new_x += bishop_movement.x;
+        if (
+          valid_temp_piece(new_y, new_x, 0, 2) == "wq" ||
+          valid_temp_piece(new_y, new_x, 0, 2) == "wb"
+        )
+          return true;
+        else if (
+          valid_temp_position(new_y, new_x) == "v" ||
+          valid_temp_position(new_y, new_x) != ""
+        )
+          break;
+      }
+    });
+    return false;
+  };
 
-  attacked_by_white_in_rowcolumns = (y, x) => {};
+  attacked_by_white_in_rowcolumns = (y, x) => {
+    this.rock_movements.forEach((rock_movement) => {
+      let new_y = y;
+      let new_x = x;
+      while (true) {
+        new_y += rock_movement.y;
+        new_x += rock_movement.x;
+        if (
+          valid_temp_piece(new_y, new_x, 0, 2) == "wq" ||
+          valid_temp_piece(new_y, new_x, 0, 2) == "wr"
+        )
+          return true;
+        else if (
+          valid_temp_position(new_y, new_x) == "v" ||
+          valid_temp_position(new_y, new_x) != ""
+        )
+          break;
+      }
+    });
+    return false;
+  };
 
   valid_temp_position = (y, x) => {};
 
@@ -962,55 +1035,6 @@ class Positions {
   can_white_checkmate = () => {};
 }
 export default Positions;
-
-// def attacked_by_white_pawn(y, x)
-//   return true if (valid_temp_piece(y + 1, x + 1, 0, 2) == "wp" || valid_temp_piece(y + 1, x - 1, 0, 2) == "wp")
-//   false
-// end
-
-// def attacked_by_white_knight(y, x)
-//   return true if (valid_temp_piece(y - 2, x + 1, 0, 2) == "wn" || valid_temp_piece(y - 2, x - 1, 0, 2) == "wn" || valid_temp_piece(y + 2, x - 1, 0, 2) == "wn" || valid_temp_piece(y + 2, x + 1, 0, 2) == "wn" || valid_temp_piece(y - 1, x + 2, 0, 2) == "wn" || valid_temp_piece(y - 1, x - 2, 0, 2) == "wn" || valid_temp_piece(y + 1, x + 2, 0, 2) == "wn" || valid_temp_piece(y + 1, x - 2, 0, 2) == "wn")
-//   false
-// end
-
-// def attacked_by_white_king(y, x)
-//   return true if (valid_temp_position(y - 1, x - 1) == "wk" || valid_temp_position(y - 1, x) == "wk" || valid_temp_position(y - 1, x + 1) == "wk" || valid_temp_position(y, x - 1) == "wk" || valid_temp_position(y, x + 1) == "wk" || valid_temp_position(y + 1, x - 1) == "wk" || valid_temp_position(y + 1, x) == "wk" || valid_temp_position(y + 1, x + 1) == "wk")
-//   false
-// end
-
-// def attacked_by_white_in_diagonals(y, x)
-//   @bishop_movements.each do |bishop_movement|
-//     new_y = y
-//     new_x = x
-//     loop do
-//       new_y += bishop_movement.y
-//       new_x += bishop_movement.x
-//       if (valid_temp_piece(new_y, new_x, 0, 2) == "wq" || valid_temp_piece(new_y, new_x, 0, 2) == "wb")
-//         return true
-//       elsif (valid_temp_position(new_y, new_x) == "v" || valid_temp_position(new_y, new_x) != "")
-//         break
-//       end
-//     end
-//   end
-//   false
-// end
-
-// def attacked_by_white_in_rowcolumns(y, x)
-//   @rock_movements.each do |rock_movement|
-//     new_y = y
-//     new_x = x
-//     loop do
-//       new_y += rock_movement.y
-//       new_x += rock_movement.x
-//       if (valid_temp_piece(new_y, new_x, 0, 2) == "wq" || valid_temp_piece(new_y, new_x, 0, 2) == "wr")
-//         return true
-//       elsif (valid_temp_position(new_y, new_x) == "v" || valid_temp_position(new_y, new_x) != "")
-//         break
-//       end
-//     end
-//   end
-//   false
-// end
 
 // def valid_temp_position(y, x)
 //   return @temp_cells[y][x] if y >= 0 && y <= 7 && x >= 0 && x <= 7
