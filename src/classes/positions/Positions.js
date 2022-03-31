@@ -1012,142 +1012,180 @@ class Positions {
     return false;
   };
 
-  valid_temp_position = (y, x) => {};
+  valid_temp_position = (y, x) => {
+    if (y >= 0 && y <= 7 && x >= 0 && x <= 7) return this.temp_cells[y][x];
+    return "v";
+  };
 
-  valid_temp_piece = (y, x, init, length) => {};
+  valid_temp_piece = (y, x, init, length) => {
+    if (!(y >= 0 && y <= 7 && x >= 0 && x <= 7)) return "v";
+    return this.temp_cells[y][x].substring(init, init + length);
+  };
 
-  valid_position = (y, x) => {};
+  valid_position = (y, x) => {
+    if (y >= 0 && y <= 7 && x >= 0 && x <= 7) return this.cells[y][x];
+    return "v";
+  };
 
-  set_initial_board = () => {};
+  set_initial_board = () => {
+    this.cells = [...Array(8)].map((x) => (x = Array(8).fill("")));
+    this.temp_cells = [...Array(8)].map((x) => (x = Array(8).fill("")));
+    this.black_pieces.forEach((piece, position) => {
+      this.cells[position.y][position.x] = piece;
+    });
+    this.white_pieces.forEach((piece, position) => {
+      this.cells[position.y][position.x] = piece;
+    });
+  };
 
-  update_board_details_after_white_move = (last_move) => {};
+  update_board_details_after_white_move = (last_move) => {
+    let selected_move_info = last_move.split(",", -1);
+    if (selected_move_info.last != "")
+      this.black_pieces.delete(selected_move_info.last); // unless change of position with no capture
+    if (selected_move_info[0] != selected_move_info[3]) {
+      // if promotion
+      this.white_pieces.delete(selected_move_info.first);
+      this.white_pieces[selected_move_info[3]] = new Cell(
+        selected_move_info[4].to_i,
+        selected_move_info[5].to_i
+      );
+      update_white_promotion(selected_move_info[3]);
+    } else if (selected_move_info.last == "castling") {
+      if (selected_move_info[5] == "6")
+        this.white_pieces["wr2"] = new Cell(7, 5);
+      else this.white_pieces["wr1"] = new Cell(7, 3);
+      this.white_short_castling = false;
+      this.white_long_castling = false;
+    }
+    if (selected_move_info.first == "wk") {
+      // if last move was white king move
+      this.white_short_castling = false;
+      this.white_long_castling = false;
+    } else if (selected_move_info.first == "wr1")
+      this.white_long_castling = false; // else if selected last move is white rock 1 move
+    else if (selected_move_info.first == "wr2")
+      this.white_short_castling = false; // else if selected last move is white rock 2 move
+    if (selected_move_info[4] == "0" && selected_move_info[5] == "0")
+      this.black_long_castling = false; // if last white move to the position of black rock 1
+    else if (selected_move_info[4] == "0" && selected_move_info[5] == "7")
+      this.black_short_castling = false; // else if last white move to the position of black rock 2
+    this.white_pieces[selected_move_info[3]] = new Cell(
+      selected_move_info[4].to_i,
+      selected_move_info[5].to_i
+    );
+    this.last_movement = last_move;
+  };
 
-  update_board_details_after_black_move = (last_move) => {};
+  update_board_details_after_black_move = (last_move) => {
+    let selected_move_info = last_move.split(",", -1);
+    if (selected_move_info.last != "")
+      this.white_pieces.delete(selected_move_info.last); // if not change of position with no capture
+    if (selected_move_info[0] != selected_move_info[3]) {
+      // if promotion
+      this.black_pieces.delete(selected_move_info.first);
+      this.black_pieces[selected_move_info[3]] = new Cell(
+        selected_move_info[4].to_i,
+        selected_move_info[5].to_i
+      );
+      update_black_promotion(selected_move_info[3]);
+    } else if (selected_move_info.last == "castling") {
+      if (selected_move_info[5] == "6")
+        this.black_pieces["br2"] = new Cell(0, 5);
+      else this.black_pieces["br1"] = Cell.new(0, 3);
+      this.black_long_castling = false;
+      this.black_short_castling = false;
+    }
+    if (selected_move_info.first == "bk") {
+      // if last move was black king move
+      this.black_long_castling = false;
+      this.black_short_castling = false;
+    } else if (selected_move_info.first == "br1")
+      this.black_long_castling = false; // else if selected last move is black rock 1 move
+    else if (selected_move_info.first == "br2")
+      this.black_short_castling = false; // else if selected last move is black rock 2 move
+    if (selected_move_info[4] == "7" && selected_move_info[5] == "0")
+      this.white_long_castling = false; //if last black move to the position of white rock 1
+    else if (selected_move_info[4] == "7" && selected_move_info[5] == "7")
+      this.white_short_castling = false; // else if last black move to the position of white rock 2
+    this.black_pieces[selected_move_info[3]] = new Cell(
+      selected_move_info[4].to_i,
+      selected_move_info[5].to_i
+    );
+    this.last_movement = last_move;
+  };
 
-  update_white_promotion = (white_promoted) => {};
+  update_white_promotion = (white_promoted) => {
+    if (white_promoted.match(/^wq/)) this.next_white_queen += 1;
+    else if (white_promoted.match(/^wr/)) this.next_white_rock += 1;
+    else if (white_promoted.match(/^wb/)) this.next_white_bishop += 1;
+    else this.next_white_knight += 1;
+  };
 
-  update_black_promotion = (black_promoted) => {};
+  update_black_promotion = (black_promoted) => {
+    if (black_promoted.match(/^bq/)) this.next_black_queen += 1;
+    else if (black_promoted.match(/^br/)) this.next_black_rock += 1;
+    else if (black_promoted.match(/^bb/)) this.next_black_bishop += 1;
+    else this.next_black_knight += 1;
+  };
 
-  checkmate_still_possible = () => {};
+  checkmate_still_possible = () => {
+    if (can_black_checkmate() || can_white_checkmate()) return true;
+    return false;
+  };
 
-  can_black_checkmate = () => {};
-
-  can_white_checkmate = () => {};
+  can_black_checkmate = () => {
+    if (this.black_pieces.length == 1) return false;
+    if (Object.keys(this.black_pieces).some((k) => k.match(/^bp/))) return true; //any pawn?
+    if (Object.keys(this.black_pieces).some((k) => k.match(/^br/))) return true; //any rock?
+    if (Object.keys(this.black_pieces).some((k) => k.match(/^bq/))) return true; //any queen?
+    if (
+      Object.keys(this.black_pieces).filter((k) => k.match(/^bn/)).length >= 3
+    )
+      return true; //at least 3 knights
+    if (
+      Object.keys(this.black_pieces).some((k) => k.match(/^bn/)) &&
+      Object.keys(this.black_pieces).some((k) => k.match(/^bb/))
+    )
+      return true; // at least one knight and one bishop
+    if (
+      Object.entries(this.black_pieces).some(
+        ([piece, position]) =>
+          piece.match(/^bb/) && (position.x + position.y) % 2 === 0
+      ) &&
+      Object.entries(this.black_pieces).some(
+        ([piece, position]) =>
+          piece.match(/^bb/) && (position.x + position.y) % 2 === 1
+      )
+    )
+      return true; // at least one bishop in black cells and one bishop in white cells
+    return false;
+  };
+  can_white_checkmate = () => {
+    if (this.white_pieces.length == 1) return false;
+    if (Object.keys(this.white_pieces).some((k) => k.match(/^wp/))) return true; //any pawn?
+    if (Object.keys(this.white_pieces).some((k) => k.match(/^wr/))) return true; //any rock?
+    if (Object.keys(this.white_pieces).some((k) => k.match(/^wq/))) return true; //any queen?
+    if (
+      Object.keys(this.white_pieces).filter((k) => k.match(/^wn/)).length >= 3
+    )
+      return true; //at least 3 knights
+    if (
+      Object.keys(this.white_pieces).some((k) => k.match(/^wn/)) &&
+      Object.keys(this.white_pieces).some((k) => k.match(/^wb/))
+    )
+      return true; // at least one knight and one bishop
+    if (
+      Object.entries(this.white_pieces).some(
+        ([piece, position]) =>
+          piece.match(/^wb/) && (position.x + position.y) % 2 === 0
+      ) &&
+      Object.entries(this.white_pieces).some(
+        ([piece, position]) =>
+          piece.match(/^wb/) && (position.x + position.y) % 2 === 1
+      )
+    )
+      return true; // at least one bishop in black cells and one bishop in white cells
+    return false;
+  };
 }
 export default Positions;
-
-// def valid_temp_position(y, x)
-//   return @temp_cells[y][x] if y >= 0 && y <= 7 && x >= 0 && x <= 7
-//   "v"
-// end
-
-// def valid_temp_piece(y, x, init, length)
-//   return "v" unless y >= 0 && y <= 7 && x >= 0 && x <= 7
-//   @temp_cells[y][x][init...init + length]
-// end
-
-// def valid_position(y, x)
-//   return @cells[y][x] if y >= 0 && y <= 7 && x >= 0 && x <= 7
-//   "v"
-// end
-
-// def set_initial_board
-//   @cells = Array.new(8).map { Array.new(8, "") }
-//   @temp_cells = Array.new(8).map { Array.new(8, "") }
-//   @black_pieces.each { |piece, position| @cells[position.y][position.x] = piece }
-//   @white_pieces.each { |piece, position| @cells[position.y][position.x] = piece }
-// end
-
-// def update_board_details_after_white_move(last_move)
-//   selected_move_info = last_move.split(",",-1)
-//   @black_pieces.delete(selected_move_info.last) unless (selected_move_info.last == "") # unless change of position with no capture
-//   if (selected_move_info[0] != selected_move_info[3]) # if promotion
-//     @white_pieces.delete(selected_move_info.first)
-//     @white_pieces[selected_move_info[3]] = Cell.new(selected_move_info[4].to_i, selected_move_info[5].to_i)
-//     update_white_promotion(selected_move_info[3])
-//   elsif (selected_move_info.last == "castling")
-//     if (selected_move_info[5] == "6") then @white_pieces["wr2"] = Cell.new(7, 5) else @white_pieces["wr1"] = Cell.new(7, 3) end
-//     @white_short_castling = false
-//     @white_long_castling = false
-//   end
-//   if (selected_move_info.first == "wk") # if last move was white king move
-//     @white_short_castling = false
-//     @white_long_castling = false
-//   elsif (selected_move_info.first == "wr1") # else if selected last move is white rock 1 move
-//     @white_long_castling = false
-//   elsif (selected_move_info.first == "wr2") # else if selected last move is white rock 2 move
-//     @white_short_castling = false
-//   end
-//   if (selected_move_info[4] == "0" && selected_move_info[5] == "0") # if last white move to the position of black rock 1
-//     @black_long_castling = false
-//   elsif (selected_move_info[4] == "0" && selected_move_info[5] == "7") # else if last white move to the position of black rock 2
-//     @black_short_castling = false
-//   end
-//   @white_pieces[selected_move_info[3]] = Cell.new(selected_move_info[4].to_i, selected_move_info[5].to_i)
-//   @last_movement = last_move
-// end
-
-// def update_board_details_after_black_move(last_move)
-//   selected_move_info = last_move.split(",",-1)
-//   @white_pieces.delete(selected_move_info.last) unless (selected_move_info.last == "") # unless change of position with no capture
-//   if (selected_move_info[0] != selected_move_info[3]) # if promotion
-//     @black_pieces.delete(selected_move_info.first)
-//     @black_pieces[selected_move_info[3]] = Cell.new(selected_move_info[4].to_i, selected_move_info[5].to_i)
-//     update_black_promotion(selected_move_info[3])
-//   elsif (selected_move_info.last == "castling")
-//     if (selected_move_info[5] == "6") then @black_pieces["br2"] = Cell.new(0, 5) else @black_pieces["br1"] = Cell.new(0, 3) end
-//     @black_long_castling = false
-//     @black_short_castling = false
-//   end
-//   if (selected_move_info.first == "bk") # if last move was black king move
-//     @black_long_castling = false
-//     @black_short_castling = false
-//   elsif (selected_move_info.first == "br1") # else if selected last move is black rock 1 move
-//     @black_long_castling = false
-//   elsif (selected_move_info.first == "br2") # else if selected last move is black rock 2 move
-//     @black_short_castling = false
-//   end
-//   if (selected_move_info[4] == "7" && selected_move_info[5] == "0") # if last black move to the position of white rock 1
-//     @white_long_castling = false
-//   elsif (selected_move_info[4] == "7" && selected_move_info[5] == "7") # else if last black move to the position of white rock 2
-//     @white_short_castling = false
-//   end
-//   @black_pieces[selected_move_info[3]] = Cell.new(selected_move_info[4].to_i, selected_move_info[5].to_i)
-//   @last_movement = last_move
-// end
-
-// def update_white_promotion(white_promoted)
-//   if (white_promoted =~ /^wq/) then @next_white_queen += 1 elsif (white_promoted =~ /^wr/) then @next_white_rock += 1 elsif (white_promoted =~ /^wb/) then @next_white_bishop += 1 else @next_white_knight += 1 end
-// end
-
-// def update_black_promotion(black_promoted)
-//   if (black_promoted =~ /^bq/) then @next_black_queen += 1 elsif (black_promoted =~ /^br/) then @next_black_rock += 1 elsif (black_promoted =~ /^bb/) then @next_black_bishop += 1 else @next_black_knight += 1 end
-// end
-
-// def checkmate_still_possible?
-//   return true if can_black_checkmate? || can_white_checkmate?
-//   false
-// end
-
-// def can_black_checkmate?
-//   return false if @black_pieces.length==1
-//   return true if @black_pieces.keys.any?{|piece| piece=~/^bp/} #any pawn?
-//   return true if @black_pieces.keys.any?{|piece| piece=~/^br/} #any rock?
-//   return true if @black_pieces.keys.any?{|piece| piece=~/^bq/} #any queen?
-//   return true if @black_pieces.keys.count{|piece| piece=~/^bn/}>=3 #at least 3 knights
-//   return true if @black_pieces.keys.any?{|piece| piece=~/^bb/} && @black_pieces.keys.any?{|piece| piece=~/^bn/} # at least one knight and one bishop
-//   return true if @black_pieces.any?{|piece, position| piece=~/^bb/ && (position.x+position.y).even?} && @black_pieces.any?{|piece, position| piece=~/^bb/ && (position.x+position.y).odd?} # at least one bishop in black cells and one bishop in white cells
-//   false
-// end
-
-// def can_white_checkmate?
-//   return false if @white_pieces.length==1
-//   return true if @white_pieces.keys.any?{|piece| piece=~/^wp/} #any pawn?
-//   return true if @white_pieces.keys.any?{|piece| piece=~/^wr/} #any rock?
-//   return true if @white_pieces.keys.any?{|piece| piece=~/^wq/} #any queen?
-//   return true if @white_pieces.keys.count{|piece| piece=~/^wn/}>=3 #at least 3 knights
-//   return true if @white_pieces.keys.any?{|piece| piece=~/^wb/} && @white_pieces.keys.any?{|piece| piece=~/^wn/} # at least one knight and one bishop
-//   return true if @white_pieces.any?{|piece, position| piece=~/^wb/ && (position.x+position.y).even?} && @white_pieces.any?{|piece, position| piece=~/^wb/ && (position.x+position.y).odd?} # at least one bishop in black cells and one bishop in white cells
-//   false
-// end
-// end
