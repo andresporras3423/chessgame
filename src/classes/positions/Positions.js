@@ -82,32 +82,32 @@ class Positions {
     };
 
     this.white_pieces = {
-      wp1: Cell.new(6, 0),
-      wp2: Cell.new(6, 1),
-      wp3: Cell.new(6, 2),
-      wp4: Cell.new(6, 3),
-      wp5: Cell.new(6, 4),
-      wp6: Cell.new(6, 5),
-      wp7: Cell.new(6, 6),
-      wp8: Cell.new(6, 7),
-      wr1: Cell.new(7, 0),
-      wn1: Cell.new(7, 1),
-      wb1: Cell.new(7, 2),
-      wq1: Cell.new(7, 3),
-      wk: Cell.new(7, 4),
-      wb2: Cell.new(7, 5),
-      wn2: Cell.new(7, 6),
-      wr2: Cell.new(7, 7),
+      wp1: new Cell(6, 0),
+      wp2: new Cell(6, 1),
+      wp3: new Cell(6, 2),
+      wp4: new Cell(6, 3),
+      wp5: new Cell(6, 4),
+      wp6: new Cell(6, 5),
+      wp7: new Cell(6, 6),
+      wp8: new Cell(6, 7),
+      wr1: new Cell(7, 0),
+      wn1: new Cell(7, 1),
+      wb1: new Cell(7, 2),
+      wq1: new Cell(7, 3),
+      wk: new Cell(7, 4),
+      wb2: new Cell(7, 5),
+      wn2: new Cell(7, 6),
+      wr2: new Cell(7, 7),
     };
   }
 
   white_king_attacked = (king) => {
     if (
-      attacked_by_black_pawn(king.y, king.x) ||
-      attacked_by_black_knight(king.y, king.x) ||
-      attacked_by_black_king(king.y, king.x) ||
-      attacked_by_black_in_diagonals(king.y, king.x) ||
-      attacked_by_black_in_rowcolumns(king.y, king.x)
+      this.attacked_by_black_pawn(king.y, king.x) ||
+      this.attacked_by_black_knight(king.y, king.x) ||
+      this.attacked_by_black_king(king.y, king.x) ||
+      this.attacked_by_black_in_diagonals(king.y, king.x) ||
+      this.attacked_by_black_in_rowcolumns(king.y, king.x)
     )
       return true;
     return false;
@@ -160,7 +160,7 @@ class Positions {
     let king = this.black_pieces["bk"];
     let available_movements = new Set();
     this.king_movements.forEach((king_movement) => {
-      let n_cell = valid_position(
+      let n_cell = this.valid_position(
         king.y + king_movement.y,
         king.x + king_movement.x
       );
@@ -220,7 +220,7 @@ class Positions {
     const king = this.black_pieces["bk"];
     let available_movements = new Set();
     this.knight_movements.forEach((knight_movement) => {
-      cell_ = valid_position(
+      let cell_ = this.valid_position(
         knight.y + knight_movement.y,
         knight.x + knight_movement.x
       );
@@ -249,7 +249,7 @@ class Positions {
   available_black_pawn_moves = (piece, pawn) => {
     let king = this.black_pieces["bk"];
     let available_movements = new Set();
-    let cell_ = valid_position(pawn.y + 1, pawn.x);
+    let cell_ = this.valid_position(pawn.y + 1, pawn.x);
     if (cell_ === "") {
       this.temp_cells = lodash.cloneDeep(this.cells);
       this.temp_cells[pawn.y][pawn.x] = "";
@@ -271,8 +271,8 @@ class Positions {
       }
     }
     if (pawn.y === 1) {
-      let cell_ = valid_position(pawn.y + 1, pawn.x);
-      let cell2_ = valid_position(pawn.y + 2, pawn.x);
+      let cell_ = this.valid_position(pawn.y + 1, pawn.x);
+      let cell2_ = this.valid_position(pawn.y + 2, pawn.x);
       if (cell_ === "" && cell2_ === "") {
         this.temp_cells = lodash.cloneDeep(this.cells);
         this.temp_cells[pawn.y][pawn.x] = "";
@@ -283,7 +283,7 @@ class Positions {
           );
       }
     }
-    cell_ = valid_position(pawn.y + 1, pawn.x + 1);
+    cell_ = this.valid_position(pawn.y + 1, pawn.x + 1);
     if (cell_[0] === "w") {
       this.temp_cells = lodash.cloneDeep(this.cells);
       this.temp_cells[pawn.y][pawn.x] = "";
@@ -306,7 +306,7 @@ class Positions {
           );
       }
     }
-    cell_ = valid_position(pawn.y + 1, pawn.x - 1);
+    cell_ = this.valid_position(pawn.y + 1, pawn.x - 1);
     if (cell_[0] === "w") {
       this.temp_cells = lodash.cloneDeep(this.cells);
       this.temp_cells[pawn.y][pawn.x] = "";
@@ -390,11 +390,11 @@ class Positions {
     let king = this.black_pieces["bk"];
     let available_movements = new Set();
     this.bishop_movements.forEach((bishop_movement) => {
-      position_ = Cell.new(bishop.y, bishop.x);
+      position_ = new Cell(bishop.y, bishop.x);
       while (true) {
         position_.x += bishop_movement.x;
         position_.y += bishop_movement.y;
-        cell_ = valid_position(position_.y, position_.x);
+        let cell_ = this.valid_position(position_.y, position_.x);
         if (cell_ == "" || cell_.match(/^w/)) {
           this.temp_cells = lodash.cloneDeep(this.cells);
           this.temp_cells[bishop.y][bishop.x] = "";
@@ -421,7 +421,7 @@ class Positions {
       while (true) {
         position_.x += rock_movement.x;
         position_.y += rock_movement.y;
-        cell_ = valid_position(position_.y, position_.x);
+        let cell_ = this.valid_position(position_.y, position_.x);
         if (cell_ == "" || cell_.match(/^w/)) {
           this.temp_cells = lodash.cloneDeep(this.cells);
           this.temp_cells[rock.y][rock.x] = "";
@@ -448,13 +448,13 @@ class Positions {
       while (true) {
         position_.x += rock_movement.x;
         position_.y += rock_movement.y;
-        cell_ = valid_position(position_.y, position_.x);
+        let cell_ = this.valid_position(position_.y, position_.x);
         if (cell_ == "" || cell_.match(/^w/)) {
           this.temp_cells = lodash.cloneDeep(this.cells);
           this.temp_cells[queen.y][queen.x] = "";
           this.temp_cells[position_.y][position_.x] =
             this.cells[queen.y][queen.x];
-          if (!black_king_attacked(Cell.new(king.y, king.x)))
+          if (!black_king_attacked(new Cell(king.y, king.x)))
             available_movements.add(
               `${piece},${queen.y},${queen.x},${piece},${position_.y},${
                 position_.x
@@ -469,7 +469,7 @@ class Positions {
       while (true) {
         position_.x += bishop_movement.x;
         position_.y += bishop_movement.y;
-        let cell_ = valid_position(position_.y, position_.x);
+        let cell_ = this.valid_position(position_.y, position_.x);
         if (cell_ == "" || cell_.match(/^w/)) {
           this.temp_cells = lodash.cloneDeep(this.cells);
           this.temp_cells[queen.y][queen.x] = "";
@@ -489,32 +489,32 @@ class Positions {
   };
 
   available_white_moves = () => {
-    let moves = available_white_king_moves();
-    this.white_pieces.forEach((piece, position) => {
+    let moves = this.available_white_king_moves();
+    Object.entries(this.white_pieces).forEach(([piece, position]) => {
       if (piece.match(/^(wn)/))
         moves = new Set([
           ...moves,
-          ...available_white_knight_moves(piece, position),
+          ...this.available_white_knight_moves(piece, position),
         ]);
       else if (piece.match(/^(wb)/))
         moves = new Set([
           ...moves,
-          ...available_white_bishop_moves(piece, position),
+          ...this.available_white_bishop_moves(piece, position),
         ]);
       else if (piece.match(/^(wr)/))
         moves = new Set([
           ...moves,
-          ...available_white_rock_moves(piece, position),
+          ...this.available_white_rock_moves(piece, position),
         ]);
       else if (piece.match(/^(wq)/))
         moves = new Set([
           ...moves,
-          ...available_white_queen_moves(piece, position),
+          ...this.available_white_queen_moves(piece, position),
         ]);
       else if (piece.match(/^(wp)/))
         moves = new Set([
           ...moves,
-          ...available_white_pawn_moves(piece, position),
+          ...this.available_white_pawn_moves(piece, position),
         ]);
     });
     return moves;
@@ -524,7 +524,7 @@ class Positions {
     let king = this.white_pieces["wk"];
     let available_movements = new Set();
     this.king_movements.forEach((king_movement) => {
-      let n_cell = valid_position(
+      let n_cell = this.valid_position(
         king.y + king_movement.y,
         king.x + king_movement.x
       );
@@ -534,7 +534,7 @@ class Positions {
         this.temp_cells[king.y + king_movement.y][king.x + king_movement.x] =
           "wk";
         if (
-          !white_king_attacked(
+          !this.white_king_attacked(
             new Cell(king.y + king_movement.y, king.x + king_movement.x)
           )
         )
@@ -551,9 +551,9 @@ class Positions {
       this.cells[7][1] == "" &&
       this.cells[7][2] == "" &&
       this.cells[7][3] == "" &&
-      !white_king_attacked(new Cell(king.y, king.x)) &&
-      !white_king_attacked(new Cell(king.y, king.x - 1)) &&
-      !white_king_attacked(new Cell(king.y, king.x - 2))
+      !this.white_king_attacked(new Cell(king.y, king.x)) &&
+      !this.white_king_attacked(new Cell(king.y, king.x - 1)) &&
+      !this.white_king_attacked(new Cell(king.y, king.x - 2))
     )
       available_movements.add(
         `wk,${king.y},${king.x},wk,${king.y},${king.x - 2},${
@@ -564,9 +564,9 @@ class Positions {
       this.white_short_castling &&
       this.cells[7][5] == "" &&
       this.cells[7][6] == "" &&
-      !white_king_attacked(new Cell(king.y, king.x)) &&
-      !white_king_attacked(new Cell(king.y, king.x + 1)) &&
-      !white_king_attacked(new Cell(king.y, king.x + 2))
+      !this.white_king_attacked(new Cell(king.y, king.x)) &&
+      !this.white_king_attacked(new Cell(king.y, king.x + 1)) &&
+      !this.white_king_attacked(new Cell(king.y, king.x + 2))
     )
       available_movements.add(
         `wk,${king.y},${king.x},wk,${king.y},${king.x + 2},${
@@ -580,39 +580,40 @@ class Positions {
     let king = this.white_pieces["wk"];
     let available_movements = new Set();
     this.knight_movements.forEach((knight_movement) => {
-      let cell_ = valid_position(
+      let cell_ = this.valid_position(
         knight.y + knight_movement.y,
         knight.x + knight_movement.x
       );
-      if (cell_ == "" || cell_[0] == "b")
+      if (cell_ == "" || cell_[0] == "b") {
         this.temp_cells = lodash.cloneDeep(this.cells);
-      this.temp_cells[knight.y][knight.x] = "";
-      this.temp_cells[knight.y + knight_movement.y][
-        knight.x + knight_movement.x
-      ] = this.cells[knight.y][knight.x];
-      if (!white_king_attacked(new Cell(king.y, king.x)))
-        available_movements.add(
-          `${piece},${knight.y},${knight.x},${piece},${
-            knight.y + knight_movement.y
-          },${knight.x + knight_movement.x},${
-            this.cells[knight.y + knight_movement.y][
-              knight.x + knight_movement.x
-            ]
-          }`
-        );
+        this.temp_cells[knight.y][knight.x] = "";
+        this.temp_cells[knight.y + knight_movement.y][
+          knight.x + knight_movement.x
+        ] = this.cells[knight.y][knight.x];
+        if (!this.white_king_attacked(new Cell(king.y, king.x)))
+          available_movements.add(
+            `${piece},${knight.y},${knight.x},${piece},${
+              knight.y + knight_movement.y
+            },${knight.x + knight_movement.x},${
+              this.cells[knight.y + knight_movement.y][
+                knight.x + knight_movement.x
+              ]
+            }`
+          );
+      }
     });
     return available_movements;
   };
 
   available_white_pawn_moves = (piece, pawn) => {
-    let king = white_pieces["wk"];
+    let king = this.white_pieces["wk"];
     let available_movements = new Set();
-    let cell_ = valid_position(pawn.y - 1, pawn.x);
+    let cell_ = this.valid_position(pawn.y - 1, pawn.x);
     if (cell_ == "") {
       this.temp_cells = lodash.cloneDeep(this.cells);
       this.temp_cells[pawn.y][pawn.x] = "";
       this.temp_cells[pawn.y - 1][pawn.x] = this.cells[pawn.y][pawn.x];
-      if (!white_king_attacked(new Cell(king.y, king.x))) {
+      if (!this.white_king_attacked(new Cell(king.y, king.x))) {
         if (pawn.y - 1 > 0)
           available_movements.add(
             `${piece},${pawn.y},${pawn.x},${piece},${pawn.y - 1},${pawn.x},`
@@ -629,24 +630,24 @@ class Positions {
       }
     }
     if (pawn.y == 6) {
-      let cell_ = valid_position(pawn.y - 1, pawn.x);
-      let cell2_ = valid_position(pawn.y - 1, pawn.x);
+      let cell_ = this.valid_position(pawn.y - 1, pawn.x);
+      let cell2_ = this.valid_position(pawn.y - 1, pawn.x);
       if (cell_ == "" && cell2_ == "") {
         this.temp_cells = lodash.cloneDeep(this.cells);
         this.temp_cells[pawn.y][pawn.x] = "";
         this.temp_cells[pawn.y - 2][pawn.x] = this.cells[pawn.y][pawn.x];
-        if (!white_king_attacked(new Cell(king.y, king.x)))
+        if (!this.white_king_attacked(new Cell(king.y, king.x)))
           available_movements.add(
             `${piece},${pawn.y},${pawn.x},${piece},${pawn.y - 2},${pawn.x},`
           );
       }
     }
-    cell_ = valid_position(pawn.y - 1, pawn.x + 1);
+    cell_ = this.valid_position(pawn.y - 1, pawn.x + 1);
     if (cell_.match(/^b/)) {
       this.temp_cells = DeepClone.clone(this.cells);
       this.temp_cells[pawn.y][pawn.x] = "";
       this.temp_cells[pawn.y - 1][pawn.x + 1] = this.cells[pawn.y][pawn.x];
-      if (!white_king_attacked(new Cell(king.y, king.x))) {
+      if (!this.white_king_attacked(new Cell(king.y, king.x))) {
         if (pawn.y - 1 > 0)
           available_movements.add(
             `${piece},${pawn.y},${pawn.x},${piece},${pawn.y - 1},${
@@ -664,12 +665,12 @@ class Positions {
           );
       }
     }
-    cell_ = valid_position(pawn.y - 1, pawn.x - 1);
+    cell_ = this.valid_position(pawn.y - 1, pawn.x - 1);
     if (cell_.match(/^b/)) {
       this.temp_cells = lodash.cloneDeep(this.cells);
       this.temp_cells[pawn.y][pawn.x] = "";
       this.temp_cells[pawn.y - 1][pawn.x - 1] = this.cells[pawn.y][pawn.x];
-      if (!white_king_attacked(new Cell(king.y, king.x))) {
+      if (!this.white_king_attacked(new Cell(king.y, king.x))) {
         if (pawn.y - 1 > 0)
           available_movements.add(
             `${piece},${pawn.y},${pawn.x},${piece},${pawn.y - 1},${
@@ -687,24 +688,24 @@ class Positions {
           );
       }
     }
-    if (can_white_en_passant(pawn.y, pawn.x + 1)) {
+    if (this.can_white_en_passant(pawn.y, pawn.x + 1)) {
       this.temp_cells = lodash.cloneDeep(this.cells);
       this.temp_cells[pawn.y][pawn.x] = "";
       this.temp_cells[pawn.y][pawn.x + 1] = "";
       this.temp_cells[pawn.y - 1][pawn.x + 1] = this.cells[pawn.y][pawn.x];
-      if (!white_king_attacked(new Cell(king.y, king.x)))
+      if (!this.white_king_attacked(new Cell(king.y, king.x)))
         available_movements.add(
           `${piece},${pawn.y},${pawn.x},${piece},${pawn.y - 1},${pawn.x + 1},${
             this.cells[pawn.y][pawn.x + 1]
           }`
         );
     }
-    if (can_white_en_passant(pawn.y, pawn.x - 1)) {
+    if (this.can_white_en_passant(pawn.y, pawn.x - 1)) {
       this.temp_cells = lodash.cloneDeep(this.cells);
       this.temp_cells[pawn.y][pawn.x] = "";
       this.temp_cells[pawn.y][pawn.x - 1] = "";
       this.temp_cells[pawn.y - 1][pawn.x - 1] = this.cells[pawn.y][pawn.x];
-      if (!white_king_attacked(new Cell(king.y, king.x)))
+      if (!this.white_king_attacked(new Cell(king.y, king.x)))
         available_movements.add(
           `${piece},${pawn.y},${pawn.x},${piece},${pawn.y - 1},${pawn.x - 1},${
             this.cells[pawn.y][pawn.x - 1]
@@ -748,17 +749,17 @@ class Positions {
     let king = this.white_pieces["wk"];
     let available_movements = new Set();
     this.bishop_movements.forEach((bishop_movement) => {
-      position_ = new Cell(bishop.y, bishop.x);
+      let position_ = new Cell(bishop.y, bishop.x);
       while (true) {
         position_.x += bishop_movement.x;
         position_.y += bishop_movement.y;
-        cell_ = valid_position(position_.y, position_.x);
+        let cell_ = this.valid_position(position_.y, position_.x);
         if (cell_ == "" || cell_.match(/^b/)) {
           this.temp_cells = lodash.cloneDeep(this.cells);
           this.temp_cells[bishop.y][bishop.x] = "";
           this.temp_cells[position_.y][position_.x] =
             this.cells[bishop.y][bishop.x];
-          if (!white_king_attacked(new Cell(king.y, king.x)))
+          if (!this.white_king_attacked(new Cell(king.y, king.x)))
             available_movements.add(
               `${piece},${bishop.y},${bishop.x},${piece},${position_.y},${
                 position_.x
@@ -779,13 +780,13 @@ class Positions {
       while (true) {
         position_.x += rock_movement.x;
         position_.y += rock_movement.y;
-        let cell_ = valid_position(position_.y, position_.x);
+        let cell_ = this.valid_position(position_.y, position_.x);
         if (cell_ == "" || cell_.match(/^b/)) {
           this.temp_cells = lodash.cloneDeep(this.cells);
           this.temp_cells[rock.y][rock.x] = "";
           this.temp_cells[position_.y][position_.x] =
             this.cells[rock.y][rock.x];
-          if (!white_king_attacked(new Cell(king.y, king.x)))
+          if (!this.white_king_attacked(new Cell(king.y, king.x)))
             available_movements.add(
               `${piece},${rock.y},${rock.x},${piece},${position_.y},${
                 position_.x
@@ -806,13 +807,13 @@ class Positions {
       while (true) {
         position_.x += rock_movement.x;
         position_.y += rock_movement.y;
-        let cell_ = valid_position(position_.y, position_.x);
+        let cell_ = this.valid_position(position_.y, position_.x);
         if (cell_ == "" || cell_.match(/^b/)) {
           this.temp_cells = lodash.cloneDeep(this.cells);
           this.temp_cells[queen.y][queen.x] = "";
           this.temp_cells[position_.y][position_.x] =
             this.cells[queen.y][queen.x];
-          if (!white_king_attacked(new Cell(king.y, king.x)))
+          if (!this.white_king_attacked(new Cell(king.y, king.x)))
             available_movements.add(
               `${piece},${queen.y},${queen.x},${piece},${position_.y},${
                 position_.x
@@ -827,13 +828,13 @@ class Positions {
       while (true) {
         position_.x += bishop_movement.x;
         position_.y += bishop_movement.y;
-        let cell_ = valid_position(position_.y, position_.x);
+        let cell_ = this.valid_position(position_.y, position_.x);
         if (cell_ == "" || cell_.match(/^b/)) {
           this.temp_cells = lodash.cloneDeep(this.cells);
           this.temp_cells[queen.y][queen.x] = "";
           this.temp_cells[position_.y][position_.x] =
             this.cells[queen.y][queen.x];
-          if (!white_king_attacked(new Cell(king.y, king.x)))
+          if (!this.white_king_attacked(new Cell(king.y, king.x)))
             available_movements.add(
               `${piece},${queen.y},${queen.x},${piece},${position_.y},${
                 position_.x
@@ -848,8 +849,8 @@ class Positions {
 
   attacked_by_black_pawn = (y, x) => {
     if (
-      valid_temp_piece(y - 1, x + 1, 0, 2) == "bp" ||
-      valid_temp_piece(y - 1, x - 1, 0, 2) == "bp"
+      this.valid_temp_piece(y - 1, x + 1, 0, 2) == "bp" ||
+      this.valid_temp_piece(y - 1, x - 1, 0, 2) == "bp"
     )
       return true;
     return false;
@@ -857,14 +858,14 @@ class Positions {
 
   attacked_by_black_knight = (y, x) => {
     if (
-      valid_temp_piece(y - 2, x + 1, 0, 2) == "bn" ||
-      valid_temp_piece(y - 2, x - 1, 0, 2) == "bn" ||
-      valid_temp_piece(y + 2, x - 1, 0, 2) == "bn" ||
-      valid_temp_piece(y + 2, x + 1, 0, 2) == "bn" ||
-      valid_temp_piece(y - 1, x + 2, 0, 2) == "bn" ||
-      valid_temp_piece(y - 1, x - 2, 0, 2) == "bn" ||
-      valid_temp_piece(y + 1, x + 2, 0, 2) == "bn" ||
-      valid_temp_piece(y + 1, x - 2, 0, 2) == "bn"
+      this.valid_temp_piece(y - 2, x + 1, 0, 2) == "bn" ||
+      this.valid_temp_piece(y - 2, x - 1, 0, 2) == "bn" ||
+      this.valid_temp_piece(y + 2, x - 1, 0, 2) == "bn" ||
+      this.valid_temp_piece(y + 2, x + 1, 0, 2) == "bn" ||
+      this.valid_temp_piece(y - 1, x + 2, 0, 2) == "bn" ||
+      this.valid_temp_piece(y - 1, x - 2, 0, 2) == "bn" ||
+      this.valid_temp_piece(y + 1, x + 2, 0, 2) == "bn" ||
+      this.valid_temp_piece(y + 1, x - 2, 0, 2) == "bn"
     )
       return true;
     return false;
@@ -872,14 +873,14 @@ class Positions {
 
   attacked_by_black_king = (y, x) => {
     if (
-      valid_temp_position(y - 1, x - 1) == "bk" ||
-      valid_temp_position(y - 1, x) == "bk" ||
-      valid_temp_position(y - 1, x + 1) == "bk" ||
-      valid_temp_position(y, x - 1) == "bk" ||
-      valid_temp_position(y, x + 1) == "bk" ||
-      valid_temp_position(y + 1, x - 1) == "bk" ||
-      valid_temp_position(y + 1, x) == "bk" ||
-      valid_temp_position(y + 1, x + 1) == "bk"
+      this.valid_temp_position(y - 1, x - 1) == "bk" ||
+      this.valid_temp_position(y - 1, x) == "bk" ||
+      this.valid_temp_position(y - 1, x + 1) == "bk" ||
+      this.valid_temp_position(y, x - 1) == "bk" ||
+      this.valid_temp_position(y, x + 1) == "bk" ||
+      this.valid_temp_position(y + 1, x - 1) == "bk" ||
+      this.valid_temp_position(y + 1, x) == "bk" ||
+      this.valid_temp_position(y + 1, x + 1) == "bk"
     )
       return true;
     return false;
@@ -893,13 +894,13 @@ class Positions {
         new_y += bishop_movement.y;
         new_x += bishop_movement.x;
         if (
-          valid_temp_piece(new_y, new_x, 0, 2) == "bq" ||
-          valid_temp_piece(new_y, new_x, 0, 2) == "bb"
+          this.valid_temp_piece(new_y, new_x, 0, 2) == "bq" ||
+          this.valid_temp_piece(new_y, new_x, 0, 2) == "bb"
         )
           return true;
         else if (
-          valid_temp_position(new_y, new_x) == "v" ||
-          valid_temp_position(new_y, new_x) != ""
+          this.valid_temp_position(new_y, new_x) == "v" ||
+          this.valid_temp_position(new_y, new_x) != ""
         )
           break;
       }
@@ -915,13 +916,13 @@ class Positions {
         new_y += rock_movement.y;
         new_x += rock_movement.x;
         if (
-          valid_temp_piece(new_y, new_x, 0, 2) == "bq" ||
-          valid_temp_piece(new_y, new_x, 0, 2) == "br"
+          this.valid_temp_piece(new_y, new_x, 0, 2) == "bq" ||
+          this.valid_temp_piece(new_y, new_x, 0, 2) == "br"
         )
           return true;
         else if (
-          valid_temp_position(new_y, new_x) == "v" ||
-          valid_temp_position(new_y, new_x) != ""
+          this.valid_temp_position(new_y, new_x) == "v" ||
+          this.valid_temp_position(new_y, new_x) != ""
         )
           break;
       }
@@ -931,8 +932,8 @@ class Positions {
 
   attacked_by_white_pawn = (y, x) => {
     if (
-      valid_temp_piece(y + 1, x + 1, 0, 2) == "wp" ||
-      valid_temp_piece(y + 1, x - 1, 0, 2) == "wp"
+      this.valid_temp_piece(y + 1, x + 1, 0, 2) == "wp" ||
+      this.valid_temp_piece(y + 1, x - 1, 0, 2) == "wp"
     )
       return true;
     return false;
@@ -940,14 +941,14 @@ class Positions {
 
   attacked_by_white_knight = (y, x) => {
     if (
-      valid_temp_piece(y - 2, x + 1, 0, 2) == "wn" ||
-      valid_temp_piece(y - 2, x - 1, 0, 2) == "wn" ||
-      valid_temp_piece(y + 2, x - 1, 0, 2) == "wn" ||
-      valid_temp_piece(y + 2, x + 1, 0, 2) == "wn" ||
-      valid_temp_piece(y - 1, x + 2, 0, 2) == "wn" ||
-      valid_temp_piece(y - 1, x - 2, 0, 2) == "wn" ||
-      valid_temp_piece(y + 1, x + 2, 0, 2) == "wn" ||
-      valid_temp_piece(y + 1, x - 2, 0, 2) == "wn"
+      this.valid_temp_piece(y - 2, x + 1, 0, 2) == "wn" ||
+      this.valid_temp_piece(y - 2, x - 1, 0, 2) == "wn" ||
+      this.valid_temp_piece(y + 2, x - 1, 0, 2) == "wn" ||
+      this.valid_temp_piece(y + 2, x + 1, 0, 2) == "wn" ||
+      this.valid_temp_piece(y - 1, x + 2, 0, 2) == "wn" ||
+      this.valid_temp_piece(y - 1, x - 2, 0, 2) == "wn" ||
+      this.valid_temp_piece(y + 1, x + 2, 0, 2) == "wn" ||
+      this.valid_temp_piece(y + 1, x - 2, 0, 2) == "wn"
     )
       return true;
     return false;
@@ -955,14 +956,14 @@ class Positions {
 
   attacked_by_white_king = (y, x) => {
     if (
-      valid_temp_position(y - 1, x - 1) == "wk" ||
-      valid_temp_position(y - 1, x) == "wk" ||
-      valid_temp_position(y - 1, x + 1) == "wk" ||
-      valid_temp_position(y, x - 1) == "wk" ||
-      valid_temp_position(y, x + 1) == "wk" ||
-      valid_temp_position(y + 1, x - 1) == "wk" ||
-      valid_temp_position(y + 1, x) == "wk" ||
-      valid_temp_position(y + 1, x + 1) == "wk"
+      this.valid_temp_position(y - 1, x - 1) == "wk" ||
+      this.valid_temp_position(y - 1, x) == "wk" ||
+      this.valid_temp_position(y - 1, x + 1) == "wk" ||
+      this.valid_temp_position(y, x - 1) == "wk" ||
+      this.valid_temp_position(y, x + 1) == "wk" ||
+      this.valid_temp_position(y + 1, x - 1) == "wk" ||
+      this.valid_temp_position(y + 1, x) == "wk" ||
+      this.valid_temp_position(y + 1, x + 1) == "wk"
     )
       return true;
     return false;
@@ -976,13 +977,13 @@ class Positions {
         new_y += bishop_movement.y;
         new_x += bishop_movement.x;
         if (
-          valid_temp_piece(new_y, new_x, 0, 2) == "wq" ||
-          valid_temp_piece(new_y, new_x, 0, 2) == "wb"
+          this.valid_temp_piece(new_y, new_x, 0, 2) == "wq" ||
+          this.valid_temp_piece(new_y, new_x, 0, 2) == "wb"
         )
           return true;
         else if (
-          valid_temp_position(new_y, new_x) == "v" ||
-          valid_temp_position(new_y, new_x) != ""
+          this.valid_temp_position(new_y, new_x) == "v" ||
+          this.valid_temp_position(new_y, new_x) != ""
         )
           break;
       }
@@ -998,13 +999,13 @@ class Positions {
         new_y += rock_movement.y;
         new_x += rock_movement.x;
         if (
-          valid_temp_piece(new_y, new_x, 0, 2) == "wq" ||
-          valid_temp_piece(new_y, new_x, 0, 2) == "wr"
+          this.valid_temp_piece(new_y, new_x, 0, 2) == "wq" ||
+          this.valid_temp_piece(new_y, new_x, 0, 2) == "wr"
         )
           return true;
         else if (
-          valid_temp_position(new_y, new_x) == "v" ||
-          valid_temp_position(new_y, new_x) != ""
+          this.valid_temp_position(new_y, new_x) == "v" ||
+          this.valid_temp_position(new_y, new_x) != ""
         )
           break;
       }
@@ -1030,10 +1031,10 @@ class Positions {
   set_initial_board = () => {
     this.cells = [...Array(8)].map((x) => (x = Array(8).fill("")));
     this.temp_cells = [...Array(8)].map((x) => (x = Array(8).fill("")));
-    this.black_pieces.forEach((piece, position) => {
+    Object.entries(this.black_pieces).forEach(([piece, position]) => {
       this.cells[position.y][position.x] = piece;
     });
-    this.white_pieces.forEach((piece, position) => {
+    Object.entries(this.white_pieces).forEach(([piece, position]) => {
       this.cells[position.y][position.x] = piece;
     });
   };
@@ -1091,7 +1092,7 @@ class Positions {
     } else if (selected_move_info.last == "castling") {
       if (selected_move_info[5] == "6")
         this.black_pieces["br2"] = new Cell(0, 5);
-      else this.black_pieces["br1"] = Cell.new(0, 3);
+      else this.black_pieces["br1"] = new Cell(0, 3);
       this.black_long_castling = false;
       this.black_short_castling = false;
     }
