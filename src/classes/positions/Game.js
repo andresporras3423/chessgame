@@ -1,5 +1,5 @@
-import Positions from "./Positions";
-import BoardData from "./BoardData";
+import Positions from "./Positions.js";
+import BoardData from "./BoardData.js";
 
 class Game {
   constructor() {}

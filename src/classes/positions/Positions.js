@@ -1,5 +1,5 @@
-const lodash = require("lodash");
-import Cell from "./Cell";
+import lodash from "lodash";
+import Cell from "./Cell.js";
 
 class Positions {
   constructor() {
