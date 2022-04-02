@@ -51,8 +51,8 @@ class Game {
   is_it_game_over = (total_movements) => {
     if (
       total_movements == 0 ||
-      this.positions.black_pieces.keys.length +
-        this.positions.white_pieces.keys.length ==
+      Object.keys(this.positions.black_pieces).length +
+      Object.keys(this.positions.white_pieces).length ==
         2 ||
       this.positions.checkmate_still_possible == false
     ) {
@@ -63,16 +63,16 @@ class Game {
   };
 
   add_recent_board = (total_movements) => {
-    this.board = new BoardData(give_current_board,
-                             this.positions.black_pieces.keys.length,
-                             this.positions.white_pieces.keys.length,
+    this.board = new BoardData(this.give_current_board,
+                             Object.keys(this.positions.black_pieces).length,
+                             Object.keys(this.positions.white_pieces).length,
                              this.positions.black_long_castling,
                              this.positions.black_short_castling,
                              this.positions.white_long_castling,
                              this.positions.white_short_castling,
-                             last_movement_reduced,
+                             this.last_movement_reduced(),
                              total_movements,
-                             [",", "b"].includes(last_movement_reduced[0]) ? "white" : "black");
+                             [",", "b"].includes(this.last_movement_reduced()[0]) ? "white" : "black");
   };
 
   last_movement_reduced = () => {
