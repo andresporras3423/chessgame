@@ -8,7 +8,7 @@ class Game {
     this.positions = new Positions();
     this.moves_done = 0;
     this.boardData = {};
-    this.positions.set_initial_board();
+    this.positions.set_board();
     this.next_white_move();
   };
 
@@ -21,7 +21,7 @@ class Game {
     let rnd = Math.floor(Math.random() * movements.length);
     let last_movement = movements[rnd];
     this.positions.update_board_details_after_white_move(last_movement);
-    this.positions.set_initial_board();
+    this.positions.set_board();
     this.next_black_move();
   };
 
@@ -34,7 +34,7 @@ class Game {
     let rnd = Math.floor(Math.random() * movements.length);
     let last_movement = movements[rnd];
     this.positions.update_board_details_after_black_move(last_movement);
-    this.positions.set_initial_board();
+    this.positions.set_board();
     this.next_white_move();
   };
 
