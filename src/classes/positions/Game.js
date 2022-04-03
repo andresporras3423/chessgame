@@ -13,7 +13,8 @@ class Game {
   };
 
   next_white_move = () => {
-    let movements = Array.from(this.positions.available_white_moves());
+    let set_movements = this.positions.available_white_moves();
+    let movements = Array.from(set_movements);
     if (this.is_it_game_over(movements.length)) return;
     this.add_recent_board(movements.length);
     this.print_last_board_info();
@@ -25,7 +26,8 @@ class Game {
   };
 
   next_black_move = () => {
-    let movements = Array.from(this.positions.available_black_moves());
+    let set_movements = this.positions.available_black_moves();
+    let movements = Array.from(set_movements);
     if (this.is_it_game_over(movements.length)) return;
     this.add_recent_board(movements.length);
     this.print_last_board_info();
@@ -56,7 +58,7 @@ class Game {
         2 ||
       this.positions.checkmate_still_possible == false
     ) {
-      if (total_movements == 0) add_recent_board(total_movements);
+      if (total_movements == 0) this.add_recent_board(total_movements);
       return true;
     }
     return false;
@@ -81,8 +83,8 @@ class Game {
 
   print_last_board_info = () => {
     this.moves_done++;
-    console.log(`turn: ${(this.moves_done + 1) / 2}`);
-    console.log(this.board.print_info);
+    console.log(`turn: ${Math.ceil(this.moves_done / 2)}`);
+    console.log(this.board.print_info());
   };
 }
 export default Game;
