@@ -171,9 +171,6 @@ class Positions {
 
   available_black_king_moves = () => {
     let king = this.black_pieces["bk"];
-    if(king===undefined){
-      console.log();
-    }
     let available_movements = new Set();
     for(let index=0; index<this.king_movements.length;index++){
       let king_movement = this.king_movements[index];
@@ -544,9 +541,6 @@ class Positions {
 
   available_white_king_moves = () => {
     let king = this.white_pieces["wk"];
-    if(king===undefined){
-      console.log();
-    }
     let available_movements = new Set();
     for(let index=0; index<this.king_movements.length;index++){
       let king_movement = this.king_movements[index];
@@ -1100,16 +1094,10 @@ class Positions {
   update_board_details_after_white_move = (last_move) => {
     let selected_move_info = last_move.split(",");
     if (selected_move_info.at(-1) != ""){
-      if(selected_move_info.at(-1)==="bk"){
-        console.log()
-      }
       delete this.black_pieces[selected_move_info.at(-1)]; // unless change of position with no capture
     }
     if (selected_move_info[0] != selected_move_info[3]) {
       // if promotion
-      if(selected_move_info[0]==="wk"){
-        console.log()
-      }
       delete this.white_pieces[selected_move_info[0]];
       this.white_pieces[selected_move_info[3]] = new Cell(
         parseInt(selected_move_info[4]),
@@ -1155,16 +1143,10 @@ class Positions {
   update_board_details_after_black_move = (last_move) => {
     let selected_move_info = last_move.split(",");
     if (selected_move_info.at(-1) != ""){
-      if(selected_move_info.at(-1)==="wk"){
-        console.log()
-      }
       delete this.white_pieces[selected_move_info.at(-1)]; // if not change of position with no capture
     }
     if (selected_move_info[0] != selected_move_info[3]) {
       // if promotion
-      if(selected_move_info[0]==="bk"){
-        console.log()
-      }
       delete this.black_pieces[selected_move_info[0]];
       this.black_pieces[selected_move_info[3]] = new Cell(
         parseInt(selected_move_info[4]),

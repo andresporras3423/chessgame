@@ -33,9 +33,6 @@ class Game {
     this.print_last_board_info();
     let rnd = Math.floor(Math.random() * movements.length);
     let last_movement = movements[rnd];
-    if(last_movement.split(",").includes("-1")){
-      console.log();
-    }
     this.positions.update_board_details_after_black_move(last_movement);
     this.positions.set_initial_board();
     this.next_white_move();
@@ -45,9 +42,6 @@ class Game {
     this.current_board = "";
     this.positions.cells.forEach((row, i) => {
       row.forEach((cell, j) => {
-        if(cell.substring(0, 2)=="-1"){
-          console.log();
-        }
         this.current_board += cell.substring(0, 2);
         if (j < 7) this.current_board += ",";
       });
