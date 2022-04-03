@@ -158,7 +158,7 @@ class Positions {
             ...this.available_black_queen_moves(piece, position),
           ]);
         }
-      else if ((piece = ~/^(bp)/))
+      else if (piece.match(/^(bp)/))
         {
           moves = new Set([
             ...moves,
@@ -175,7 +175,8 @@ class Positions {
       console.log();
     }
     let available_movements = new Set();
-    this.king_movements.forEach((king_movement) => {
+    for(let index=0; index<this.king_movements.length;index++){
+      let king_movement = this.king_movements[index];
       let n_cell = this.valid_position(
         king.y + king_movement.y,
         king.x + king_movement.x
@@ -197,7 +198,7 @@ class Positions {
           );
         }
       }
-    });
+    }
     this.temp_cells = lodash.cloneDeep(this.cells);
     const king_on_check = this.black_king_attacked(new Cell(king.y, king.x));
     if (
@@ -235,7 +236,8 @@ class Positions {
   available_black_knight_moves = (piece, knight) => {
     const king = this.black_pieces["bk"];
     let available_movements = new Set();
-    this.knight_movements.forEach((knight_movement) => {
+    for(let index=0; index<this.knight_movements.length;index++){
+      let knight_movement = this.knight_movements[index];
       let cell_ = this.valid_position(
         knight.y + knight_movement.y,
         knight.x + knight_movement.x
@@ -258,7 +260,7 @@ class Positions {
           );
         }
       }
-    });
+    }
     return available_movements;
   };
 
@@ -405,7 +407,8 @@ class Positions {
   available_black_bishop_moves = (piece, bishop) => {
     let king = this.black_pieces["bk"];
     let available_movements = new Set();
-    this.bishop_movements.forEach((bishop_movement) => {
+    for(let index=0; index<this.bishop_movements.length;index++){
+      let bishop_movement = this.bishop_movements[index];
       let position_ = new Cell(bishop.y, bishop.x);
       while (true) {
         position_.x += bishop_movement.x;
@@ -425,14 +428,15 @@ class Positions {
         }
         if (cell_ != "") break;
       }
-    });
+    }
     return available_movements;
   };
 
   available_black_rock_moves = (piece, rock) => {
     let king = this.black_pieces["bk"];
     let available_movements = new Set();
-    this.rock_movements.forEach((rock_movement) => {
+    for(let index=0; index<this.bishop_movements.length;index++){
+      let rock_movement = this.rock_movements[index];
       let position_ = new Cell(rock.y, rock.x);
       while (true) {
         position_.x += rock_movement.x;
@@ -452,14 +456,15 @@ class Positions {
         }
         if (cell_ != "") break;
       }
-    });
+    }
     return available_movements;
   };
 
   available_black_queen_moves = (piece, queen) => {
     let king = this.black_pieces["bk"];
     let available_movements = new Set();
-    this.rock_movements.forEach((rock_movement) => {
+    for(let index=0; index<this.rock_movements.length;index++){
+      let rock_movement = this.rock_movements[index];
       let position_ = new Cell(queen.y, queen.x);
       while (true) {
         position_.x += rock_movement.x;
@@ -479,8 +484,9 @@ class Positions {
         }
         if (cell_ != "") break;
       }
-    });
-    this.bishop_movements.forEach((bishop_movement) => {
+    }
+    for(let index=0; index<this.bishop_movements.length;index++){
+      let bishop_movement = this.bishop_movements[index];
       let position_ = new Cell(queen.y, queen.x);
       while (true) {
         position_.x += bishop_movement.x;
@@ -500,7 +506,7 @@ class Positions {
         }
         if (cell_ != "") break;
       }
-    });
+    }
     return available_movements;
   };
 
@@ -542,7 +548,8 @@ class Positions {
       console.log();
     }
     let available_movements = new Set();
-    this.king_movements.forEach((king_movement) => {
+    for(let index=0; index<this.king_movements.length;index++){
+      let king_movement = this.king_movements[index];
       let n_cell = this.valid_position(
         king.y + king_movement.y,
         king.x + king_movement.x
@@ -563,7 +570,7 @@ class Positions {
             },${this.cells[king.y + king_movement.y][king.x + king_movement.x]}`
           );
       }
-    });
+    }
     this.temp_cells = lodash.cloneDeep(this.cells);
     if (
       this.white_long_castling &&
@@ -598,7 +605,8 @@ class Positions {
   available_white_knight_moves = (piece, knight) => {
     let king = this.white_pieces["wk"];
     let available_movements = new Set();
-    this.knight_movements.forEach((knight_movement) => {
+    for(let index=0; index<this.knight_movements.length;index++){
+      let knight_movement = this.knight_movements[index];
       let cell_ = this.valid_position(
         knight.y + knight_movement.y,
         knight.x + knight_movement.x
@@ -620,7 +628,7 @@ class Positions {
             }`
           );
       }
-    });
+    }
     return available_movements;
   };
 
@@ -767,7 +775,8 @@ class Positions {
   available_white_bishop_moves = (piece, bishop) => {
     let king = this.white_pieces["wk"];
     let available_movements = new Set();
-    this.bishop_movements.forEach((bishop_movement) => {
+    for(let index=0; index<this.bishop_movements.length;index++){
+      let bishop_movement = this.bishop_movements[index];
       let position_ = new Cell(bishop.y, bishop.x);
       while (true) {
         position_.x += bishop_movement.x;
@@ -787,14 +796,15 @@ class Positions {
         }
         if (cell_ != "") break;
       }
-    });
+    }
     return available_movements;
   };
 
   available_white_rock_moves = (piece, rock) => {
     let king = this.white_pieces["wk"];
     let available_movements = new Set();
-    this.rock_movements.forEach((rock_movement) => {
+    for(let index=0; index<this.rock_movements.length;index++){
+      let rock_movement = this.rock_movements[index];
       let position_ = new Cell(rock.y, rock.x);
       while (true) {
         position_.x += rock_movement.x;
@@ -814,14 +824,15 @@ class Positions {
         }
         if (cell_ != "") break;
       }
-    });
+    }
     return available_movements;
   };
 
   available_white_queen_moves = (piece, queen) => {
     let king = this.white_pieces["wk"];
     let available_movements = new Set();
-    this.rock_movements.forEach((rock_movement) => {
+    for(let index=0; index<this.rock_movements.length;index++){
+      let rock_movement = this.rock_movements[index];
       let position_ = new Cell(queen.y, queen.x);
       while (true) {
         position_.x += rock_movement.x;
@@ -841,8 +852,9 @@ class Positions {
         }
         if (cell_ != "") break;
       }
-    });
-    this.bishop_movements.forEach((bishop_movement) => {
+    }
+    for(let index=0; index<this.bishop_movements.length;index++){
+      let bishop_movement = this.bishop_movements[index];
       let position_ = new Cell(queen.y, queen.x);
       while (true) {
         position_.x += bishop_movement.x;
@@ -862,7 +874,7 @@ class Positions {
         }
         if (cell_ != "") break;
       }
-    });
+    }
     return available_movements;
   };
 
