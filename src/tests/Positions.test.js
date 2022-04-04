@@ -129,3 +129,123 @@ test('test N°2 black promotion', () => {
   let movements = Array.from(set_movements);
   expect(movements.length).toBe(44);
 });
+test('black with no movements available', () => {
+  clear_board();
+  no_castling();
+  positions.white_pieces["wk"] = new Cell(2, 4);
+  positions.white_pieces["wp4"] = new Cell(1, 4);
+  positions.black_pieces["bk"] = new Cell(0, 4);
+  positions.set_board();
+  let set_movements = positions.available_black_moves();
+  let movements = Array.from(set_movements);
+  expect(movements.length).toBe(0);
+});
+test('white with no movements available', () => {
+  clear_board();
+  no_castling();
+  positions.black_pieces["bk"] = new Cell(5, 4);
+  positions.black_pieces["bp4"] = new Cell(6, 4);
+  positions.white_pieces["wk"] = new Cell(7, 4);
+  positions.set_board();
+  let set_movements = positions.available_white_moves();
+  let movements = Array.from(set_movements);
+  expect(movements.length).toBe(0);
+});
+
+test('white with no movements available N°2', () => {
+  clear_board();
+  no_castling();
+  positions.white_pieces["wk"] = new Cell(7, 7);
+  positions.white_pieces["wp1"] = new Cell(5, 0);
+  positions.black_pieces["bb2"] = new Cell(7, 6);
+  positions.black_pieces["bp7"] = new Cell(6, 7);
+  positions.black_pieces["bp8"] = new Cell(5, 7);
+  positions.black_pieces["bp1"] = new Cell(4, 0);
+  positions.black_pieces["bk"] = new Cell(0, 7);
+  positions.set_board();
+  let set_movements = positions.available_white_moves();
+  let movements = Array.from(set_movements);
+  expect(movements.length).toBe(0);
+});
+test('black with no movements available N°2', () => {
+  clear_board();
+  no_castling();
+  positions.black_pieces["bk"] = new Cell(0, 7);
+  positions.black_pieces["bp1"] = new Cell(4, 0);
+  positions.white_pieces["wb2"] = new Cell(0, 6);
+  positions.white_pieces["wp7"] = new Cell(1, 7);
+  positions.white_pieces["wp8"] = new Cell(2, 7);
+  positions.white_pieces["wp1"] = new Cell(5, 0);
+  positions.white_pieces["wk"] = new Cell(7, 7);
+  positions.set_board();
+  let set_movements = positions.available_black_moves();
+  let movements = Array.from(set_movements);
+  expect(movements.length).toBe(0);
+});
+
+test('white castling test 1', () => {
+  clear_board();
+  positions.white_pieces["wk"] = new Cell(7, 4);
+  positions.white_pieces["wr1"] = new Cell(7, 0);
+  positions.white_pieces["wr2"] = new Cell(7, 7);
+  positions.black_pieces["bk"] = new Cell(0, 1);
+  positions.set_board();
+  let set_movements = positions.available_white_moves();
+  let movements = Array.from(set_movements);
+  expect(movements.length).toBe(26);
+});
+
+test('white castling test 2', () => {
+  delete positions.white_pieces["wn2"];
+  delete positions.white_pieces["wb2"];
+  positions.set_board();
+  let set_movements = positions.available_white_moves();
+  let movements = Array.from(set_movements);
+  expect(movements.length).toBe(22);
+});
+
+test('white castling test 3', () => {
+  delete positions.white_pieces["wn1"];
+  delete positions.white_pieces["wb1"];
+  delete positions.white_pieces["wq1"];
+  positions.set_board();
+  let set_movements = positions.available_white_moves();
+  let movements = Array.from(set_movements);
+  expect(movements.length).toBe(23);
+});
+
+test('white cant castling test 1', () => {
+  no_white_castling();
+  delete positions.white_pieces["wn1"];
+  delete positions.white_pieces["wb1"];
+  delete positions.white_pieces["wq1"];
+  delete positions.white_pieces["wn2"];
+  delete positions.white_pieces["wb2"];
+  positions.set_board();
+  let set_movements = positions.available_white_moves();
+  let movements = Array.from(set_movements);
+  expect(movements.length).toBe(23);
+});
+
+test('white cant castling test 2', () => {
+  delete positions.white_pieces["wn2"];
+  delete positions.white_pieces["wb2"];
+  delete positions.white_pieces["wp6"];
+  positions.black_pieces["bq1"]=new Cell(2,5);
+  positions.set_board();
+  let set_movements = positions.available_white_moves();
+  let movements = Array.from(set_movements);
+  expect(movements.length).toBe(18);
+});
+
+test('white cant castling test 3', () => {
+  delete positions.white_pieces["wn1"];
+  delete positions.white_pieces["wb1"];
+  delete positions.white_pieces["wq1"];
+  delete positions.white_pieces["wp4"];
+  positions.black_pieces["bq1"]=new Cell(2,3);
+  positions.set_board();
+  let set_movements = positions.available_white_moves();
+  let movements = Array.from(set_movements);
+  expect(movements.length).toBe(19);
+});
