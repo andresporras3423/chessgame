@@ -450,3 +450,27 @@ it('white en passant test 2', () => {
   let movements = Array.from(set_movements);
   expect(movements.length).toBe(23);
 });
+
+it('black king capture, test 1', () => {
+  clear_board();
+  no_castling();
+  positions.black_pieces["bk"] = new Cell(3,3);
+  positions.white_pieces["wp8"] = new Cell(4,3);
+  positions.white_pieces["wk"] = new Cell(0,0);
+  positions.set_board();
+  let set_movements = positions.available_black_moves();
+  let movements = Array.from(set_movements);
+  expect(movements.includes("bk,3,3,bk,4,3,wp8")).toBe(true);
+});
+
+it.only('white king capture, test 1', () => {
+  clear_board();
+  no_castling();
+  positions.white_pieces["wk"] = new Cell(4,3);
+  positions.black_pieces["bp8"] = new Cell(3,3);
+  positions.black_pieces["bk"] = new Cell(0,0);
+  positions.set_board();
+  let set_movements = positions.available_white_moves();
+  let movements = Array.from(set_movements);
+  expect(movements.includes("wk,4,3,wk,3,3,bp8")).toBe(true);
+});
