@@ -463,7 +463,7 @@ it('black king capture, test 1', () => {
   expect(movements.includes("bk,3,3,bk,4,3,wp8")).toBe(true);
 });
 
-it.only('white king capture, test 1', () => {
+it('white king capture, test 1', () => {
   clear_board();
   no_castling();
   positions.white_pieces["wk"] = new Cell(4,3);
@@ -473,4 +473,30 @@ it.only('white king capture, test 1', () => {
   let set_movements = positions.available_white_moves();
   let movements = Array.from(set_movements);
   expect(movements.includes("wk,4,3,wk,3,3,bp8")).toBe(true);
+});
+
+it('black pawn capture, test 1', () => {
+  clear_board();
+  no_castling();
+  positions.black_pieces["bk"] = new Cell(0,0);
+  positions.black_pieces["bp4"] = new Cell(3,3);
+  positions.white_pieces["wp5"] = new Cell(4,4);
+  positions.white_pieces["wk"] = new Cell(7,7);
+  positions.set_board();
+  let set_movements = positions.available_black_moves();
+  let movements = Array.from(set_movements);
+  expect(movements.includes("bp4,3,3,bp4,4,4,wp5")).toBe(true);
+});
+
+it('white pawn capture, test 1', () => {
+  clear_board();
+  no_castling();
+  positions.black_pieces["bk"] = new Cell(0,0);
+  positions.black_pieces["bp4"] = new Cell(3,3);
+  positions.white_pieces["wp5"] = new Cell(4,4);
+  positions.white_pieces["wk"] = new Cell(7,7);
+  positions.set_board();
+  let set_movements = positions.available_white_moves();
+  let movements = Array.from(set_movements);
+  expect(movements.includes("wp5,4,4,wp5,3,3,bp4")).toBe(true);
 });
