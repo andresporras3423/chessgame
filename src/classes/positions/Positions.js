@@ -59,8 +59,8 @@ class Positions {
     this.next_white_rock = 3;
     this.next_white_bishop = 3;
     this.next_white_knight = 3;
-    this.cells = [...Array(8)].map((x) => (x = Array(8).fill("x")));
-    this.temp_cells = [...Array(8)].map((x) => (x = Array(8).fill("x")));
+    this.cells = [...Array(8)].map((x) => (x = Array(8).fill("")));
+    this.temp_cells = [...Array(8)].map((x) => (x = Array(8).fill("")));
 
     this.black_pieces = {
       br1: new Cell(0, 0),
@@ -361,7 +361,7 @@ class Positions {
       this.temp_cells[pawn.y][pawn.x] = "";
       this.temp_cells[pawn.y][pawn.x - 1] = "";
       this.temp_cells[pawn.y + 1][pawn.x - 1] = this.cells[pawn.y][pawn.x];
-      if (this.black_king_attacked(new Cell(king.y, king.x)))
+      if (!this.black_king_attacked(new Cell(king.y, king.x)))
         available_movements.add(
           `${piece},${pawn.y},${pawn.x},${piece},${pawn.y + 1},${pawn.x - 1},${
             this.cells[pawn.y][pawn.x - 1]
