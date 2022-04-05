@@ -578,3 +578,55 @@ it('white rock capture, test 1', () => {
   let movements = Array.from(set_movements);
   expect(movements.includes("wr1,7,7,wr1,0,7,br1")).toBe(true);
 });
+
+it('black queen diagonal capture, test 1', () => {
+  clear_board();
+  no_castling();
+  positions.black_pieces["bk"] = new Cell(0,1);
+  positions.black_pieces["bq1"] = new Cell(0,0);
+  positions.white_pieces["wq1"] = new Cell(7,7);
+  positions.white_pieces["wk"] = new Cell(7,6);
+  positions.set_board();
+  let set_movements = positions.available_black_moves();
+  let movements = Array.from(set_movements);
+  expect(movements.includes("bq1,0,0,bq1,7,7,wq1")).toBe(true);
+});
+
+it('white queen diagonal capture, test 1', () => {
+  clear_board();
+  no_castling();
+  positions.black_pieces["bk"] = new Cell(0,1);
+  positions.black_pieces["bq1"] = new Cell(0,0);
+  positions.white_pieces["wq1"] = new Cell(7,7);
+  positions.white_pieces["wk"] = new Cell(7,6);
+  positions.set_board();
+  let set_movements = positions.available_white_moves();
+  let movements = Array.from(set_movements);
+  expect(movements.includes("wq1,7,7,wq1,0,0,bq1")).toBe(true);
+});
+
+it('black queen rowcolumn capture, test 1', () => {
+  clear_board();
+  no_castling();
+  positions.black_pieces["bk"] = new Cell(0,6);
+  positions.black_pieces["bq1"] = new Cell(0,7);
+  positions.white_pieces["wq1"] = new Cell(7,7);
+  positions.white_pieces["wk"] = new Cell(7,6);
+  positions.set_board();
+  let set_movements = positions.available_black_moves();
+  let movements = Array.from(set_movements);
+  expect(movements.includes("bq1,0,7,bq1,7,7,wq1")).toBe(true);
+});
+
+it('white queen rowcolumn capture, test 1', () => {
+  clear_board();
+  no_castling();
+  positions.black_pieces["bk"] = new Cell(0,6);
+  positions.black_pieces["bq1"] = new Cell(0,7);
+  positions.white_pieces["wq1"] = new Cell(7,7);
+  positions.white_pieces["wk"] = new Cell(7,6);
+  positions.set_board();
+  let set_movements = positions.available_white_moves();
+  let movements = Array.from(set_movements);
+  expect(movements.includes("wq1,7,7,wq1,0,7,bq1")).toBe(true);
+});
