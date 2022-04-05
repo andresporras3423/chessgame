@@ -500,3 +500,81 @@ it('white pawn capture, test 1', () => {
   let movements = Array.from(set_movements);
   expect(movements.includes("wp5,4,4,wp5,3,3,bp4")).toBe(true);
 });
+
+it('black knight capture, test 1', () => {
+  clear_board();
+  no_castling();
+  positions.black_pieces["bk"] = new Cell(0,0);
+  positions.black_pieces["bn1"] = new Cell(3,4);
+  positions.white_pieces["wn1"] = new Cell(4,6);
+  positions.white_pieces["wk"] = new Cell(7,7);
+  positions.set_board();
+  let set_movements = positions.available_black_moves();
+  let movements = Array.from(set_movements);
+  expect(movements.includes("bn1,3,4,bn1,4,6,wn1")).toBe(true);
+});
+
+it('white knight capture, test 1', () => {
+  clear_board();
+  no_castling();
+  positions.black_pieces["bk"] = new Cell(0,0);
+  positions.black_pieces["bn1"] = new Cell(3,4);
+  positions.white_pieces["wn1"] = new Cell(4,6);
+  positions.white_pieces["wk"] = new Cell(7,7);
+  positions.set_board();
+  let set_movements = positions.available_white_moves();
+  let movements = Array.from(set_movements);
+  expect(movements.includes("wn1,4,6,wn1,3,4,bn1")).toBe(true);
+});
+
+it('black bishop capture, test 1', () => {
+  clear_board();
+  no_castling();
+  positions.black_pieces["bk"] = new Cell(0,7);
+  positions.black_pieces["bb1"] = new Cell(0,0);
+  positions.white_pieces["wb1"] = new Cell(7,7);
+  positions.white_pieces["wk"] = new Cell(7,0);
+  positions.set_board();
+  let set_movements = positions.available_black_moves();
+  let movements = Array.from(set_movements);
+  expect(movements.includes("bb1,0,0,bb1,7,7,wb1")).toBe(true);
+});
+
+it('white bishop capture, test 1', () => {
+  clear_board();
+  no_castling();
+  positions.black_pieces["bk"] = new Cell(0,7);
+  positions.black_pieces["bb1"] = new Cell(0,0);
+  positions.white_pieces["wb1"] = new Cell(7,7);
+  positions.white_pieces["wk"] = new Cell(7,0);
+  positions.set_board();
+  let set_movements = positions.available_white_moves();
+  let movements = Array.from(set_movements);
+  expect(movements.includes("wb1,7,7,wb1,0,0,bb1")).toBe(true);
+});
+
+it('black rock capture, test 1', () => {
+  clear_board();
+  no_castling();
+  positions.black_pieces["bk"] = new Cell(0,0);
+  positions.black_pieces["br1"] = new Cell(0,7);
+  positions.white_pieces["wr1"] = new Cell(7,7);
+  positions.white_pieces["wk"] = new Cell(7,0);
+  positions.set_board();
+  let set_movements = positions.available_black_moves();
+  let movements = Array.from(set_movements);
+  expect(movements.includes("br1,0,7,br1,7,7,wr1")).toBe(true);
+});
+
+it('white rock capture, test 1', () => {
+  clear_board();
+  no_castling();
+  positions.black_pieces["bk"] = new Cell(0,0);
+  positions.black_pieces["br1"] = new Cell(0,7);
+  positions.white_pieces["wr1"] = new Cell(7,7);
+  positions.white_pieces["wk"] = new Cell(7,0);;
+  positions.set_board();
+  let set_movements = positions.available_white_moves();
+  let movements = Array.from(set_movements);
+  expect(movements.includes("wr1,7,7,wr1,0,7,br1")).toBe(true);
+});
