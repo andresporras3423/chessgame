@@ -630,3 +630,133 @@ it('white queen rowcolumn capture, test 1', () => {
   let movements = Array.from(set_movements);
   expect(movements.includes("wq1,7,7,wq1,0,7,bq1")).toBe(true);
 });
+
+it('white queen moves to protect the king', () => {
+  clear_board();
+  no_castling();
+  positions.black_pieces["bk"] = new Cell(0,0);
+  positions.black_pieces["bq1"] = new Cell(7,0);
+  positions.white_pieces["wq1"] = new Cell(6,2);
+  positions.white_pieces["wk"] = new Cell(7,7);
+  positions.set_board();
+  let set_movements = positions.available_white_moves();
+  let movements = Array.from(set_movements);
+  expect(movements.length).toBe(5);
+});
+
+it('black queen moves to protect the king', () => {
+  clear_board();
+  no_castling();
+  positions.black_pieces["bk"] = new Cell(0,0);
+  positions.black_pieces["bq1"] = new Cell(1,5);
+  positions.white_pieces["wq1"] = new Cell(0,7);
+  positions.white_pieces["wk"] = new Cell(7,7);
+  positions.set_board();
+  let set_movements = positions.available_black_moves();
+  let movements = Array.from(set_movements);
+  expect(movements.length).toBe(5);
+});
+
+it('white rock moves to protect the king', () => {
+  clear_board();
+  no_castling();
+  positions.black_pieces["bk"] = new Cell(0,0);
+  positions.black_pieces["br1"] = new Cell(7,0);
+  positions.white_pieces["wr1"] = new Cell(6,1);
+  positions.white_pieces["wk"] = new Cell(7,7);
+  positions.set_board();
+  let set_movements = positions.available_white_moves();
+  let movements = Array.from(set_movements);
+  expect(movements.length).toBe(3);
+});
+
+it('black rock moves to protect the king', () => {
+  clear_board();
+  no_castling();
+  positions.black_pieces["bk"] = new Cell(0,0);
+  positions.black_pieces["br1"] = new Cell(1,6);
+  positions.white_pieces["wr1"] = new Cell(0,7);
+  positions.white_pieces["wk"] = new Cell(7,7);
+  positions.set_board();
+  let set_movements = positions.available_black_moves();
+  let movements = Array.from(set_movements);
+  expect(movements.length).toBe(3);
+});
+
+it('white bishop moves to protect the king', () => {
+  clear_board();
+  no_castling();
+  positions.black_pieces["bk"] = new Cell(0,1);
+  positions.black_pieces["bb1"] = new Cell(0,0);
+  positions.white_pieces["wb1"] = new Cell(7,5);
+  positions.white_pieces["wk"] = new Cell(7,7);
+  positions.set_board();
+  let set_movements = positions.available_white_moves();
+  let movements = Array.from(set_movements);
+  expect(movements.length).toBe(3);
+});
+
+it('black bishop moves to protect the king', () => {
+  clear_board();
+  no_castling();
+  positions.black_pieces["bk"] = new Cell(0,0);
+  positions.black_pieces["bb1"] = new Cell(0,2);
+  positions.white_pieces["wb1"] = new Cell(6,6);
+  positions.white_pieces["wk"] = new Cell(7,7);
+  positions.set_board();
+  let set_movements = positions.available_black_moves();
+  let movements = Array.from(set_movements);
+  expect(movements.length).toBe(3);
+});
+
+it('white knight moves to protect the king', () => {
+  clear_board();
+  no_castling();
+  positions.black_pieces["bk"] = new Cell(0,0);
+  positions.black_pieces["bq1"] = new Cell(7,0);
+  positions.white_pieces["wn1"] = new Cell(6,1);
+  positions.white_pieces["wk"] = new Cell(7,7);
+  positions.set_board();
+  let set_movements = positions.available_white_moves();
+  let movements = Array.from(set_movements);
+  expect(movements.length).toBe(3);
+});
+
+it('black knight moves to protect the king', () => {
+  clear_board();
+  no_castling();
+  positions.black_pieces["bk"] = new Cell(0,0);
+  positions.black_pieces["bn1"] = new Cell(1,6);
+  positions.white_pieces["wq1"] = new Cell(0,7);
+  positions.white_pieces["wk"] = new Cell(7,7);
+  positions.set_board();
+  let set_movements = positions.available_black_moves();
+  let movements = Array.from(set_movements);
+  expect(movements.length).toBe(3);
+});
+
+it('white pawn moves to protect the king', () => {
+  clear_board();
+  no_castling();
+  positions.black_pieces["bk"] = new Cell(0,0);
+  positions.black_pieces["bb1"] = new Cell(1,1);
+  positions.white_pieces["wp1"] = new Cell(6,5);
+  positions.white_pieces["wk"] = new Cell(7,7);
+  positions.set_board();
+  let set_movements = positions.available_white_moves();
+  let movements = Array.from(set_movements);
+  expect(movements.length).toBe(3);
+});
+
+it('black pawn moves to protect the king', () => {
+  clear_board();
+  no_castling();
+  positions.black_pieces["bk"] = new Cell(0,0);
+  positions.black_pieces["bp1"] = new Cell(1,2);
+  positions.white_pieces["wb1"] = new Cell(6,6);
+  positions.white_pieces["wk"] = new Cell(7,7);
+  positions.set_board();
+  let set_movements = positions.available_black_moves();
+  let movements = Array.from(set_movements);
+  expect(movements.length).toBe(3);
+});
