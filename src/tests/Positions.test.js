@@ -1067,3 +1067,160 @@ it('black pawn capture because king is been attacked', () => {
   let movements = Array.from(set_movements);
   expect(movements.length==1 && movements[0]=="bp3,1,2,bp3,2,1,wp4").toBe(true);
 });
+
+
+it('white king movements', () => {
+  clear_board();
+  no_castling();
+  positions.black_pieces["bk"] = new Cell(1,1);
+  positions.white_pieces["wk"] = new Cell(6,6);
+  positions.set_board();
+  let set_movements = positions.available_white_moves();
+  let movements = Array.from(set_movements);
+  expect(movements.length).toBe(8);
+});
+
+it('black king movements', () => {
+  clear_board();
+  no_castling();
+  positions.black_pieces["bk"] = new Cell(1,1);
+  positions.white_pieces["wk"] = new Cell(6,6);
+  positions.set_board();
+  let set_movements = positions.available_black_moves();
+  let movements = Array.from(set_movements);
+  expect(movements.length).toBe(8);
+});
+
+it('white queen movements', () => {
+  clear_board();
+  no_castling();
+  positions.black_pieces["bk"] = new Cell(1,1);
+  positions.white_pieces["wk"] = new Cell(6,6);
+  positions.white_pieces["wq1"] = new Cell(3,4);
+  positions.set_board();
+  let set_movements = positions.available_white_moves();
+  let movements = Array.from(set_movements);
+  expect(movements.length).toBe(35);
+});
+
+it('black queen movements', () => {
+  clear_board();
+  no_castling();
+  positions.black_pieces["bk"] = new Cell(1,1);
+  positions.white_pieces["wk"] = new Cell(6,6);
+  positions.black_pieces["bq1"] = new Cell(3,4);
+  positions.set_board();
+  let set_movements = positions.available_black_moves();
+  let movements = Array.from(set_movements);
+  expect(movements.length).toBe(35);
+});
+
+it('white rock movements', () => {
+  clear_board();
+  no_castling();
+  positions.black_pieces["bk"] = new Cell(1,1);
+  positions.white_pieces["wk"] = new Cell(6,6);
+  positions.white_pieces["wr1"] = new Cell(3,4);
+  positions.set_board();
+  let set_movements = positions.available_white_moves();
+  let movements = Array.from(set_movements);
+  expect(movements.length).toBe(22);
+});
+
+it('black rock movements', () => {
+  clear_board();
+  no_castling();
+  positions.black_pieces["bk"] = new Cell(1,1);
+  positions.white_pieces["wk"] = new Cell(6,6);
+  positions.black_pieces["br1"] = new Cell(3,4);
+  positions.set_board();
+  let set_movements = positions.available_black_moves();
+  let movements = Array.from(set_movements);
+  expect(movements.length).toBe(22);
+});
+
+it('white bishop movements', () => {
+  clear_board();
+  no_castling();
+  positions.black_pieces["bk"] = new Cell(1,1);
+  positions.white_pieces["wk"] = new Cell(6,6);
+  positions.white_pieces["wb1"] = new Cell(3,4);
+  positions.set_board();
+  let set_movements = positions.available_white_moves();
+  let movements = Array.from(set_movements);
+  expect(movements.length).toBe(21);
+});
+
+it('black bishop movements', () => {
+  clear_board();
+  no_castling();
+  positions.black_pieces["bk"] = new Cell(1,1);
+  positions.white_pieces["wk"] = new Cell(6,6);
+  positions.black_pieces["bb1"] = new Cell(3,4);
+  positions.set_board();
+  let set_movements = positions.available_black_moves();
+  let movements = Array.from(set_movements);
+  expect(movements.length).toBe(21);
+});
+
+it('white knight movements', () => {
+  clear_board();
+  no_castling();
+  positions.black_pieces["bk"] = new Cell(1,1);
+  positions.white_pieces["wk"] = new Cell(6,6);
+  positions.white_pieces["wn1"] = new Cell(4,4);
+  positions.set_board();
+  let set_movements = positions.available_white_moves();
+  let movements = Array.from(set_movements);
+  expect(movements.length).toBe(16);
+});
+
+it('black knight movements', () => {
+  clear_board();
+  no_castling();
+  positions.black_pieces["bk"] = new Cell(1,1);
+  positions.white_pieces["wk"] = new Cell(6,6);
+  positions.black_pieces["bn1"] = new Cell(4,4);
+  positions.set_board();
+  let set_movements = positions.available_black_moves();
+  let movements = Array.from(set_movements);
+  expect(movements.length).toBe(16);
+});
+
+it('white pawn movements', () => {
+  clear_board();
+  no_castling();
+  positions.last_movement = "bp7,1,6,bp7,3,6,";
+  positions.black_pieces["bk"] = new Cell(1,1);
+  positions.black_pieces["bp1"] = new Cell(5,0);
+  positions.black_pieces["bp3"] = new Cell(5,2);
+  positions.black_pieces["bp7"] = new Cell(3,6);
+  positions.black_pieces["bp4"] = new Cell(6,3);
+  positions.white_pieces["wk"] = new Cell(6,6);
+  positions.white_pieces["wp2"] = new Cell(6,1);
+  positions.white_pieces["wp8"] = new Cell(3,7);
+  positions.white_pieces["wp4"] = new Cell(1,4);
+  positions.set_board();
+  let set_movements = positions.available_white_moves();
+  let movements = Array.from(set_movements);
+  expect(movements.length).toBe(18);
+});
+
+it('black pawn movements', () => {
+  clear_board();
+  no_castling();
+  positions.last_movement = "wp1,6,1,wp1,4,1,";
+  positions.black_pieces["bk"] = new Cell(1,1);
+  positions.black_pieces["bp7"] = new Cell(1,6);
+  positions.black_pieces["bp0"] = new Cell(4,0);
+  positions.black_pieces["bp4"] = new Cell(6,3);
+  positions.white_pieces["wk"] = new Cell(6,6);
+  positions.white_pieces["wp6"] = new Cell(2,5);
+  positions.white_pieces["wp8"] = new Cell(2,7);
+  positions.white_pieces["wp1"] = new Cell(4,1);
+  positions.white_pieces["wp4"] = new Cell(1,4);
+  positions.set_board();
+  let set_movements = positions.available_black_moves();
+  let movements = Array.from(set_movements);
+  expect(movements.length).toBe(18);
+});
