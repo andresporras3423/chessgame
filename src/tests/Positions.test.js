@@ -1224,3 +1224,121 @@ it('black pawn movements', () => {
   let movements = Array.from(set_movements);
   expect(movements.length).toBe(18);
 });
+
+it('white king can capture when opponent queen attack from adjacent cell', () => {
+  clear_board();
+  no_castling();
+  positions.black_pieces["bk"] = new Cell(1,1);
+  positions.black_pieces["bq1"] = new Cell(6,5);
+  positions.white_pieces["wk"] = new Cell(6,6);
+  positions.set_board();
+  let set_movements = positions.available_white_moves();
+  let movements = Array.from(set_movements);
+  expect(movements.includes("wk,6,6,wk,6,5,bq1")).toBe(true);
+});
+
+it('black king can capture when opponent queen attack from adjacent cell', () => {
+  clear_board();
+  no_castling();
+  positions.black_pieces["bk"] = new Cell(1,1);
+  positions.white_pieces["wq1"] = new Cell(1,2);
+  positions.white_pieces["wk"] = new Cell(6,6);
+  positions.set_board();
+  let set_movements = positions.available_black_moves();
+  let movements = Array.from(set_movements);
+  expect(movements.includes("bk,1,1,bk,1,2,wq1")).toBe(true);
+});
+
+it('white king capture when opponent rock attack from adjacent cell', () => {
+  clear_board();
+  no_castling();
+  positions.black_pieces["bk"] = new Cell(1,1);
+  positions.black_pieces["br1"] = new Cell(6,5);
+  positions.white_pieces["wk"] = new Cell(6,6);
+  positions.set_board();
+  let set_movements = positions.available_white_moves();
+  let movements = Array.from(set_movements);
+  expect(movements.includes("wk,6,6,wk,6,5,br1")).toBe(true);
+});
+
+it('black king capture when opponent rock attack from adjacent cell', () => {
+  clear_board();
+  no_castling();
+  positions.black_pieces["bk"] = new Cell(1,1);
+  positions.white_pieces["wr1"] = new Cell(1,2);
+  positions.white_pieces["wk"] = new Cell(6,6);
+  positions.set_board();
+  let set_movements = positions.available_black_moves();
+  let movements = Array.from(set_movements);
+  expect(movements.includes("bk,1,1,bk,1,2,wr1")).toBe(true);
+});
+
+it('white king capture when opponent bishop attack from adjacent cell', () => {
+  clear_board();
+  no_castling();
+  positions.black_pieces["bk"] = new Cell(1,1);
+  positions.black_pieces["bb1"] = new Cell(5,5);
+  positions.white_pieces["wk"] = new Cell(6,6);
+  positions.set_board();
+  let set_movements = positions.available_white_moves();
+  let movements = Array.from(set_movements);
+  expect(movements.includes("wk,6,6,wk,5,5,bb1")).toBe(true);
+});
+
+it('black king capture when opponent bishop attack from adjacent cell', () => {
+  clear_board();
+  no_castling();
+  positions.black_pieces["bk"] = new Cell(1,1);
+  positions.white_pieces["wb1"] = new Cell(2,2);
+  positions.white_pieces["wk"] = new Cell(6,6);
+  positions.set_board();
+  let set_movements = positions.available_black_moves();
+  let movements = Array.from(set_movements);
+  expect(movements.includes("bk,1,1,bk,2,2,wb1")).toBe(true);
+});
+
+it('white king capture when opponent pawn attack from adjacent cell', () => {
+  clear_board();
+  no_castling();
+  positions.black_pieces["bk"] = new Cell(1,1);
+  positions.black_pieces["bp1"] = new Cell(5,5);
+  positions.white_pieces["wk"] = new Cell(6,6);
+  positions.set_board();
+  let set_movements = positions.available_white_moves();
+  let movements = Array.from(set_movements);
+  expect(movements.includes("wk,6,6,wk,5,5,bp1")).toBe(true);
+});
+
+it('black king capture when opponent pawn attack from adjacent cell', () => {
+  clear_board();
+  no_castling();
+  positions.black_pieces["bk"] = new Cell(1,1);
+  positions.white_pieces["wp1"] = new Cell(2,2);
+  positions.white_pieces["wk"] = new Cell(6,6);
+  positions.set_board();
+  let set_movements = positions.available_black_moves();
+  let movements = Array.from(set_movements);
+  expect(movements.includes("bk,1,1,bk,2,2,wp1")).toBe(true);
+});
+
+it('white king cannot move to adjacent cell from opponent king', () => {
+  clear_board();
+  no_castling();
+  positions.black_pieces["bk"] = new Cell(2,2);
+  positions.white_pieces["wk"] = new Cell(4,4);
+  positions.set_board();
+  let set_movements = positions.available_white_moves();
+  let movements = Array.from(set_movements);
+  expect(movements.includes("wk,4,4,wk,3,3,")).toBe(false);
+});
+
+it('black king cannot move to adjacent cell from opponent king', () => {
+  clear_board();
+  no_castling();
+  positions.black_pieces["bk"] = new Cell(2,2);
+  positions.white_pieces["wk"] = new Cell(4,4);
+  positions.set_board();
+  let set_movements = positions.available_black_moves();
+  let movements = Array.from(set_movements);
+  expect(movements.includes("bk,2,2,bk,3,3,")).toBe(false);
+});
