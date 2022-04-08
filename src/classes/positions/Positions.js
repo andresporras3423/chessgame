@@ -1,4 +1,3 @@
-import lodash from "lodash";
 import Cell from "./Cell.js";
 
 class Positions {
@@ -101,16 +100,6 @@ class Positions {
     };
   }
 
-  deep_clone = (value)=>{
-    try{
-      return JSON.parse(JSON.stringify(value));
-    }
-    catch(error){
-      console.log(error);
-      return this.deep_clone(value);
-    }
-  }
-
   white_king_attacked = (king) => {
     if (
       this.attacked_by_black_pawn(king.y, king.x) ||
@@ -189,7 +178,7 @@ class Positions {
         king.x + king_movement.x
       );
       if (n_cell == "" || n_cell.match(/^[w]/)) {
-        this.temp_cells = this.deep_clone(this.cells);
+        this.temp_cells = JSON.parse(JSON.stringify(this.cells));
         this.temp_cells[king.y][king.x] = "";
         this.temp_cells[king.y + king_movement.y][king.x + king_movement.x] =
           "bk";
@@ -206,7 +195,7 @@ class Positions {
         }
       }
     }
-    this.temp_cells = this.deep_clone(this.cells);
+    this.temp_cells = JSON.parse(JSON.stringify(this.cells));
     const king_on_check = this.black_king_attacked(new Cell(king.y, king.x));
     if (
       this.black_long_castling &&
@@ -250,7 +239,7 @@ class Positions {
         knight.x + knight_movement.x
       );
       if (cell_ == "" || cell_[0] == "w") {
-        this.temp_cells = this.deep_clone(this.cells);
+        this.temp_cells = JSON.parse(JSON.stringify(this.cells));
         this.temp_cells[knight.y][knight.x] = "";
         this.temp_cells[knight.y + knight_movement.y][
           knight.x + knight_movement.x
@@ -276,7 +265,7 @@ class Positions {
     let available_movements = new Set();
     let cell_ = this.valid_position(pawn.y + 1, pawn.x);
     if (cell_ === "") {
-      this.temp_cells = this.deep_clone(this.cells);
+      this.temp_cells = JSON.parse(JSON.stringify(this.cells));
       this.temp_cells[pawn.y][pawn.x] = "";
       this.temp_cells[pawn.y + 1][pawn.x] = this.cells[pawn.y][pawn.x];
       if (!this.black_king_attacked(new Cell(king.y, king.x))) {
@@ -299,7 +288,7 @@ class Positions {
       let cell_ = this.valid_position(pawn.y + 1, pawn.x);
       let cell2_ = this.valid_position(pawn.y + 2, pawn.x);
       if (cell_ === "" && cell2_ === "") {
-        this.temp_cells = this.deep_clone(this.cells);
+        this.temp_cells = JSON.parse(JSON.stringify(this.cells));
         this.temp_cells[pawn.y][pawn.x] = "";
         this.temp_cells[pawn.y + 2][pawn.x] = this.cells[pawn.y][pawn.x];
         if (!this.black_king_attacked(new Cell(king.y, king.x)))
@@ -310,7 +299,7 @@ class Positions {
     }
     cell_ = this.valid_position(pawn.y + 1, pawn.x + 1);
     if (cell_[0] === "w") {
-      this.temp_cells = this.deep_clone(this.cells);
+      this.temp_cells = JSON.parse(JSON.stringify(this.cells));
       this.temp_cells[pawn.y][pawn.x] = "";
       this.temp_cells[pawn.y + 1][pawn.x + 1] = this.cells[pawn.y][pawn.x];
       if (!this.black_king_attacked(new Cell(king.y, king.x))) {
@@ -333,7 +322,7 @@ class Positions {
     }
     cell_ = this.valid_position(pawn.y + 1, pawn.x - 1);
     if (cell_[0] === "w") {
-      this.temp_cells = this.deep_clone(this.cells);
+      this.temp_cells = JSON.parse(JSON.stringify(this.cells));
       this.temp_cells[pawn.y][pawn.x] = "";
       this.temp_cells[pawn.y + 1][pawn.x - 1] = this.cells[pawn.y][pawn.x];
       if (!this.black_king_attacked(new Cell(king.y, king.x))) {
@@ -355,7 +344,7 @@ class Positions {
       }
     }
     if (this.can_black_en_passant(pawn.y, pawn.x + 1)) {
-      this.temp_cells = this.deep_clone(this.cells);
+      this.temp_cells = JSON.parse(JSON.stringify(this.cells));
       this.temp_cells[pawn.y][pawn.x] = "";
       this.temp_cells[pawn.y][pawn.x + 1] = "";
       this.temp_cells[pawn.y + 1][pawn.x + 1] = this.cells[pawn.y][pawn.x];
@@ -367,7 +356,7 @@ class Positions {
         );
     }
     if (this.can_black_en_passant(pawn.y, pawn.x - 1)) {
-      this.temp_cells = this.deep_clone(this.cells);
+      this.temp_cells = JSON.parse(JSON.stringify(this.cells));
       this.temp_cells[pawn.y][pawn.x] = "";
       this.temp_cells[pawn.y][pawn.x - 1] = "";
       this.temp_cells[pawn.y + 1][pawn.x - 1] = this.cells[pawn.y][pawn.x];
@@ -422,7 +411,7 @@ class Positions {
         position_.y += bishop_movement.y;
         let cell_ = this.valid_position(position_.y, position_.x);
         if (cell_ == "" || cell_.match(/^w/)) {
-          this.temp_cells = this.deep_clone(this.cells);
+          this.temp_cells = JSON.parse(JSON.stringify(this.cells));
           this.temp_cells[bishop.y][bishop.x] = "";
           this.temp_cells[position_.y][position_.x] =
             this.cells[bishop.y][bishop.x];
@@ -450,7 +439,7 @@ class Positions {
         position_.y += rock_movement.y;
         let cell_ = this.valid_position(position_.y, position_.x);
         if (cell_ == "" || cell_.match(/^w/)) {
-          this.temp_cells = this.deep_clone(this.cells);
+          this.temp_cells = JSON.parse(JSON.stringify(this.cells));
           this.temp_cells[rock.y][rock.x] = "";
           this.temp_cells[position_.y][position_.x] =
             this.cells[rock.y][rock.x];
@@ -478,7 +467,7 @@ class Positions {
         position_.y += rock_movement.y;
         let cell_ = this.valid_position(position_.y, position_.x);
         if (cell_ == "" || cell_.match(/^w/)) {
-          this.temp_cells = this.deep_clone(this.cells);
+          this.temp_cells = JSON.parse(JSON.stringify(this.cells));
           this.temp_cells[queen.y][queen.x] = "";
           this.temp_cells[position_.y][position_.x] =
             this.cells[queen.y][queen.x];
@@ -500,7 +489,7 @@ class Positions {
         position_.y += bishop_movement.y;
         let cell_ = this.valid_position(position_.y, position_.x);
         if (cell_ == "" || cell_.match(/^w/)) {
-          this.temp_cells = this.deep_clone(this.cells);
+          this.temp_cells = JSON.parse(JSON.stringify(this.cells));
           this.temp_cells[queen.y][queen.x] = "";
           this.temp_cells[position_.y][position_.x] =
             this.cells[queen.y][queen.x];
@@ -559,7 +548,7 @@ class Positions {
         king.x + king_movement.x
       );
       if (n_cell == "" || n_cell.match(/^[b]/)) {
-        this.temp_cells = this.deep_clone(this.cells);
+        this.temp_cells = JSON.parse(JSON.stringify(this.cells));
         this.temp_cells[king.y][king.x] = "";
         this.temp_cells[king.y + king_movement.y][king.x + king_movement.x] =
           "wk";
@@ -575,7 +564,7 @@ class Positions {
           );
       }
     }
-    this.temp_cells = this.deep_clone(this.cells);
+    this.temp_cells = JSON.parse(JSON.stringify(this.cells));
     if (
       this.white_long_castling &&
       this.cells[7][1] == "" &&
@@ -616,7 +605,7 @@ class Positions {
         knight.x + knight_movement.x
       );
       if (cell_ == "" || cell_[0] == "b") {
-        this.temp_cells = this.deep_clone(this.cells);
+        this.temp_cells = JSON.parse(JSON.stringify(this.cells));
         this.temp_cells[knight.y][knight.x] = "";
         this.temp_cells[knight.y + knight_movement.y][
           knight.x + knight_movement.x
@@ -641,7 +630,7 @@ class Positions {
     let available_movements = new Set();
     let cell_ = this.valid_position(pawn.y - 1, pawn.x);
     if (cell_ == "") {
-      this.temp_cells = this.deep_clone(this.cells);
+      this.temp_cells = JSON.parse(JSON.stringify(this.cells));
       this.temp_cells[pawn.y][pawn.x] = "";
       this.temp_cells[pawn.y - 1][pawn.x] = this.cells[pawn.y][pawn.x];
       if (!this.white_king_attacked(new Cell(king.y, king.x))) {
@@ -664,7 +653,7 @@ class Positions {
       let cell_ = this.valid_position(pawn.y - 1, pawn.x);
       let cell2_ = this.valid_position(pawn.y - 1, pawn.x);
       if (cell_ == "" && cell2_ == "") {
-        this.temp_cells = this.deep_clone(this.cells);
+        this.temp_cells = JSON.parse(JSON.stringify(this.cells));
         this.temp_cells[pawn.y][pawn.x] = "";
         this.temp_cells[pawn.y - 2][pawn.x] = this.cells[pawn.y][pawn.x];
         if (!this.white_king_attacked(new Cell(king.y, king.x)))
@@ -675,7 +664,7 @@ class Positions {
     }
     cell_ = this.valid_position(pawn.y - 1, pawn.x + 1);
     if (cell_.match(/^b/)) {
-      this.temp_cells = this.deep_clone(this.cells);
+      this.temp_cells = JSON.parse(JSON.stringify(this.cells));
       this.temp_cells[pawn.y][pawn.x] = "";
       this.temp_cells[pawn.y - 1][pawn.x + 1] = this.cells[pawn.y][pawn.x];
       if (!this.white_king_attacked(new Cell(king.y, king.x))) {
@@ -698,7 +687,7 @@ class Positions {
     }
     cell_ = this.valid_position(pawn.y - 1, pawn.x - 1);
     if (cell_.match(/^b/)) {
-      this.temp_cells = this.deep_clone(this.cells);
+      this.temp_cells = JSON.parse(JSON.stringify(this.cells));
       this.temp_cells[pawn.y][pawn.x] = "";
       this.temp_cells[pawn.y - 1][pawn.x - 1] = this.cells[pawn.y][pawn.x];
       if (!this.white_king_attacked(new Cell(king.y, king.x))) {
@@ -720,7 +709,7 @@ class Positions {
       }
     }
     if (this.can_white_en_passant(pawn.y, pawn.x + 1)) {
-      this.temp_cells = this.deep_clone(this.cells);
+      this.temp_cells = JSON.parse(JSON.stringify(this.cells));
       this.temp_cells[pawn.y][pawn.x] = "";
       this.temp_cells[pawn.y][pawn.x + 1] = "";
       this.temp_cells[pawn.y - 1][pawn.x + 1] = this.cells[pawn.y][pawn.x];
@@ -732,7 +721,7 @@ class Positions {
         );
     }
     if (this.can_white_en_passant(pawn.y, pawn.x - 1)) {
-      this.temp_cells = this.deep_clone(this.cells);
+      this.temp_cells = JSON.parse(JSON.stringify(this.cells));
       this.temp_cells[pawn.y][pawn.x] = "";
       this.temp_cells[pawn.y][pawn.x - 1] = "";
       this.temp_cells[pawn.y - 1][pawn.x - 1] = this.cells[pawn.y][pawn.x];
@@ -787,7 +776,7 @@ class Positions {
         position_.y += bishop_movement.y;
         let cell_ = this.valid_position(position_.y, position_.x);
         if (cell_ == "" || cell_.match(/^b/)) {
-          this.temp_cells = this.deep_clone(this.cells);
+          this.temp_cells = JSON.parse(JSON.stringify(this.cells));
           this.temp_cells[bishop.y][bishop.x] = "";
           this.temp_cells[position_.y][position_.x] =
             this.cells[bishop.y][bishop.x];
@@ -815,7 +804,7 @@ class Positions {
         position_.y += rock_movement.y;
         let cell_ = this.valid_position(position_.y, position_.x);
         if (cell_ == "" || cell_.match(/^b/)) {
-          this.temp_cells = this.deep_clone(this.cells);
+          this.temp_cells = JSON.parse(JSON.stringify(this.cells));
           this.temp_cells[rock.y][rock.x] = "";
           this.temp_cells[position_.y][position_.x] =
             this.cells[rock.y][rock.x];
@@ -843,7 +832,7 @@ class Positions {
         position_.y += rock_movement.y;
         let cell_ = this.valid_position(position_.y, position_.x);
         if (cell_ == "" || cell_.match(/^b/)) {
-          this.temp_cells = this.deep_clone(this.cells);
+          this.temp_cells = JSON.parse(JSON.stringify(this.cells));
           this.temp_cells[queen.y][queen.x] = "";
           this.temp_cells[position_.y][position_.x] =
             this.cells[queen.y][queen.x];
@@ -865,7 +854,7 @@ class Positions {
         position_.y += bishop_movement.y;
         let cell_ = this.valid_position(position_.y, position_.x);
         if (cell_ == "" || cell_.match(/^b/)) {
-          this.temp_cells = this.deep_clone(this.cells);
+          this.temp_cells = JSON.parse(JSON.stringify(this.cells));
           this.temp_cells[queen.y][queen.x] = "";
           this.temp_cells[position_.y][position_.x] =
             this.cells[queen.y][queen.x];
