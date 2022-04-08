@@ -9,32 +9,46 @@ class Game {
     this.moves_done = 0;
     this.boardData = {};
     this.positions.set_board();
-    this.next_white_move();
   };
 
-  next_white_move = () => {
+  next_start_game= ()=>{
+    this.start_game();
+    this.next_white_move();
+  }
+
+  white_move = ()=>{
     let set_movements = this.positions.available_white_moves();
     let movements = Array.from(set_movements);
-    if (this.is_it_game_over(movements.length)) return;
+    if (this.is_it_game_over(movements.length)) return false;
     this.add_recent_board(movements.length);
     this.print_last_board_info();
     let rnd = Math.floor(Math.random() * movements.length);
     let last_movement = movements[rnd];
     this.positions.update_board_details_after_white_move(last_movement);
     this.positions.set_board();
+    return true;
+  }
+
+  next_white_move = () => {
+    if(this.white_move()==false) return;
     this.next_black_move();
   };
 
-  next_black_move = () => {
+  black_move = ()=>{
     let set_movements = this.positions.available_black_moves();
     let movements = Array.from(set_movements);
-    if (this.is_it_game_over(movements.length)) return;
+    if (this.is_it_game_over(movements.length)) return false;
     this.add_recent_board(movements.length);
     this.print_last_board_info();
     let rnd = Math.floor(Math.random() * movements.length);
     let last_movement = movements[rnd];
     this.positions.update_board_details_after_black_move(last_movement);
     this.positions.set_board();
+    return true;
+  }
+
+  next_black_move = () => {
+    if(this.black_move()==false) return;
     this.next_white_move();
   };
 
@@ -56,7 +70,7 @@ class Game {
       Object.keys(this.positions.black_pieces).length +
       Object.keys(this.positions.white_pieces).length ==
         2 ||
-      this.positions.checkmate_still_possible == false
+      this.positions.checkmate_still_possible() == false
     ) {
       if (total_movements == 0) this.add_recent_board(total_movements);
       return true;
