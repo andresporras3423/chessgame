@@ -1,6 +1,18 @@
 import Game from './../classes/positions/Game';
 import Cell from './../classes/positions/Cell';
 let game = {};
+const no_castling = ()=>{
+  no_white_castling();
+  no_black_castling();
+}
+const no_white_castling = ()=>{
+  game.positions.white_long_castling = false;
+  game.positions.white_short_castling = false;
+};
+const no_black_castling = ()=>{
+  game.positions.black_long_castling = false;
+  game.positions.black_short_castling = false;
+};
 beforeEach(() => {
   game = new Game();
   game.start_game();
@@ -45,6 +57,7 @@ it('with default settings after white and black have move black side is unchange
 });
 
 it('check is it game over when white has to move but there is lack of material because only king on the board', () => {
+  no_castling();
   game.positions.cells = [["bk","","","","","","",""],
   ["","","","","","","",""],
   ["","","","","","","",""],
@@ -63,6 +76,7 @@ it('check is it game over when white has to move but there is lack of material b
 });
 
 it('check is it game over when black has to move but there is lack of material because only king on the board', () => {
+  no_castling();
   game.positions.cells = [["bk","","","","","","",""],
   ["","","","","","","",""],
   ["","","","","","","",""],
@@ -81,6 +95,7 @@ it('check is it game over when black has to move but there is lack of material b
 });
 
 it('check is it game over when white has to move but there is lack of material because only kings and one bishop per player', () => {
+  no_castling();
   game.positions.cells = [["bk","bb1","","","","","",""],
   ["","","","","","","",""],
   ["","","","","","","",""],
@@ -101,6 +116,7 @@ it('check is it game over when white has to move but there is lack of material b
 });
 
 it('check is it game over when black has to move but there is lack of material because only kings and one bishop per player', () => {
+  no_castling();
   game.positions.cells = [["bk","bb1","","","","","",""],
   ["","","","","","","",""],
   ["","","","","","","",""],
@@ -121,6 +137,7 @@ it('check is it game over when black has to move but there is lack of material b
 });
 
 it('check is it game over when white has to move but there is lack of material because only kings and same color bishops per player', () => {
+  no_castling();
   game.positions.cells = [["bk","bb1","","bb2","","bb3","",""],
   ["","","","","","","",""],
   ["","","","","","","",""],
@@ -145,6 +162,7 @@ it('check is it game over when white has to move but there is lack of material b
 });
 
 it('check is it game over when black has to move but there is lack of material because only kings and same color bishops per player', () => {
+  no_castling();
   game.positions.cells = [["bk","bb1","","bb2","","bb3","",""],
   ["","","","","","","",""],
   ["","","","","","","",""],
@@ -169,6 +187,7 @@ it('check is it game over when black has to move but there is lack of material b
 });
 
 it('check is it game over when white has to move but there is lack of material because only a couple of knights per player', () => {
+  no_castling();
   game.positions.cells = [["bk","bn1","","bn2","","","",""],
   ["","","","","","","",""],
   ["","","","","","","",""],
@@ -191,6 +210,7 @@ it('check is it game over when white has to move but there is lack of material b
 });
 
 it('check is it game over when white has to move but there is lack of material because only a couple of knights per player', () => {
+  no_castling();
   game.positions.cells = [["bk","bn1","","bn2","","","",""],
   ["","","","","","","",""],
   ["","","","","","","",""],
@@ -208,6 +228,90 @@ it('check is it game over when white has to move but there is lack of material b
     wk: new Cell(7, 7),
     wn1: new Cell(7, 6),
     wn2: new Cell(7, 4)
+  };
+  expect(game.black_move()).toBe(false);
+});
+
+it('check is it game over when white has to move but it is on checkmate', () => {
+  no_castling();
+  game.positions.cells = [["bk","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","wp7","wp8"],
+  ["br1","","","","","","","wk"]];
+  game.positions.black_pieces = {
+    bk: new Cell(0, 0),
+    br1: new Cell(7, 0)
+  };
+  game.positions.white_pieces = {
+    wk: new Cell(7, 7),
+    wp7: new Cell(6, 6),
+    wp8: new Cell(6, 7)
+  };
+  expect(game.white_move()).toBe(false);
+});
+
+it('check is it game over when black has to move but it is on checkmate', () => {
+  no_castling();
+  game.positions.cells = [["bk","","","","","","","wr1"],
+  ["bp1","bp2","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","","wk"]];
+  game.positions.black_pieces = {
+    bk: new Cell(0, 0),
+    bp1: new Cell(1, 0),
+    bp2: new Cell(1, 1)
+  };
+  game.positions.white_pieces = {
+    wk: new Cell(7, 7),
+    wr1: (0,7)
+  };
+  expect(game.black_move()).toBe(false);
+});
+
+it('check is it game over when white has to move but it is on stalemate', () => {
+  no_castling();
+  game.positions.cells = [["","","","","","bk","","wk"],
+  ["","","","","","","","wp8"],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""]];
+  game.positions.black_pieces = {
+    bk: new Cell(0, 5)
+  };
+  game.positions.white_pieces = {
+    wk: new Cell(0, 7),
+    wp8: new Cell(1,7)
+  };
+  expect(game.white_move()).toBe(false);
+});
+
+it('check is it game over when black has to move but it is on stalemate', () => {
+  no_castling();
+  game.positions.cells = [["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["bp1","","","","","","",""],
+  ["bk","","wk","","","","",""]];
+  game.positions.black_pieces = {
+    bk: new Cell(7, 0),
+    bp1: new Cell(6,0)
+  };
+  game.positions.white_pieces = {
+    wk: new Cell(7, 2)
   };
   expect(game.black_move()).toBe(false);
 });
