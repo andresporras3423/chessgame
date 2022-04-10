@@ -22,6 +22,7 @@ class Game {
     if (this.is_it_game_over(movements.length)) return false;
     this.add_recent_board(movements.length);
     this.print_last_board_info();
+    this.moves_done++;
     let rnd = Math.floor(Math.random() * movements.length);
     let last_movement = movements[rnd];
     this.positions.update_board_details_after_white_move(last_movement);
@@ -40,6 +41,7 @@ class Game {
     if (this.is_it_game_over(movements.length)) return false;
     this.add_recent_board(movements.length);
     this.print_last_board_info();
+    this.moves_done++;
     let rnd = Math.floor(Math.random() * movements.length);
     let last_movement = movements[rnd];
     this.positions.update_board_details_after_black_move(last_movement);
@@ -96,7 +98,6 @@ class Game {
   };
 
   print_last_board_info = () => {
-    this.moves_done++;
     console.log(`turn: ${Math.ceil(this.moves_done / 2)}`);
     console.log(this.board.print_info());
   };
