@@ -315,3 +315,504 @@ it('check is it game over when black has to move but it is on stalemate', () => 
   };
   expect(game.black_move()).toBe(false);
 });
+
+it('black can play, game is not over because there is a black queen', () => {
+  no_castling();
+  game.positions.cells = [["bk","bq1","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","","wk"]];
+  game.positions.black_pieces = {
+    bk: new Cell(0, 0),
+    bq1: new Cell(0,1)
+  };
+  game.positions.white_pieces = {
+    wk: new Cell(7, 7)
+  };
+  expect(game.black_move()).toBe(true);
+});
+
+it('white can play, game is not over because there is a black queen', () => {
+  no_castling();
+  game.positions.cells = [["bk","bq1","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","","wk"]];
+  game.positions.black_pieces = {
+    bk: new Cell(0, 0),
+    bq1: new Cell(0,1)
+  };
+  game.positions.white_pieces = {
+    wk: new Cell(7, 7)
+  };
+  expect(game.white_move()).toBe(true);
+});
+
+it('black can play, game is not over because there is a white queen', () => {
+  no_castling();
+  game.positions.cells = [["bk","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","wq1","wk"]];
+  game.positions.black_pieces = {
+    bk: new Cell(0, 0)
+  };
+  game.positions.white_pieces = {
+    wk: new Cell(7, 7),
+    wq1: new Cell(7,6)
+  };
+  expect(game.black_move()).toBe(true);
+});
+
+it('white can play, game is not over because there is a white queen', () => {
+  no_castling();
+  game.positions.cells = [["bk","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","wq1","wk"]];
+  game.positions.black_pieces = {
+    bk: new Cell(0, 0)
+  };
+  game.positions.white_pieces = {
+    wk: new Cell(7, 7),
+    wq1: new Cell(7,6)
+  };
+  expect(game.white_move()).toBe(true);
+});
+
+it('black can play, game is not over because there is a black rock', () => {
+  no_castling();
+  game.positions.cells = [["bk","br1","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","","wk"]];
+  game.positions.black_pieces = {
+    bk: new Cell(0, 0),
+    br1: new Cell(0,1)
+  };
+  game.positions.white_pieces = {
+    wk: new Cell(7, 7)
+  };
+  expect(game.black_move()).toBe(true);
+});
+
+it('white can play, game is not over because there is a black rock', () => {
+  no_castling();
+  game.positions.cells = [["bk","br1","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","","wk"]];
+  game.positions.black_pieces = {
+    bk: new Cell(0, 0),
+    br1: new Cell(0,1)
+  };
+  game.positions.white_pieces = {
+    wk: new Cell(7, 7)
+  };
+  expect(game.white_move()).toBe(true);
+});
+
+it('black can play, game is not over because there is a white rock', () => {
+  no_castling();
+  game.positions.cells = [["bk","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","wr1","wk"]];
+  game.positions.black_pieces = {
+    bk: new Cell(0, 0)
+  };
+  game.positions.white_pieces = {
+    wk: new Cell(7, 7),
+    wr1: new Cell(7,6)
+  };
+  expect(game.black_move()).toBe(true);
+});
+
+it('white can play, game is not over because there is a white rock', () => {
+  no_castling();
+  game.positions.cells = [["bk","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","wr1","wk"]];
+  game.positions.black_pieces = {
+    bk: new Cell(0, 0)
+  };
+  game.positions.white_pieces = {
+    wk: new Cell(7, 7),
+    wr1: new Cell(7,6)
+  };
+  expect(game.white_move()).toBe(true);
+});
+
+it('black can play, game is not over because there is two black bishops in different color', () => {
+  no_castling();
+  game.positions.cells = [["bk","bb1","bb2","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","","wk"]];
+  game.positions.black_pieces = {
+    bk: new Cell(0, 0),
+    bb1: new Cell(0,1),
+    bb2: new Cell(0,2)
+  };
+  game.positions.white_pieces = {
+    wk: new Cell(7, 7)
+  };
+  expect(game.black_move()).toBe(true);
+});
+
+it('white can play, game is not over because there is two black bishops in different color', () => {
+  no_castling();
+  game.positions.cells = [["bk","bb1","bb2","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","","wk"]];
+  game.positions.black_pieces = {
+    bk: new Cell(0, 0),
+    bb1: new Cell(0,1),
+    bb2: new Cell(0,2)
+  };
+  game.positions.white_pieces = {
+    wk: new Cell(7, 7)
+  };
+  expect(game.white_move()).toBe(true);
+});
+
+it('black can play, game is not over because there is two white bishops in different color', () => {
+  no_castling();
+  game.positions.cells = [["bk","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","wb2","wb1","wk"]];
+  game.positions.black_pieces = {
+    bk: new Cell(0, 0)
+  };
+  game.positions.white_pieces = {
+    wk: new Cell(7, 7),
+    wb1: new Cell(7,6),
+    wb2: new Cell(7,5)
+  };
+  expect(game.black_move()).toBe(true);
+});
+
+it('white can play, game is not over because there is two white bishops in different color', () => {
+  no_castling();
+  game.positions.cells = [["bk","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","wb2","wb1","wk"]];
+  game.positions.black_pieces = {
+    bk: new Cell(0, 0)
+  };
+  game.positions.white_pieces = {
+    wk: new Cell(7, 7),
+    wb1: new Cell(7,6),
+    wb2: new Cell(7,5)
+  };
+  expect(game.white_move()).toBe(true);
+});
+
+it('black can play, game is not over because there is three black knights', () => {
+  no_castling();
+  game.positions.cells = [["bk","bn1","bn2","bn3","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","","wk"]];
+  game.positions.black_pieces = {
+    bk: new Cell(0, 0),
+    bn1: new Cell(0,1),
+    bn2: new Cell(0,2),
+    bn3: new Cell(0,3)
+  };
+  game.positions.white_pieces = {
+    wk: new Cell(7, 7)
+  };
+  expect(game.black_move()).toBe(true);
+});
+
+it('white can play, game is not over because there is three black knights', () => {
+  no_castling();
+  game.positions.cells = [["bk","bn1","bn2","bn3","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","","wk"]];
+  game.positions.black_pieces = {
+    bk: new Cell(0, 0),
+    bn1: new Cell(0,1),
+    bn2: new Cell(0,2),
+    bn3: new Cell(0,3)
+  };
+  game.positions.white_pieces = {
+    wk: new Cell(7, 7)
+  };
+  expect(game.white_move()).toBe(true);
+});
+
+it('black can play, game is not over because there is three white knights', () => {
+  no_castling();
+  game.positions.cells = [["bk","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","wn3","wn2","wn1","wk"]];
+  game.positions.black_pieces = {
+    bk: new Cell(0, 0)
+  };
+  game.positions.white_pieces = {
+    wk: new Cell(7, 7),
+    wn1: new Cell(7,6),
+    wn2: new Cell(7,5),
+    wn3: new Cell(7,4)
+  };
+  expect(game.black_move()).toBe(true);
+});
+it('white can play, game is not over because there is three white knights', () => {
+  no_castling();
+  game.positions.cells = [["bk","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","wn3","wn2","wn1","wk"]];
+  game.positions.black_pieces = {
+    bk: new Cell(0, 0)
+  };
+  game.positions.white_pieces = {
+    wk: new Cell(7, 7),
+    wn1: new Cell(7,6),
+    wn2: new Cell(7,5),
+    wn3: new Cell(7,4)
+  };
+  expect(game.white_move()).toBe(true);
+});
+
+it('black can play, game is not over because black has a knight and a bishop', () => {
+  no_castling();
+  game.positions.cells = [["bk","bn1","bb1","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","","wk"]];
+  game.positions.black_pieces = {
+    bk: new Cell(0, 0),
+    bn1: new Cell(0,1),
+    bb1: new Cell(0,2)
+  };
+  game.positions.white_pieces = {
+    wk: new Cell(7, 7)
+    
+  };
+  expect(game.black_move()).toBe(true);
+});
+
+it('white can play, game is not over because black has a knight and a bishop', () => {
+  no_castling();
+  game.positions.cells = [["bk","bn1","bb1","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","","wk"]];
+  game.positions.black_pieces = {
+    bk: new Cell(0, 0),
+    bn1: new Cell(0,1),
+    bb1: new Cell(0,2)
+  };
+  game.positions.white_pieces = {
+    wk: new Cell(7, 7)
+    
+  };
+  expect(game.white_move()).toBe(true);
+});
+
+it('black can play, game is not over because white has a knight and a bishop', () => {
+  no_castling();
+  game.positions.cells = [["bk","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","wb1","wn1","wk"]];
+  game.positions.black_pieces = {
+    bk: new Cell(0, 0)
+  };
+  game.positions.white_pieces = {
+    wk: new Cell(7, 7),
+    wn1: new Cell(7,6),
+    wb1: new Cell(7,5)
+    
+  };
+  expect(game.black_move()).toBe(true);
+});
+
+it('white can play, game is not over because white has a knight and a bishop', () => {
+  no_castling();
+  game.positions.cells = [["bk","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","wb1","wn1","wk"]];
+  game.positions.black_pieces = {
+    bk: new Cell(0, 0)
+  };
+  game.positions.white_pieces = {
+    wk: new Cell(7, 7),
+    wn1: new Cell(7,6),
+    wb1: new Cell(7,5)
+    
+  };
+  expect(game.white_move()).toBe(true);
+});
+
+it('black can play, game is not over because black has a pawn', () => {
+  no_castling();
+  game.positions.cells = [["bk","","","","","","",""],
+  ["bp1","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","","wk"]];
+  game.positions.black_pieces = {
+    bk: new Cell(0, 0),
+    bp1: new Cell(1, 0)
+  };
+  game.positions.white_pieces = {
+    wk: new Cell(7, 7)
+    
+  };
+  expect(game.black_move()).toBe(true);
+});
+
+it('white can play, game is not over because black has a pawn', () => {
+  no_castling();
+  game.positions.cells = [["bk","","","","","","",""],
+  ["bp1","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","","wk"]];
+  game.positions.black_pieces = {
+    bk: new Cell(0, 0),
+    bp1: new Cell(1, 0)
+  };
+  game.positions.white_pieces = {
+    wk: new Cell(7, 7)
+    
+  };
+  expect(game.white_move()).toBe(true);
+});
+
+it('black can play, game is not over because white has a pawn', () => {
+  no_castling();
+  game.positions.cells = [["bk","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","","wp8"],
+  ["","","","","","","","wk"]];
+  game.positions.black_pieces = {
+    bk: new Cell(0, 0)
+  };
+  game.positions.white_pieces = {
+    wk: new Cell(7, 7),
+    wp8: new Cell(6, 7)
+  };
+  expect(game.black_move()).toBe(true);
+});
+
+it('white can play, game is not over because white has a pawn', () => {
+  no_castling();
+  game.positions.cells = [["bk","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","","wp8"],
+  ["","","","","","","","wk"]];
+  game.positions.black_pieces = {
+    bk: new Cell(0, 0)
+  };
+  game.positions.white_pieces = {
+    wk: new Cell(7, 7),
+    wp8: new Cell(6, 7)
+  };
+  expect(game.white_move()).toBe(true);
+});
