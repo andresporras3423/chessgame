@@ -817,7 +817,7 @@ it('white can play, game is not over because white has a pawn', () => {
   expect(game.white_move()).toBe(true);
 });
 
-it('spot out precisely the only unique white king move', () => {
+it('spot out precisely the unique white king move', () => {
   no_castling();
   game.positions.cells = [["bk","","","","","","",""],
   ["","","","","","","",""],
@@ -853,7 +853,7 @@ next_player: white
   );
 });
 
-it('spot out precisely the only unique white king move and update after that move', () => {
+it('spot out precisely the unique white king move and update after that move', () => {
   no_castling();
   game.positions.cells = [["bk","","","","","","",""],
   ["","","","","","","",""],
@@ -886,6 +886,383 @@ white short castling: false
 most recent movement: wk,7,7,wk,6,7,
 total movements available: 16
 next_player: black
+`
+  );
+});
+
+it('spot out precisely the unique black king move', () => {
+  no_castling();
+  game.positions.cells = [["bk","","","","","","","wr1"],
+  ["bp1","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","","wk"]];
+  game.positions.black_pieces = {
+    bk: new Cell(0, 0),
+    bp1: new Cell(1, 0)
+  };
+  game.positions.white_pieces = {
+    wk: new Cell(7, 7),
+    wr1: new Cell(0, 7)
+  };
+  game.add_recent_board("black")
+  expect(game.board.print_info()).toBe(
+`
+current board: bk,,,,,,,wr*bp,,,,,,,*,,,,,,,*,,,,,,,*,,,,,,,*,,,,,,,*,,,,,,,*,,,,,,,wk
+total black pieces: 2
+total white pieces: 2
+total pieces: 4
+black long castling: false
+black short castling: false
+white long castling: false
+white short castling: false
+most recent movement: ,,,,,,
+total movements available: 1
+next_player: black
+`
+  );
+});
+
+it('spot out precisely the unique black king move and update after that move', () => {
+  no_castling();
+  game.positions.cells = [["bk","","","","","","","wr1"],
+  ["bp1","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","","wk"]];
+  game.positions.black_pieces = {
+    bk: new Cell(0, 0),
+    bp1: new Cell(1, 0)
+  };
+  game.positions.white_pieces = {
+    wk: new Cell(7, 7),
+    wr1: new Cell(0, 7)
+  };
+  game.black_move();
+  game.add_recent_board("white");
+  expect(game.board.print_info()).toBe(
+`
+current board: ,,,,,,,wr*bp,bk,,,,,,*,,,,,,,*,,,,,,,*,,,,,,,*,,,,,,,*,,,,,,,*,,,,,,,wk
+total black pieces: 2
+total white pieces: 2
+total pieces: 4
+black long castling: false
+black short castling: false
+white long castling: false
+white short castling: false
+most recent movement: bk,0,0,bk,1,1,
+total movements available: 16
+next_player: white
+`
+  );
+});
+
+it('spot out precisely the unique white pawn move', () => {
+  no_castling();
+  game.positions.cells = [["bk","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","","wp8"],
+  ["br2","","","","","","",""],
+  ["br1","","","","","","wn1","wk"]];
+  game.positions.black_pieces = {
+    bk: new Cell(0, 0),
+    br1: new Cell(7, 0),
+    br2: new Cell(6, 0)
+  };
+  game.positions.white_pieces = {
+    wk: new Cell(7, 7),
+    wn1: new Cell(7, 6),
+    wp8: new Cell(5,7)
+  };
+  game.add_recent_board("white")
+  expect(game.board.print_info()).toBe(
+`
+current board: bk,,,,,,,*,,,,,,,*,,,,,,,*,,,,,,,*,,,,,,,*,,,,,,,wp*br,,,,,,,*br,,,,,,wn,wk
+total black pieces: 3
+total white pieces: 3
+total pieces: 6
+black long castling: false
+black short castling: false
+white long castling: false
+white short castling: false
+most recent movement: ,,,,,,
+total movements available: 1
+next_player: white
+`
+  );
+});
+
+it('spot out precisely the unique white pawn move and update after that move', () => {
+  no_castling();
+  game.positions.cells = [["bk","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","","wp8"],
+  ["br2","","","","","","",""],
+  ["br1","","","","","","wn1","wk"]];
+  game.positions.black_pieces = {
+    bk: new Cell(0, 0),
+    br1: new Cell(7, 0),
+    br2: new Cell(6, 0)
+  };
+  game.positions.white_pieces = {
+    wk: new Cell(7, 7),
+    wn1: new Cell(7, 6),
+    wp8: new Cell(5,7)
+  };
+  game.white_move();
+  game.add_recent_board("black");
+  expect(game.board.print_info()).toBe(
+`
+current board: bk,,,,,,,*,,,,,,,*,,,,,,,*,,,,,,,*,,,,,,,wp*,,,,,,,*br,,,,,,,*br,,,,,,wn,wk
+total black pieces: 3
+total white pieces: 3
+total pieces: 6
+black long castling: false
+black short castling: false
+white long castling: false
+white short castling: false
+most recent movement: wp,5,7,wp,4,7,
+total movements available: 21
+next_player: black
+`
+  );
+});
+
+it('spot out precisely the unique black pawn move', () => {
+  no_castling();
+  game.positions.cells = [["bk","bn1","","","","","","wr1"],
+  ["","","","","","","","wr2"],
+  ["bp1","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","","wk"]];
+  game.positions.black_pieces = {
+    bk: new Cell(0, 0),
+    bn1: new Cell(0, 1),
+    bp1: new Cell(2, 0)
+  };
+  game.positions.white_pieces = {
+    wk: new Cell(7, 7),
+    wr1: new Cell(0, 7),
+    wr2: new Cell(1, 7)
+  };
+  game.add_recent_board("black")
+  expect(game.board.print_info()).toBe(
+`
+current board: bk,bn,,,,,,wr*,,,,,,,wr*bp,,,,,,,*,,,,,,,*,,,,,,,*,,,,,,,*,,,,,,,*,,,,,,,wk
+total black pieces: 3
+total white pieces: 3
+total pieces: 6
+black long castling: false
+black short castling: false
+white long castling: false
+white short castling: false
+most recent movement: ,,,,,,
+total movements available: 1
+next_player: black
+`
+  );
+});
+
+it('spot out precisely the unique black pawn move and update after that move', () => {
+  no_castling();
+  game.positions.cells = [["bk","bn1","","","","","","wr1"],
+  ["","","","","","","","wr2"],
+  ["bp1","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","","wk"]];
+  game.positions.black_pieces = {
+    bk: new Cell(0, 0),
+    bn1: new Cell(0, 1),
+    bp1: new Cell(2, 0)
+  };
+  game.positions.white_pieces = {
+    wk: new Cell(7, 7),
+    wr1: new Cell(0, 7),
+    wr2: new Cell(1, 7)
+  };
+  game.black_move();
+  game.add_recent_board("white");
+  expect(game.board.print_info()).toBe(
+`
+current board: bk,bn,,,,,,wr*,,,,,,,wr*,,,,,,,*bp,,,,,,,*,,,,,,,*,,,,,,,*,,,,,,,*,,,,,,,wk
+total black pieces: 3
+total white pieces: 3
+total pieces: 6
+black long castling: false
+black short castling: false
+white long castling: false
+white short castling: false
+most recent movement: bp,2,0,bp,3,0,
+total movements available: 21
+next_player: white
+`
+  );
+});
+
+it('spot out precisely the unique white knight move', () => {
+  no_castling();
+  game.positions.cells = [["bk","","","","","","","br1"],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["br2","","","","","","",""],
+  ["","","","","","","wn1","wk"]];
+  game.positions.black_pieces = {
+    bk: new Cell(0, 0),
+    br1: new Cell(0, 7),
+    br2: new Cell(6, 0)
+  };
+  game.positions.white_pieces = {
+    wk: new Cell(7, 7),
+    wn1: new Cell(7, 6)
+  };
+  game.add_recent_board("white")
+  expect(game.board.print_info()).toBe(
+`
+current board: bk,,,,,,,br*,,,,,,,*,,,,,,,*,,,,,,,*,,,,,,,*,,,,,,,*br,,,,,,,*,,,,,,wn,wk
+total black pieces: 3
+total white pieces: 2
+total pieces: 5
+black long castling: false
+black short castling: false
+white long castling: false
+white short castling: false
+most recent movement: ,,,,,,
+total movements available: 1
+next_player: white
+`
+  );
+});
+
+it('spot out precisely the unique white knight move and update after that move', () => {
+  no_castling();
+  game.positions.cells = [["bk","","","","","","","br1"],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["br2","","","","","","",""],
+  ["","","","","","","wn1","wk"]];
+  game.positions.black_pieces = {
+    bk: new Cell(0, 0),
+    br1: new Cell(0, 7),
+    br2: new Cell(6, 0)
+  };
+  game.positions.white_pieces = {
+    wk: new Cell(7, 7),
+    wn1: new Cell(7, 6)
+  };
+  game.white_move();
+  game.add_recent_board("black");
+  expect(game.board.print_info()).toBe(
+`
+current board: bk,,,,,,,br*,,,,,,,*,,,,,,,*,,,,,,,*,,,,,,,*,,,,,,,wn*br,,,,,,,*,,,,,,,wk
+total black pieces: 3
+total white pieces: 2
+total pieces: 5
+black long castling: false
+black short castling: false
+white long castling: false
+white short castling: false
+most recent movement: wn,7,6,wn,5,7,
+total movements available: 27
+next_player: black
+`
+  );
+});
+
+it('spot out precisely the unique black knight move', () => {
+  no_castling();
+  game.positions.cells = [["bk","bn1","","","","","",""],
+  ["","","","","","","","wr2"],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["wr1","","","","","","","wk"]];
+  game.positions.black_pieces = {
+    bk: new Cell(0, 0),
+    bn1: new Cell(0, 1)
+  };
+  game.positions.white_pieces = {
+    wk: new Cell(7, 7),
+    wr1: new Cell(7, 0),
+    wr2: new Cell(1, 7)
+  };
+  game.add_recent_board("black")
+  expect(game.board.print_info()).toBe(
+`
+current board: bk,bn,,,,,,*,,,,,,,wr*,,,,,,,*,,,,,,,*,,,,,,,*,,,,,,,*,,,,,,,*wr,,,,,,,wk
+total black pieces: 2
+total white pieces: 3
+total pieces: 5
+black long castling: false
+black short castling: false
+white long castling: false
+white short castling: false
+most recent movement: ,,,,,,
+total movements available: 1
+next_player: black
+`
+  );
+});
+
+it('spot out precisely the unique black knight move and update after that move', () => {
+  no_castling();
+  game.positions.cells = [["bk","bn1","","","","","",""],
+  ["","","","","","","","wr2"],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["wr1","","","","","","","wk"]];
+  game.positions.black_pieces = {
+    bk: new Cell(0, 0),
+    bn1: new Cell(0, 1)
+  };
+  game.positions.white_pieces = {
+    wk: new Cell(7, 7),
+    wr1: new Cell(7, 0),
+    wr2: new Cell(1, 7)
+  };
+  game.black_move();
+  game.add_recent_board("white");
+  expect(game.board.print_info()).toBe(
+`
+current board: bk,,,,,,,*,,,,,,,wr*bn,,,,,,,*,,,,,,,*,,,,,,,*,,,,,,,*,,,,,,,*wr,,,,,,,wk
+total black pieces: 2
+total white pieces: 3
+total pieces: 5
+black long castling: false
+black short castling: false
+white long castling: false
+white short castling: false
+most recent movement: bn,0,1,bn,2,0,
+total movements available: 27
+next_player: white
 `
   );
 });

@@ -89,7 +89,7 @@ class Game {
                              this.positions.white_short_castling,
                              this.last_movement_reduced(),
                              total_movements,
-                             [",", "b"].includes(this.last_movement_reduced()[0]) ? "white" : "black",
+                             color,
                              game_finished,
                              movements);
   };
