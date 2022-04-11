@@ -271,7 +271,7 @@ it('check is it game over when black has to move but it is on checkmate', () => 
   };
   game.positions.white_pieces = {
     wk: new Cell(7, 7),
-    wr1: (0,7)
+    wr1: new Cell(0,7)
   };
   expect(game.black_move()).toBe(false);
 });
@@ -815,4 +815,77 @@ it('white can play, game is not over because white has a pawn', () => {
     wp8: new Cell(6, 7)
   };
   expect(game.white_move()).toBe(true);
+});
+
+it('spot out precisely the only unique white king move', () => {
+  no_castling();
+  game.positions.cells = [["bk","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","wp7",""],
+  ["br1","","","","","","","wk"]];
+  game.positions.black_pieces = {
+    bk: new Cell(0, 0),
+    br1: new Cell(7, 0)
+  };
+  game.positions.white_pieces = {
+    wk: new Cell(7, 7),
+    wp7: new Cell(6, 6)
+  };
+  game.add_recent_board("white")
+  expect(game.board.print_info()).toBe(
+`
+current board: bk,,,,,,,*,,,,,,,*,,,,,,,*,,,,,,,*,,,,,,,*,,,,,,,*,,,,,,wp,*br,,,,,,,wk
+total black pieces: 2
+total white pieces: 2
+total pieces: 4
+black long castling: false
+black short castling: false
+white long castling: false
+white short castling: false
+most recent movement: ,,,,,,
+total movements available: 1
+next_player: white
+`
+  );
+});
+
+it('spot out precisely the only unique white king move and update after that move', () => {
+  no_castling();
+  game.positions.cells = [["bk","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","wp7",""],
+  ["br1","","","","","","","wk"]];
+  game.positions.black_pieces = {
+    bk: new Cell(0, 0),
+    br1: new Cell(7, 0)
+  };
+  game.positions.white_pieces = {
+    wk: new Cell(7, 7),
+    wp7: new Cell(6, 6)
+  };
+  game.white_move();
+  game.add_recent_board("black");
+  expect(game.board.print_info()).toBe(
+`
+current board: bk,,,,,,,*,,,,,,,*,,,,,,,*,,,,,,,*,,,,,,,*,,,,,,,*,,,,,,wp,wk*br,,,,,,,
+total black pieces: 2
+total white pieces: 2
+total pieces: 4
+black long castling: false
+black short castling: false
+white long castling: false
+white short castling: false
+most recent movement: wk,7,7,wk,6,7,
+total movements available: 16
+next_player: black
+`
+  );
 });

@@ -17,14 +17,12 @@ class Game {
   }
 
   white_move = ()=>{
-    let set_movements = this.positions.available_white_moves();
-    let movements = Array.from(set_movements);
-    if (this.is_it_game_over(movements.length)) return false;
-    this.add_recent_board(movements.length);
+    this.add_recent_board("white");
+    if(this.board.game_finished) return false;
     this.print_last_board_info();
     this.moves_done++;
-    let rnd = Math.floor(Math.random() * movements.length);
-    let last_movement = movements[rnd];
+    let rnd = Math.floor(Math.random() * this.board.movements_available);
+    let last_movement = this.board.movements[rnd];
     this.positions.update_board_details_after_white_move(last_movement);
     this.positions.set_board();
     return true;
@@ -36,14 +34,12 @@ class Game {
   };
 
   black_move = ()=>{
-    let set_movements = this.positions.available_black_moves();
-    let movements = Array.from(set_movements);
-    if (this.is_it_game_over(movements.length)) return false;
-    this.add_recent_board(movements.length);
+    this.add_recent_board("black");
+    if(this.board.game_finished) return false;
     this.print_last_board_info();
     this.moves_done++;
-    let rnd = Math.floor(Math.random() * movements.length);
-    let last_movement = movements[rnd];
+    let rnd = Math.floor(Math.random() * this.board.movements_available);
+    let last_movement = this.board.movements[rnd];
     this.positions.update_board_details_after_black_move(last_movement);
     this.positions.set_board();
     return true;
@@ -74,13 +70,16 @@ class Game {
         2 ||
       this.positions.checkmate_still_possible() == false
     ) {
-      if (total_movements == 0) this.add_recent_board(total_movements);
       return true;
     }
     return false;
   };
 
-  add_recent_board = (total_movements) => {
+  add_recent_board = (color) => {
+    let set_movements = color=="white" ? this.positions.available_white_moves() : this.positions.available_black_moves();
+    let movements = Array.from(set_movements);
+    const total_movements = movements.length;
+    const game_finished = this.is_it_game_over(total_movements) ? true : false;
     this.board = new BoardData(this.give_current_board(),
                              Object.keys(this.positions.black_pieces).length,
                              Object.keys(this.positions.white_pieces).length,
@@ -90,7 +89,9 @@ class Game {
                              this.positions.white_short_castling,
                              this.last_movement_reduced(),
                              total_movements,
-                             [",", "b"].includes(this.last_movement_reduced()[0]) ? "white" : "black");
+                             [",", "b"].includes(this.last_movement_reduced()[0]) ? "white" : "black",
+                             game_finished,
+                             movements);
   };
 
   last_movement_reduced = () => {
