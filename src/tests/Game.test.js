@@ -1266,3 +1266,461 @@ next_player: white
 `
   );
 });
+
+it('spot out precisely the unique white bishop move', () => {
+  no_castling();
+  game.positions.cells = [["bk","","","","","","","br1"],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["br2","","","","","","",""],
+  ["","","","","","","wb1","wk"]];
+  game.positions.black_pieces = {
+    bk: new Cell(0, 0),
+    br1: new Cell(0, 7),
+    br2: new Cell(6, 0)
+  };
+  game.positions.white_pieces = {
+    wk: new Cell(7, 7),
+    wb1: new Cell(7, 6)
+  };
+  game.add_recent_board("white")
+  expect(game.board.print_info()).toBe(
+`
+current board: bk,,,,,,,br*,,,,,,,*,,,,,,,*,,,,,,,*,,,,,,,*,,,,,,,*br,,,,,,,*,,,,,,wb,wk
+total black pieces: 3
+total white pieces: 2
+total pieces: 5
+black long castling: false
+black short castling: false
+white long castling: false
+white short castling: false
+most recent movement: ,,,,,,
+total movements available: 1
+next_player: white
+`
+  );
+});
+
+it('spot out precisely the unique white bishop move and update after that move', () => {
+  no_castling();
+  game.positions.cells = [["bk","","","","","","","br1"],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["br2","","","","","","",""],
+  ["","","","","","","wb1","wk"]];
+  game.positions.black_pieces = {
+    bk: new Cell(0, 0),
+    br1: new Cell(0, 7),
+    br2: new Cell(6, 0)
+  };
+  game.positions.white_pieces = {
+    wk: new Cell(7, 7),
+    wb1: new Cell(7, 6)
+  };
+  game.white_move();
+  game.add_recent_board("black");
+  expect(game.board.print_info()).toBe(
+`
+current board: bk,,,,,,,br*,,,,,,,*,,,,,,,*,,,,,,,*,,,,,,,*,,,,,,,*br,,,,,,,wb*,,,,,,,wk
+total black pieces: 3
+total white pieces: 2
+total pieces: 5
+black long castling: false
+black short castling: false
+white long castling: false
+white short castling: false
+most recent movement: wb,7,6,wb,6,7,
+total movements available: 27
+next_player: black
+`
+  );
+});
+
+it('spot out precisely the unique black bishop move', () => {
+  no_castling();
+  game.positions.cells = [["bk","bb1","","","","","",""],
+  ["","","","","","","","wr2"],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["wr1","","","","","","","wk"]];
+  game.positions.black_pieces = {
+    bk: new Cell(0, 0),
+    bb1: new Cell(0, 1)
+  };
+  game.positions.white_pieces = {
+    wk: new Cell(7, 7),
+    wr1: new Cell(7, 0),
+    wr2: new Cell(1, 7)
+  };
+  game.add_recent_board("black")
+  expect(game.board.print_info()).toBe(
+`
+current board: bk,bb,,,,,,*,,,,,,,wr*,,,,,,,*,,,,,,,*,,,,,,,*,,,,,,,*,,,,,,,*wr,,,,,,,wk
+total black pieces: 2
+total white pieces: 3
+total pieces: 5
+black long castling: false
+black short castling: false
+white long castling: false
+white short castling: false
+most recent movement: ,,,,,,
+total movements available: 1
+next_player: black
+`
+  );
+});
+
+it('spot out precisely the unique black bishop move and update after that move', () => {
+  no_castling();
+  game.positions.cells = [["bk","bb1","","","","","",""],
+  ["","","","","","","","wr2"],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["wr1","","","","","","","wk"]];
+  game.positions.black_pieces = {
+    bk: new Cell(0, 0),
+    bb1: new Cell(0, 1)
+  };
+  game.positions.white_pieces = {
+    wk: new Cell(7, 7),
+    wr1: new Cell(7, 0),
+    wr2: new Cell(1, 7)
+  };
+  game.black_move();
+  game.add_recent_board("white");
+  expect(game.board.print_info()).toBe(
+`
+current board: bk,,,,,,,*bb,,,,,,,wr*,,,,,,,*,,,,,,,*,,,,,,,*,,,,,,,*,,,,,,,*wr,,,,,,,wk
+total black pieces: 2
+total white pieces: 3
+total pieces: 5
+black long castling: false
+black short castling: false
+white long castling: false
+white short castling: false
+most recent movement: bb,0,1,bb,1,0,
+total movements available: 27
+next_player: white
+`
+  );
+});
+
+it('spot out precisely the unique white rock move', () => {
+  no_castling();
+  game.positions.cells = [["bk","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","wr1","",""],
+  ["","","","","","","wp7","wp8"],
+  ["br1","","","","","","","wk"]];
+  game.positions.black_pieces = {
+    bk: new Cell(0, 0),
+    br1: new Cell(7, 0)
+  };
+  game.positions.white_pieces = {
+    wk: new Cell(7, 7),
+    wr1: new Cell(5, 5),
+    wp7: new Cell(6, 6),
+    wp8: new Cell(6, 7)
+  };
+  game.add_recent_board("white")
+  expect(game.board.print_info()).toBe(
+`
+current board: bk,,,,,,,*,,,,,,,*,,,,,,,*,,,,,,,*,,,,,,,*,,,,,wr,,*,,,,,,wp,wp*br,,,,,,,wk
+total black pieces: 2
+total white pieces: 4
+total pieces: 6
+black long castling: false
+black short castling: false
+white long castling: false
+white short castling: false
+most recent movement: ,,,,,,
+total movements available: 1
+next_player: white
+`
+  );
+});
+
+it('spot out precisely the unique white rock move and update after that move', () => {
+  no_castling();
+  game.positions.cells = [["bk","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","wr1","",""],
+  ["","","","","","","wp7","wp8"],
+  ["br1","","","","","","","wk"]];
+  game.positions.black_pieces = {
+    bk: new Cell(0, 0),
+    br1: new Cell(7, 0)
+  };
+  game.positions.white_pieces = {
+    wk: new Cell(7, 7),
+    wr1: new Cell(5, 5),
+    wp7: new Cell(6, 6),
+    wp8: new Cell(6, 7)
+  };
+  game.white_move();
+  game.add_recent_board("black");
+  expect(game.board.print_info()).toBe(
+`
+current board: bk,,,,,,,*,,,,,,,*,,,,,,,*,,,,,,,*,,,,,,,*,,,,,,,*,,,,,,wp,wp*br,,,,,wr,,wk
+total black pieces: 2
+total white pieces: 4
+total pieces: 6
+black long castling: false
+black short castling: false
+white long castling: false
+white short castling: false
+most recent movement: wr,5,5,wr,7,5,
+total movements available: 14
+next_player: black
+`
+  );
+});
+
+it('spot out precisely the unique black rock move', () => {
+  no_castling();
+  game.positions.cells = [["bk","","","","","","","wr1"],
+  ["bp1","bp2","","","","","",""],
+  ["","","br1","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","","wk"]];
+  game.positions.black_pieces = {
+    bk: new Cell(0, 0),
+    br1: new Cell(2, 2),
+    bp1: new Cell(1, 0),
+    bp2: new Cell(1, 1)
+  };
+  game.positions.white_pieces = {
+    wk: new Cell(7, 7),
+    wr1: new Cell(0, 7)
+  };
+  game.add_recent_board("black")
+  expect(game.board.print_info()).toBe(
+`
+current board: bk,,,,,,,wr*bp,bp,,,,,,*,,br,,,,,*,,,,,,,*,,,,,,,*,,,,,,,*,,,,,,,*,,,,,,,wk
+total black pieces: 4
+total white pieces: 2
+total pieces: 6
+black long castling: false
+black short castling: false
+white long castling: false
+white short castling: false
+most recent movement: ,,,,,,
+total movements available: 1
+next_player: black
+`
+  );
+});
+
+it('spot out precisely the unique black rock move and update after that move', () => {
+  no_castling();
+  game.positions.cells = [["bk","","","","","","","wr1"],
+  ["bp1","bp2","","","","","",""],
+  ["","","br1","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","","wk"]];
+  game.positions.black_pieces = {
+    bk: new Cell(0, 0),
+    br1: new Cell(2, 2),
+    bp1: new Cell(1, 0),
+    bp2: new Cell(1, 1)
+  };
+  game.positions.white_pieces = {
+    wk: new Cell(7, 7),
+    wr1: new Cell(0, 7)
+  };
+  game.black_move();
+  game.add_recent_board("white");
+  expect(game.board.print_info()).toBe(
+`
+current board: bk,,br,,,,,wr*bp,bp,,,,,,*,,,,,,,*,,,,,,,*,,,,,,,*,,,,,,,*,,,,,,,*,,,,,,,wk
+total black pieces: 4
+total white pieces: 2
+total pieces: 6
+black long castling: false
+black short castling: false
+white long castling: false
+white short castling: false
+most recent movement: br,2,2,br,0,2,
+total movements available: 14
+next_player: white
+`
+  );
+});
+
+it('spot out precisely the unique white queen move', () => {
+  no_castling();
+  game.positions.cells = [["bk","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","wq1",""],
+  ["","","","","","","wp7","wp8"],
+  ["br1","","","","","","","wk"]];
+  game.positions.black_pieces = {
+    bk: new Cell(0, 0),
+    br1: new Cell(7, 0)
+  };
+  game.positions.white_pieces = {
+    wk: new Cell(7, 7),
+    wq1: new Cell(5, 6),
+    wp7: new Cell(6, 6),
+    wp8: new Cell(6, 7)
+  };
+  game.add_recent_board("white")
+  expect(game.board.print_info()).toBe(
+`
+current board: bk,,,,,,,*,,,,,,,*,,,,,,,*,,,,,,,*,,,,,,,*,,,,,,wq,*,,,,,,wp,wp*br,,,,,,,wk
+total black pieces: 2
+total white pieces: 4
+total pieces: 6
+black long castling: false
+black short castling: false
+white long castling: false
+white short castling: false
+most recent movement: ,,,,,,
+total movements available: 1
+next_player: white
+`
+  );
+});
+
+it('spot out precisely the unique white queen move and update after that move', () => {
+  no_castling();
+  game.positions.cells = [["bk","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","wq1",""],
+  ["","","","","","","wp7","wp8"],
+  ["br1","","","","","","","wk"]];
+  game.positions.black_pieces = {
+    bk: new Cell(0, 0),
+    br1: new Cell(7, 0)
+  };
+  game.positions.white_pieces = {
+    wk: new Cell(7, 7),
+    wq1: new Cell(5, 6),
+    wp7: new Cell(6, 6),
+    wp8: new Cell(6, 7)
+  };
+  game.white_move();
+  game.add_recent_board("black");
+  expect(game.board.print_info()).toBe(
+`
+current board: bk,,,,,,,*,,,,,,,*,,,,,,,*,,,,,,,*,,,,,,,*,,,,,,,*,,,,,,wp,wp*br,,,,wq,,,wk
+total black pieces: 2
+total white pieces: 4
+total pieces: 6
+black long castling: false
+black short castling: false
+white long castling: false
+white short castling: false
+most recent movement: wq,5,6,wq,7,4,
+total movements available: 13
+next_player: black
+`
+  );
+});
+
+it('spot out precisely the unique black queen move', () => {
+  no_castling();
+  game.positions.cells = [["bk","","","","","","","wr1"],
+  ["bp1","bp2","","","","","",""],
+  ["","bq1","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","","wk"]];
+  game.positions.black_pieces = {
+    bk: new Cell(0, 0),
+    bq1: new Cell(2, 1),
+    bp1: new Cell(1, 0),
+    bp2: new Cell(1, 1)
+  };
+  game.positions.white_pieces = {
+    wk: new Cell(7, 7),
+    wr1: new Cell(0, 7)
+  };
+  game.add_recent_board("black")
+  expect(game.board.print_info()).toBe(
+`
+current board: bk,,,,,,,wr*bp,bp,,,,,,*,bq,,,,,,*,,,,,,,*,,,,,,,*,,,,,,,*,,,,,,,*,,,,,,,wk
+total black pieces: 4
+total white pieces: 2
+total pieces: 6
+black long castling: false
+black short castling: false
+white long castling: false
+white short castling: false
+most recent movement: ,,,,,,
+total movements available: 1
+next_player: black
+`
+  );
+});
+
+it('spot out precisely the unique black queen move and update after that move', () => {
+  no_castling();
+  game.positions.cells = [["bk","","","","","","","wr1"],
+  ["bp1","bp2","","","","","",""],
+  ["","bq1","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","","wk"]];
+  game.positions.black_pieces = {
+    bk: new Cell(0, 0),
+    bq1: new Cell(2, 1),
+    bp1: new Cell(1, 0),
+    bp2: new Cell(1, 1)
+  };
+  game.positions.white_pieces = {
+    wk: new Cell(7, 7),
+    wr1: new Cell(0, 7)
+  };
+  game.black_move();
+  game.add_recent_board("white");
+  expect(game.board.print_info()).toBe(
+`
+current board: bk,,,bq,,,,wr*bp,bp,,,,,,*,,,,,,,*,,,,,,,*,,,,,,,*,,,,,,,*,,,,,,,*,,,,,,,wk
+total black pieces: 4
+total white pieces: 2
+total pieces: 6
+black long castling: false
+black short castling: false
+white long castling: false
+white short castling: false
+most recent movement: bq,2,1,bq,0,3,
+total movements available: 13
+next_player: white
+`
+  );
+});
