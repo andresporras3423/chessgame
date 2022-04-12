@@ -1724,3 +1724,94 @@ next_player: white
 `
   );
 });
+
+it('spot out precisely the position and board data for white movement after the next two moves', () => {
+  no_castling();
+  game.positions.cells = [["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","wr1","","wr2","",""],
+  ["","","","","bk","","",""],
+  ["","","","br1","","","",""],
+  ["","","wb1","","","wp6","wk",""],
+  ["br2","","","","","bb1","wn1","wb2"]];
+  game.positions.black_pieces = {
+    bk: new Cell(4, 4),
+    br1: new Cell(5, 3),
+    br2: new Cell(7, 0),
+    bb1: new Cell(7, 5)
+  };
+  game.positions.white_pieces = {
+    wk: new Cell(6, 6),
+    wp6: new Cell(6, 5),
+    wr1: new Cell(3, 3),
+    wr2: new Cell(3, 5),
+    wb1: new Cell(6, 2),
+    wb2: new Cell(7, 7),
+    wn1: new Cell(7, 6)
+  };
+  game.white_move();
+  game.black_move();
+  game.add_recent_board("white");
+  expect(game.board.print_info()).toBe(
+`
+current board: ,,,,,,,*,,,,,,,*,,,,,,,*,,,wr,,wr,,*,,,,bk,,,*,,,br,,,,*,,wb,,,wp,bb,wk*br,,,,,,wn,wb
+total black pieces: 4
+total white pieces: 7
+total pieces: 11
+black long castling: false
+black short castling: false
+white long castling: false
+white short castling: false
+most recent movement: bb,7,5,bb,6,6,
+total movements available: 29
+next_player: white
+`
+  );
+});
+
+it('spot out precisely the position and board for black movement data after the next two moves', () => {
+  no_castling();
+  game.positions.cells = [
+  ["bb2","bn1","wb1","","","","","wr1"],
+  ["","bk","bp3","","","bb1","",""],
+  ["","","","","wr2","","",""],
+  ["","","","wk","","","",""],
+  ["","","br2","","br1","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""]];
+  game.positions.black_pieces = {
+    bk: new Cell(1, 1),
+    bp3: new Cell(1, 2),
+    br1: new Cell(4, 4),
+    br2: new Cell(4, 2),
+    bb1: new Cell(1, 5),
+    bb2: new Cell(0, 0),
+    bn1: new Cell(0, 1)
+  };
+  game.positions.white_pieces = {
+    wk: new Cell(3, 3),
+    wr1: new Cell(0, 7),
+    wr2: new Cell(2, 4),
+    wb1: new Cell(0, 2)
+  };
+  game.black_move();
+  game.white_move();
+  game.add_recent_board("black");
+  expect(game.board.print_info()).toBe(
+`
+current board: bb,bn,,,,,,wr*bk,wb,bp,,,bb,,*,,,,wr,,,*,,,wk,,,,*,,br,,br,,,*,,,,,,,*,,,,,,,*,,,,,,,
+total black pieces: 7
+total white pieces: 4
+total pieces: 11
+black long castling: false
+black short castling: false
+white long castling: false
+white short castling: false
+most recent movement: wb,0,2,wb,1,1,
+total movements available: 29
+next_player: black
+`
+  );
+});
