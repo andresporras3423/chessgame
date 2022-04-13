@@ -27,6 +27,15 @@ class Board extends React.Component {
       "wk": "/assets/white-king.svg",
       "": ""},
       cellColor: ["white-cell", "black-cell"],
+      firstCell: null,
+      secondCell: null,
+      selectCell: (i, j)=>{
+        if(this.firstCell==null){
+          this.setState({
+            firstCell: this.state.cells[i][j]
+          });
+        }
+      },
       selectedColor: "white",
       updateColorToPlay: ()=>{
         let reverseCells = [];
@@ -69,7 +78,7 @@ class Board extends React.Component {
                         row.map(
                           (cell, j)=>{
                             return(
-                              <div className={"cell-properties "+this.state.cellColor[(i+j)%2]} key={nanoid()}>
+                              <div className={"cell-properties "+this.state.cellColor[(i+j)%2]} key={nanoid()} onClick={()=>this.selectCell(i,j)}>
                                 <img src={this.state.pieces[cell]} height="40px" width="40px" className={cell==="" ? "invisible" : ""} />
                               </div>
                             )
