@@ -7,7 +7,13 @@ class Board extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      boardData : new BoardData()
+      boardData : new BoardData(),
+      turnBoard: ()=>{
+        this.state.boardData.turnBoard();
+        this.setState({
+          boardData: this.state.boardData
+        });
+        }
     };
   }
 
@@ -17,14 +23,14 @@ class Board extends React.Component {
           <div className="form-check">
             <div>
             <input type="radio" value="white" name="color" className="form-check-input"
-            checked={this.state.selectedColor === "white"}
-              onChange={this.state.updateColorToPlay} /> 
+            checked={this.state.boardData.playWithWhite}
+              onChange={()=>this.state.turnBoard()} /> 
               <label className="form-check-label">Play with white</label>
             </div>
             <div>
             <input type="radio" value="black" name="color" className="form-check-input"
-            checked={this.state.selectedColor === "black"}
-            onChange={this.state.updateColorToPlay}  /> 
+            checked={!this.state.boardData.playWithWhite}
+            onChange={()=>this.state.turnBoard()}  /> 
             <label className="form-check-label">Play with black</label>
             </div>
           </div>

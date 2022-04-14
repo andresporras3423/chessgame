@@ -2,6 +2,7 @@ import CellData from "./CellData.js";
 
 class BoardData {
   constructor() {
+    this.playWithWhite = true;
     this.blackLongCastling = true;
     this.blackShortCastling = true;
     this.whiteLongCastling = true;
@@ -43,10 +44,11 @@ class BoardData {
   };
   turnBoard = () => {
     let reverseCells = [];
-    this.arraycells.reverse().forEach((row) => {
+    this.arrayCells.reverse().forEach((row) => {
       reverseCells.push(row.reverse());
     });
     this.arrayCells = reverseCells;
+    this.playWithWhite = !this.playWithWhite;
   };
 }
 
