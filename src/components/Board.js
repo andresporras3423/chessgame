@@ -18,6 +18,15 @@ class Board extends React.Component {
           this.setState({
             boardData: new BoardData(this.state.playWithWhite)
           });
+        },
+        clickCell: (cell)=>{
+          this.state.boardData.selectPiece(cell);
+          this.state.updateBoard();
+        },
+        updateBoard: ()=>{
+          this.setState({
+            boardData: this.state.boardData
+          });
         }
     };
   }
@@ -58,7 +67,7 @@ class Board extends React.Component {
                         row.map(
                           (cell)=>{
                             return(
-                              <Cell key={nanoid()} cell={cell}></Cell>
+                              <Cell key={nanoid()} cell={cell} clickCell={this.state.clickCell}></Cell>
                             )
                           }
                         )

@@ -22,6 +22,10 @@
   background-color: purple;
 }
 
+.blue-cell{
+  background-color: lightblue;
+}
+
 .last-move-cell{
   background-color: #27B34F;
 }

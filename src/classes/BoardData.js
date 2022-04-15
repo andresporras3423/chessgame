@@ -2,6 +2,7 @@ import CellData from "./CellData.js";
 // this class contains all the information about board situation
 class BoardData {
   constructor(nPlayWithWhite=true) {
+    this.selectedPiece = null; // clicked piece by player to move
     this.whitePlaying = true; // indicates whether the current turn is for white or not
     this.playWithWhite = nPlayWithWhite; // indicates whether the human player is using white color or not
     // next four variables indicate if these castlings are still available or not
@@ -64,6 +65,23 @@ class BoardData {
     this.arrayCells = reverseCells;
     this.playWithWhite = !this.playWithWhite;
   };
+
+  selectPiece = (cell) =>{
+  if(cell === this.selectedPiece){
+    this.selectedPiece.removeColor("selected");
+    this.selectedPiece = null;
+  }
+  else if(this.whitePlaying === this.playWithWhite){
+    if(this.selectedPiece!==null){
+      this.selectedPiece.removeColor("selected");
+      this.selectedPiece = null;
+    }
+    if((this.playWithWhite && cell.piece[0]=="w") || (!this.playWithWhite && cell.piece[0]=="b")){
+      this.selectedPiece = cell;
+      this.selectedPiece.addColor("selected");
+    }
+  }
+  }
 }
 
 export default BoardData;

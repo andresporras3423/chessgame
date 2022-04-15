@@ -22,7 +22,7 @@ class Cell extends React.Component {
 
   render() {
     return (
-    <div className={`cell-properties ${this.props.cell.currentColor()}`}>
+    <div className={`cell-properties ${this.props.cell.currentColor()}`} onClick={()=>this.props.clickCell(this.props.cell)}>
       <img src={this.state.images[this.props.cell.piece]} height="40px" width="40px" className={this.props.cell.piece==="" ? "invisible" : ""} />
     </div>
     );

@@ -13,15 +13,15 @@ class CellData{
     this.y=y;
     this.x=x;
     this.piece=piece;
-    this.colors=[];
+    this.colors={};
     this.initialColors();
   }
 
   initialColors = ()=>{
     const castlings = ["00","04","07","70","74","77"]
-    if((this.y+this.x)%2==0) this.colors.push(Colors["white"]);
-    else this.colors.push(Colors["black"]);
-    if(castlings.includes(`${this.y}${this.x}`)) this.colors.push(Colors["castling-available"]);
+    if((this.y+this.x)%2==0) this.colors["white"] = Colors["white"];
+    else this.colors["black"] = Colors["black"];
+    if(castlings.includes(`${this.y}${this.x}`)) this.colors["castling-available"] = Colors["castling-available"];
   }
 
   currentColor =()=>{
@@ -30,6 +30,14 @@ class CellData{
       return nColor;
     },{"value": 0});
     return color["class"];
+  }
+
+  removeColor =(newColor)=>{
+    delete this.colors[newColor];
+  }
+
+  addColor =(newColor)=>{
+    this.colors[newColor] = Colors[newColor];
   }
 }
 export default CellData;
