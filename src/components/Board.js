@@ -7,12 +7,17 @@ class Board extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      playWithWhite: true,
       boardData : new BoardData(),
-      turnBoard: ()=>{
-        this.state.boardData.turnBoard();
-        this.setState({
-          boardData: this.state.boardData
-        });
+        updateHumanColor: ()=>{
+          this.setState({
+            playWithWhite: !this.state.playWithWhite
+          });
+        },
+        startGame: ()=>{
+          this.setState({
+            boardData: new BoardData(this.state.playWithWhite)
+          });
         }
     };
   }
@@ -23,15 +28,24 @@ class Board extends React.Component {
           <div className="form-check">
             <div>
             <input type="radio" value="white" name="color" className="form-check-input"
-            checked={this.state.boardData.playWithWhite}
-              onChange={()=>this.state.turnBoard()} /> 
+            checked={this.state.playWithWhite}
+              onChange={()=>this.state.updateHumanColor()} /> 
               <label className="form-check-label">Play with white</label>
             </div>
             <div>
             <input type="radio" value="black" name="color" className="form-check-input"
-            checked={!this.state.boardData.playWithWhite}
-            onChange={()=>this.state.turnBoard()}  /> 
+            checked={!this.state.playWithWhite}
+            onChange={()=>this.state.updateHumanColor()}  /> 
             <label className="form-check-label">Play with black</label>
+            </div>
+            <div className="margin-start-button">
+            <button
+            data-testid="button-start"
+            className="btn btn-primary"
+            onClick={()=> this.state.startGame()}
+          >
+            start
+          </button>
             </div>
           </div>
           <div className="board">

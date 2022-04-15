@@ -46,6 +46,11 @@
   pointer-events: none;
 }
 
+.margin-start-button{
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
