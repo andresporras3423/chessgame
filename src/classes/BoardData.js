@@ -10,6 +10,8 @@ class BoardData {
     this.blackShortCastling = true;
     this.whiteLongCastling = true;
     this.whiteShortCastling = true;
+    this.lastMovement1 = null;
+    this.lastMovement2 = null;
     // cells variable is used for getArrayCells() function to set the original position of the board
     this.cells = [
       ["br", "bn", "bb", "bq", "bk", "bb", "bn", "br"],
@@ -67,20 +69,54 @@ class BoardData {
   };
 
   selectPiece = (cell) =>{
-  if(cell === this.selectedPiece){
-    this.selectedPiece.removeColor("selected");
-    this.selectedPiece = null;
-  }
-  else if(this.whitePlaying === this.playWithWhite){
-    if(this.selectedPiece!==null){
+    if(this.selectedPiece===null){
+      if((this.whitePlaying && cell.piece[0]=="w") || (!this.whitePlaying && cell.piece[0]=="b")){
+        this.selectedPiece = cell;
+        this.selectedPiece.addColor("selected");
+      }
+    }
+    else if(cell === this.selectedPiece){
       this.selectedPiece.removeColor("selected");
       this.selectedPiece = null;
     }
-    if((this.playWithWhite && cell.piece[0]=="w") || (!this.playWithWhite && cell.piece[0]=="b")){
+    else if(cell.piece[0]==this.selectedPiece.piece[0]){
+      this.selectedPiece.removeColor("selected");
+      this.selectedPiece = null;
       this.selectedPiece = cell;
       this.selectedPiece.addColor("selected");
     }
+    else if(this.validMovement(this.selectedPiece, cell)){
+      cell.piece = this.selectedPiece.piece;
+      this.selectedPiece.piece="";
+      if(this.lastMovement1!==null) this.lastMovement1.removeColor("last-move");
+      if(this.lastMovement2!==null) this.lastMovement2.removeColor("last-move");
+      this.lastMovement1= this.selectedPiece;
+      this.lastMovement2 = cell;
+      this.lastMovement1.addColor("last-move");
+      this.lastMovement2.addColor("last-move");
+      this.selectedPiece.removeColor("selected");
+      this.selectedPiece=null;
+      this.whitePlaying = !this.whitePlaying;
+    }
+    // samePiece check if you click the already selected piece
+    // next two lines, unselect piece the currently selected piece
+    // do nothing else if it was the same previous selected piece
+  //otherwise select if valid selection
   }
+
+  validMovement = (cell1, cell2)=>{
+  if(cell1.piece==="bn" || cell1.piece==="wn"){
+    if(this.validKnightMove(cell1, cell2)){
+      return true;
+    }
+  }
+  return false;
+  }
+
+  validKnightMove = (cell1, cell2)=>{
+    const knightMovements = ["12","1-2","21","2-1","-12","-1-2","-21","-2-1"];
+    if(knightMovements.includes(`${cell1.y-cell2.y}${cell1.x-cell2.x}`)) return true;
+    return false;
   }
 }
 

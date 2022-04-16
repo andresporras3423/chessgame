@@ -7,6 +7,7 @@ class Board extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      gameMessage: "",
       playWithWhite: true,
       boardData : new BoardData(),
         updateHumanColor: ()=>{
@@ -16,7 +17,8 @@ class Board extends React.Component {
         },
         startGame: ()=>{
           this.setState({
-            boardData: new BoardData(this.state.playWithWhite)
+            boardData: new BoardData(this.state.playWithWhite),
+            gameMessage: "Game started"
           });
         },
         clickCell: (cell)=>{
@@ -55,6 +57,7 @@ class Board extends React.Component {
           >
             start
           </button>
+          <h3>{this.state.gameMessage}</h3>
             </div>
           </div>
           <div className="board">

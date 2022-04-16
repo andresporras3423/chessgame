@@ -26,6 +26,10 @@
   background-color: lightblue;
 }
 
+.green-cell{
+  background-color: lightgreen;
+}
+
 .last-move-cell{
   background-color: #27B34F;
 }
@@ -52,7 +56,7 @@
 
 .margin-start-button{
   margin-top: 20px;
-  margin-bottom: 10px;
+  height: 60px;
 }
 
 @media (prefers-reduced-motion: no-preference) {
