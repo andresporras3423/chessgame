@@ -128,12 +128,26 @@ class BoardData {
   }
 
   validWhitePawnMove = (cell1, cell2)=>{
+    const capture = ["1-1","11"];
     if(cell2.piece=="" && `${cell1.y-cell2.y}${cell1.x-cell2.x}`==="10") return true;
+    if(cell1.y===6 && cell2.piece==="" && `${cell1.y-cell2.y}${cell1.x-cell2.x}`==="20" && this.objectCells[5][cell1.x].piece==="") return true;
+    if(cell2.piece[0]==="b" && capture.includes(`${cell1.y-cell2.y}${cell1.x-cell2.x}`)) return true;
+    if(cell1.y===3 && capture.includes(`${cell1.y-cell2.y}${cell1.x-cell2.x}`) && this.lastMovement2.piece==="bp" && this.lastMovement2.y===3 && this.lastMovement2.x===cell2.x && this.lastMovement1.y===1 && this.lastMovement1.x===cell2.x){
+      this.lastMovement2.piece="";
+      return true;
+    }
     return false;
   }
 
   validBlackPawnMove = (cell1, cell2)=>{
+    const capture = ["-1-1","-11"];
     if(cell2.piece=="" && `${cell1.y-cell2.y}${cell1.x-cell2.x}`==="-10") return true;
+    if(cell1.y===1 && cell2.piece=="" && `${cell1.y-cell2.y}${cell1.x-cell2.x}`==="-20" && this.objectCells[2][cell1.x].piece==="") return true;
+    if(cell2.piece[0]=="w" && capture.includes(`${cell1.y-cell2.y}${cell1.x-cell2.x}`)) return true;
+    if(cell1.y===4 && capture.includes(`${cell1.y-cell2.y}${cell1.x-cell2.x}`) && this.lastMovement2.piece==="wp" && this.lastMovement2.y===4 && this.lastMovement2.x===cell2.x && this.lastMovement1.y===6 && this.lastMovement1.x===cell2.x){
+      this.lastMovement2.piece="";
+      return true;
+    }
     return false;
   }
 }
