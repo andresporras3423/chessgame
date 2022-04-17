@@ -69,23 +69,31 @@ class BoardData {
   };
 
   selectPiece = (cell) =>{
+    // if there is no selected piece yet
     if(this.selectedPiece===null){
+      // if the selected piece is from the color that has to move now
       if((this.whitePlaying && cell.piece[0]=="w") || (!this.whitePlaying && cell.piece[0]=="b")){
         this.selectedPiece = cell;
         this.selectedPiece.addColor("selected");
       }
     }
+    //if click over the already selected piece then unselect the piece
     else if(cell === this.selectedPiece){
       this.selectedPiece.removeColor("selected");
       this.selectedPiece = null;
     }
+    // if select a different piece from the same color of the already selected piece then unselect privous piece and select the new one
     else if(cell.piece[0]==this.selectedPiece.piece[0]){
       this.selectedPiece.removeColor("selected");
       this.selectedPiece = null;
       this.selectedPiece = cell;
       this.selectedPiece.addColor("selected");
     }
+    //check if valid movement
     else if(this.validMovement(this.selectedPiece, cell)){
+      //if valid movement the reove last movement color from last movement cells
+      // update last movement cells 
+      // remove selected color from the last selectedPiece
       cell.piece = this.selectedPiece.piece;
       this.selectedPiece.piece="";
       if(this.lastMovement1!==null) this.lastMovement1.removeColor("last-move");
@@ -98,17 +106,17 @@ class BoardData {
       this.selectedPiece=null;
       this.whitePlaying = !this.whitePlaying;
     }
-    // samePiece check if you click the already selected piece
-    // next two lines, unselect piece the currently selected piece
-    // do nothing else if it was the same previous selected piece
-  //otherwise select if valid selection
   }
 
   validMovement = (cell1, cell2)=>{
   if(cell1.piece==="bn" || cell1.piece==="wn"){
-    if(this.validKnightMove(cell1, cell2)){
-      return true;
-    }
+    return this.validKnightMove(cell1, cell2);
+  }
+  if(cell1.piece==="bp"){
+    return this.validBlackPawnMove(cell1, cell2);
+  }
+  if(cell1.piece==="wp"){
+    return this.validWhitePawnMove(cell1, cell2);
   }
   return false;
   }
@@ -116,6 +124,16 @@ class BoardData {
   validKnightMove = (cell1, cell2)=>{
     const knightMovements = ["12","1-2","21","2-1","-12","-1-2","-21","-2-1"];
     if(knightMovements.includes(`${cell1.y-cell2.y}${cell1.x-cell2.x}`)) return true;
+    return false;
+  }
+
+  validWhitePawnMove = (cell1, cell2)=>{
+    if(cell2.piece=="" && `${cell1.y-cell2.y}${cell1.x-cell2.x}`==="10") return true;
+    return false;
+  }
+
+  validBlackPawnMove = (cell1, cell2)=>{
+    if(cell2.piece=="" && `${cell1.y-cell2.y}${cell1.x-cell2.x}`==="-10") return true;
     return false;
   }
 }
