@@ -124,6 +124,9 @@ class BoardData {
   if(cell1.piece==="wb" || cell1.piece==="bb"){
     return this.validBishopMove(cell1, cell2);
   }
+  if(cell1.piece==="wr" || cell1.piece==="br"){
+    return this.validRockMove(cell1, cell2);
+  }
   return false;
   }
 
@@ -171,15 +174,15 @@ class BoardData {
 
   validBishopMove = (cell1, cell2)=>{
     // return false if is not a diagonal move
-    if(Math.abs(cell1.y-cell2.y)!==Math.abs(cell1.x-cell2.x)) return false;
+    if(Math.abs(cell2.y-cell1.y)!==Math.abs(cell2.x-cell1.x)) return false;
     // check there is no pieces between cell1 and cell2
-    let changeRow = Math.abs(cell1.y-cell2.y)/(cell1.y-cell2.y);
-    let changeColumn = Math.abs(cell1.x-cell2.x)/(cell1.x-cell2.x);
+    let changeRow = Math.abs(cell2.y-cell1.y)/(cell2.y-cell1.y);
+    let changeColumn = Math.abs(cell2.x-cell1.x)/(cell2.x-cell1.x);
     let row = cell1.y+changeRow;
     let column = cell1.x+changeColumn;
-    while(row<cell2.y){
+    while(row!=cell2.y){ // while checked cell is not the second cell
       //if a piece between cell1 and cell2 then invalid bishop movement
-      if(this.objectCells[row][column]!=="") return false;
+      if(this.objectCells[row][column].piece!=="") return false;
       row += changeRow;
       column += changeColumn;
     }
