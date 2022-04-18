@@ -129,25 +129,37 @@ class BoardData {
 
   validWhitePawnMove = (cell1, cell2)=>{
     const capture = ["1-1","11"];
+    // if pawn move one cell ahead and the cell is empty
     if(cell2.piece=="" && `${cell1.y-cell2.y}${cell1.x-cell2.x}`==="10") return true;
+    // if pawn move two cells ahead from its starting position, both cells ahead must be empty
     if(cell1.y===6 && cell2.piece==="" && `${cell1.y-cell2.y}${cell1.x-cell2.x}`==="20" && this.objectCells[5][cell1.x].piece==="") return true;
+    // if capture on diagonal cells ahead, the ending cell must have a black piece
     if(cell2.piece[0]==="b" && capture.includes(`${cell1.y-cell2.y}${cell1.x-cell2.x}`)) return true;
+    // en passant move, white pawn is in the fifth row, if last movement was oponent pawn move to the left or right side of the selected pawn then it can take
     if(cell1.y===3 && capture.includes(`${cell1.y-cell2.y}${cell1.x-cell2.x}`) && this.lastMovement2.piece==="bp" && this.lastMovement2.y===3 && this.lastMovement2.x===cell2.x && this.lastMovement1.y===1 && this.lastMovement1.x===cell2.x){
+      //in this case, delete the pawn that moves in the previous move
       this.lastMovement2.piece="";
       return true;
     }
+    // otherwise, is an invalid pawn movement and return false
     return false;
   }
 
   validBlackPawnMove = (cell1, cell2)=>{
     const capture = ["-1-1","-11"];
+    // if pawn move one cell ahead and the cell is empty
     if(cell2.piece=="" && `${cell1.y-cell2.y}${cell1.x-cell2.x}`==="-10") return true;
+    // if pawn move two cells ahead from its starting position, both cells ahead must be empty
     if(cell1.y===1 && cell2.piece=="" && `${cell1.y-cell2.y}${cell1.x-cell2.x}`==="-20" && this.objectCells[2][cell1.x].piece==="") return true;
+    // if capture on diagonal cells ahead, the ending cell must have a white piece
     if(cell2.piece[0]=="w" && capture.includes(`${cell1.y-cell2.y}${cell1.x-cell2.x}`)) return true;
+    // en passant move, black pawn is in the fourth row, if last movement was oponent pawn move to the left or right side of the selected pawn then it can take
     if(cell1.y===4 && capture.includes(`${cell1.y-cell2.y}${cell1.x-cell2.x}`) && this.lastMovement2.piece==="wp" && this.lastMovement2.y===4 && this.lastMovement2.x===cell2.x && this.lastMovement1.y===6 && this.lastMovement1.x===cell2.x){
+      //in this case, delete the pawn that moves in the previous move
       this.lastMovement2.piece="";
       return true;
     }
+    // otherwise, is an invalid pawn movement and return false
     return false;
   }
 }
