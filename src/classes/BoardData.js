@@ -188,6 +188,23 @@ class BoardData {
     }
     return true;
   }
+
+  validRockMove = (cell1, cell2)=>{
+    // return false if is not a horizontal/vertical move
+    if((cell2.y-cell1.y)!==0 && (cell2.x-cell1.x)!==0) return false;
+    // check there is no pieces between cell1 and cell2
+    let changeRow = (cell2.y-cell1.y)===0 ? 0 : Math.abs(cell2.y-cell1.y)/(cell2.y-cell1.y);
+    let changeColumn = (cell2.x-cell1.x)===0 ? 0 : Math.abs(cell2.x-cell1.x)/(cell2.x-cell1.x);
+    let row = cell1.y+changeRow;
+    let column = cell1.x+changeColumn;
+    while((row+column)!=(cell2.x+cell2.y)){ // while checked cell is not the second cell
+      //if a piece between cell1 and cell2 then invalid rock movement
+      if(this.objectCells[row][column].piece!=="") return false;
+      row += changeRow;
+      column += changeColumn;
+    }
+    return true;
+  }
 }
 
 export default BoardData;
