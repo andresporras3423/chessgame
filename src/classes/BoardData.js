@@ -127,6 +127,9 @@ class BoardData {
   if(cell1.piece==="wr" || cell1.piece==="br"){
     return this.validRockMove(cell1, cell2);
   }
+  if(cell1.piece==="wq" || cell1.piece==="bq"){
+    return this.validBishopMove(cell1, cell2) || this.validRockMove(cell1, cell2);
+  }
   return false;
   }
 
