@@ -68,6 +68,7 @@ class BoardData {
     this.playWithWhite = !this.playWithWhite;
   };
 
+  // method called after user click any cell in the board
   selectPiece = (cell) =>{
     // if there is no selected piece yet
     if(this.selectedPiece===null){
@@ -108,6 +109,8 @@ class BoardData {
     }
   }
 
+  // this method is called after user click a second cell and after checking it doesnt click another piece of the same color
+  // therefore by this point we already know the second cell selected is either an empty cell or fill by oponnnent color 
   validMovement = (cell1, cell2)=>{
   if(cell1.piece==="bn" || cell1.piece==="wn"){
     return this.validKnightMove(cell1, cell2);
@@ -118,11 +121,14 @@ class BoardData {
   if(cell1.piece==="wp"){
     return this.validWhitePawnMove(cell1, cell2);
   }
+  if(cell1.piece==="wb" || cell1.piece==="bb"){
+    return this.validBishopMove(cell1, cell2);
+  }
   return false;
   }
 
   validKnightMove = (cell1, cell2)=>{
-    const knightMovements = ["12","1-2","21","2-1","-12","-1-2","-21","-2-1"];
+    const knightMovements = ["12","1-2","21","2-1","-12","-1-2","-21","-2-1"]; // eight possible knight moves
     if(knightMovements.includes(`${cell1.y-cell2.y}${cell1.x-cell2.x}`)) return true;
     return false;
   }
@@ -146,7 +152,7 @@ class BoardData {
   }
 
   validBlackPawnMove = (cell1, cell2)=>{
-    const capture = ["-1-1","-11"];
+    const capture = ["-1-1","-11"]; 
     // if pawn move one cell ahead and the cell is empty
     if(cell2.piece=="" && `${cell1.y-cell2.y}${cell1.x-cell2.x}`==="-10") return true;
     // if pawn move two cells ahead from its starting position, both cells ahead must be empty
@@ -161,6 +167,23 @@ class BoardData {
     }
     // otherwise, is an invalid pawn movement and return false
     return false;
+  }
+
+  validBishopMove = (cell1, cell2)=>{
+    // return false if is not a diagonal move
+    if(Math.abs(cell1.y-cell2.y)!==Math.abs(cell1.x-cell2.x)) return false;
+    // check there is no pieces between cell1 and cell2
+    let changeRow = Math.abs(cell1.y-cell2.y)/(cell1.y-cell2.y);
+    let changeColumn = Math.abs(cell1.x-cell2.x)/(cell1.x-cell2.x);
+    let row = cell1.y+changeRow;
+    let column = cell1.x+changeColumn;
+    while(row<cell2.y){
+      //if a piece between cell1 and cell2 then invalid bishop movement
+      if(this.objectCells[row][column]!=="") return false;
+      row += changeRow;
+      column += changeColumn;
+    }
+    return true;
   }
 }
 
