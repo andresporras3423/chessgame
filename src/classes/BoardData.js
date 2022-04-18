@@ -130,6 +130,9 @@ class BoardData {
   if(cell1.piece==="wq" || cell1.piece==="bq"){
     return this.validBishopMove(cell1, cell2) || this.validRockMove(cell1, cell2);
   }
+  if(cell1.piece==="wk" || cell1.piece==="bk"){
+    return this.validKingMove(cell1, cell2);
+  }
   return false;
   }
 
@@ -207,6 +210,12 @@ class BoardData {
       column += changeColumn;
     }
     return true;
+  }
+
+  validKingMove = (cell1, cell2)=>{
+    const kingMovements = ["10","11","1-1","01","0-1","-11","-10","-1-1"]; // eight possible king moves
+    if(kingMovements.includes(`${cell1.y-cell2.y}${cell1.x-cell2.x}`)) return true;
+    return false;
   }
 }
 
