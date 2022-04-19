@@ -215,6 +215,82 @@ class BoardData {
   validKingMove = (cell1, cell2)=>{
     const kingMovements = ["10","11","1-1","01","0-1","-11","-10","-1-1"]; // eight possible king moves
     if(kingMovements.includes(`${cell1.y-cell2.y}${cell1.x-cell2.x}`)) return true;
+    // check if movement is black long castling and it is still available
+    if(cell1.piece==="bk" && cell2.y===0 && cell2.x===2 && this.checkBlackLongCastling()){ 
+      // if long black castling then remove purple from king cell and black rock for long castling
+      this.objectCells[0][0].removeColor("castling-available");
+      this.objectCells[0][4].removeColor("castling-available");
+      // move black rock to castling position
+      this.objectCells[0][0].piece="";
+      this.objectCells[0][3].piece="br";
+      // now both long and short castling are not possible moves
+      this.blackLongCastling=false;
+      this.blackShortCastling=false;
+      return true;
+    }
+    // check if movement is black short castling and it is still available
+    if(cell1.piece==="bk" && cell2.y===0 && cell2.x===6 && this.checkBlackShortCastling()){ 
+      // if short black castling then remove purple from king cell and black rock for long castling
+      this.objectCells[0][7].removeColor("castling-available");
+      this.objectCells[0][4].removeColor("castling-available");
+      // move black rock to castling position
+      this.objectCells[0][7].piece="";
+      this.objectCells[0][5].piece="br";
+      // now both long and short castling are not possible moves
+      this.blackLongCastling=false;
+      this.blackShortCastling=false;
+      return true;
+    }
+    // check if movement is white long castling and it is still available
+    if(cell1.piece==="wk" && cell2.y===7 && cell2.x===2 && this.checkWhiteLongCastling()){ 
+      // if long white castling then remove purple from king cell and black rock for long castling
+      this.objectCells[7][0].removeColor("castling-available");
+      this.objectCells[7][4].removeColor("castling-available");
+      // move white rock to castling position
+      this.objectCells[7][0].piece="";
+      this.objectCells[7][3].piece="wr";
+      // now both long and short castling are not possible moves
+      this.whiteLongCastling=false;
+      this.whiteShortCastling=false;
+      return true;
+    }
+    // check if movement is white short castling and is still available
+    if(cell1.piece==="wk" && cell2.y===7 && cell2.x===6 && this.checkWhiteShortCastling()){ 
+      // if short white castling then remove purple from king cell and black rock for long castling
+      this.objectCells[7][7].removeColor("castling-available");
+      this.objectCells[7][4].removeColor("castling-available");
+      // move white rock to castling position
+      this.objectCells[7][7].piece="";
+      this.objectCells[7][5].piece="wr";
+      // now both long and short castling are not possible moves
+      this.whiteLongCastling=false;
+      this.whiteShortCastling=false;
+      return true;
+    }
+    return false;
+  }
+
+  // after checking that player is trying to do long black castling this function checks the conditions to do it are consummated
+  checkBlackLongCastling = ()=>{
+    if(this.blackLongCastling && this.objectCells[0][1].piece==="" && this.objectCells[0][2].piece==="" && this.objectCells[0][3].piece==="") return true;
+    return false;
+  }
+
+  // after checking that player is trying to do short black castling this function checks the conditions to do it are consummated
+  checkBlackShortCastling = ()=>{
+    if(this.blackShortCastling && this.objectCells[0][5].piece==="" && this.objectCells[0][6].piece==="") return true;
+    return false;
+  }
+
+  // after checking that player is trying to do long white castling this function checks the conditions to do it are consummated
+  checkWhiteLongCastling = ()=>{
+    if(this.whiteLongCastling && this.objectCells[7][1].piece==="" && this.objectCells[7][2].piece==="" && this.objectCells[7][3].piece==="") return true;
+    return false;
+  }
+
+  // after checking that player is trying to do short white castling this function checks the conditions to do it are consummated
+  checkWhiteShortCastling = ()=>{
+    if(this.whiteShortCastling && this.objectCells[7][5].piece==="" && this.objectCells[7][6].piece==="") return true;
     return false;
   }
 }
