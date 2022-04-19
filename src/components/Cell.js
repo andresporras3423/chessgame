@@ -1,21 +1,34 @@
 import React from 'react';
+import bp from "../assets/black-pawn.svg";
+import bn from "../assets/black-knight.svg";
+import bb from "../assets/black-bishop.svg";
+import br from "../assets/black-rook.svg";
+import bq from "../assets/black-queen.svg";
+import bk from "../assets/black-king.svg";
+import wp from "../assets/white-pawn.svg";
+import wn from "../assets/white-knight.svg";
+import wb from "../assets/white-bishop.svg";
+import wr from "../assets/white-rook.svg";
+import wq from "../assets/white-queen.svg";
+import wk from "../assets/white-king.svg";
+
 
 class Cell extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      images: {"bp": "/assets/black-pawn.svg",
-      "bn": "/assets/black-knight.svg",
-      "bb": "/assets/black-bishop.svg",
-      "br": "/assets/black-rook.svg",
-      "bq": "/assets/black-queen.svg",
-      "bk": "/assets/black-king.svg",
-      "wp": "/assets/white-pawn.svg",
-      "wn": "/assets/white-knight.svg",
-      "wb": "/assets/white-bishop.svg",
-      "wr": "/assets/white-rook.svg",
-      "wq": "/assets/white-queen.svg",
-      "wk": "/assets/white-king.svg",
+      images: {"bp": bp,
+      "bn": bn,
+      "bb": bb,
+      "br": br,
+      "bq": bq,
+      "bk": bk,
+      "wp": wp,
+      "wn": wn,
+      "wb": wb,
+      "wr": wr,
+      "wq": wq,
+      "wk": wk,
       "": ""},
      }
     };

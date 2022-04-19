@@ -2,11 +2,18 @@ import React from 'react';
 import { nanoid } from 'nanoid';
 import Cell from './Cell';
 import BoardData from './../classes/BoardData';
+import Modal from './Modal';
 
 class Board extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      modalOpen: true,
+      setModalOpen: (newValue)=>{
+        this.setState({
+          modalOpen: newValue
+        })
+      },
       gameMessage: "",
       playWithWhite: true,
       boardData : new BoardData(),
@@ -89,6 +96,7 @@ class Board extends React.Component {
     return <div>
       {this.state.brand}
       {this.displayContent()}
+      {this.state.modalOpen && <Modal setModalOpen={this.state.setModalOpen}></Modal>}
     </div>;
   }
 }
