@@ -125,7 +125,24 @@ class BoardData {
     return this.validBishopMove(cell1, cell2);
   }
   if(cell1.piece==="wr" || cell1.piece==="br"){
-    return this.validRockMove(cell1, cell2);
+    if(!this.validRockMove(cell1, cell2)) return false;
+    if(cell1.piece==="br" && cell1.y===0 && cell1.x===0){
+      this.objectCells[0][0].removeColor("castling-available");
+      this.blackLongCastling = false;
+    }
+    else if(cell1.piece==="br" && cell1.y===0 && cell1.x===7){
+      this.objectCells[0][7].removeColor("castling-available");
+      this.blackShortCastling = false;
+    }
+    else if(cell1.piece==="wr" && cell1.y===7 && cell1.x===0){
+      this.objectCells[7][0].removeColor("castling-available");
+      this.whiteLongCastling = false;
+    }
+    else if(cell1.piece==="wr" && cell1.y===7 && cell1.x===7){
+      this.objectCells[7][7].removeColor("castling-available");
+      this.whiteShortCastling = false;
+    }
+    return true;
   }
   if(cell1.piece==="wq" || cell1.piece==="bq"){
     return this.validBishopMove(cell1, cell2) || this.validRockMove(cell1, cell2);
@@ -214,12 +231,25 @@ class BoardData {
 
   validKingMove = (cell1, cell2)=>{
     const kingMovements = ["10","11","1-1","01","0-1","-11","-10","-1-1"]; // eight possible king moves
-    if(kingMovements.includes(`${cell1.y-cell2.y}${cell1.x-cell2.x}`)) return true;
+    if(kingMovements.includes(`${cell1.y-cell2.y}${cell1.x-cell2.x}`)){
+      if(cell1.piece==="bk"){
+        this.objectCells[0][7].removeColor("castling-available");
+        this.objectCells[0][0].removeColor("castling-available");
+        this.blackLongCastling=false;
+        this.blackShortCastling=false;
+      }
+      else if(cell1.piece==="wk"){
+        this.objectCells[7][7].removeColor("castling-available");
+        this.objectCells[7][0].removeColor("castling-available");
+        this.whiteLongCastling=false;
+        this.whiteShortCastling=false;
+      }
+      return true;
+    }
     // check if movement is black long castling and it is still available
     if(cell1.piece==="bk" && cell2.y===0 && cell2.x===2 && this.checkBlackLongCastling()){ 
       // if long black castling then remove purple from king cell and black rock for long castling
       this.objectCells[0][0].removeColor("castling-available");
-      this.objectCells[0][4].removeColor("castling-available");
       // move black rock to castling position
       this.objectCells[0][0].piece="";
       this.objectCells[0][3].piece="br";
@@ -232,7 +262,6 @@ class BoardData {
     if(cell1.piece==="bk" && cell2.y===0 && cell2.x===6 && this.checkBlackShortCastling()){ 
       // if short black castling then remove purple from king cell and black rock for long castling
       this.objectCells[0][7].removeColor("castling-available");
-      this.objectCells[0][4].removeColor("castling-available");
       // move black rock to castling position
       this.objectCells[0][7].piece="";
       this.objectCells[0][5].piece="br";
@@ -245,7 +274,6 @@ class BoardData {
     if(cell1.piece==="wk" && cell2.y===7 && cell2.x===2 && this.checkWhiteLongCastling()){ 
       // if long white castling then remove purple from king cell and black rock for long castling
       this.objectCells[7][0].removeColor("castling-available");
-      this.objectCells[7][4].removeColor("castling-available");
       // move white rock to castling position
       this.objectCells[7][0].piece="";
       this.objectCells[7][3].piece="wr";
@@ -258,7 +286,6 @@ class BoardData {
     if(cell1.piece==="wk" && cell2.y===7 && cell2.x===6 && this.checkWhiteShortCastling()){ 
       // if short white castling then remove purple from king cell and black rock for long castling
       this.objectCells[7][7].removeColor("castling-available");
-      this.objectCells[7][4].removeColor("castling-available");
       // move white rock to castling position
       this.objectCells[7][7].piece="";
       this.objectCells[7][5].piece="wr";

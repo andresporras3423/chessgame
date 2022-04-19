@@ -18,7 +18,7 @@ class CellData{
   }
 
   initialColors = ()=>{
-    const castlings = ["00","04","07","70","74","77"]
+    const castlings = ["00","07","70","77"];
     if((this.y+this.x)%2==0) this.colors["white"] = Colors["white"];
     else this.colors["black"] = Colors["black"];
     if(castlings.includes(`${this.y}${this.x}`)) this.colors["castling-available"] = Colors["castling-available"];
