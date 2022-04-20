@@ -15,12 +15,27 @@ class Modal extends React.Component{
     super(props);
 
     this.state={
-      styles: styles
+      styles: styles,
+      promotion: {
+        "white": {
+          "q": wq,
+          "r": wr,
+          "b": wb,
+          "n": wn
+        },
+        "black": {
+          "q": bq,
+          "r": br,
+          "b": bb,
+          "n": bn
+        }
+      } 
     }
   }
 
   render(){
     const styles = this.state.styles;
+    const pieces = this.state.promotion[this.props.color];
     const props = this.props;
     return (
       <>
@@ -32,26 +47,27 @@ class Modal extends React.Component{
             </button>
             <div className={styles.modalActions}>
               <div className={styles.actionsContainer}>
-                <button className={styles.cellBtn} onClick={() => props.setModalOpen(false)}>
-                <img src={bq} height="40px" width="40px" />
+                <button className={styles.cellBtn} 
+                onClick={() => props.setModalOpen(false, `${props.color[0]}q`)}>
+                <img src={pieces["q"]} height="40px" width="40px" />
                 </button>
                 <button
                   className={styles.cellBtn}
-                  onClick={() => props.setModalOpen(false)}
+                  onClick={() => props.setModalOpen(false, `${props.color[0]}r`)}
                 >
-                  <img src={br} height="40px" width="40px" />
+                  <img src={pieces["r"]} height="40px" width="40px" />
                 </button>
                 <button
                   className={styles.cellBtn}
-                  onClick={() => props.setModalOpen(false)}
+                  onClick={() => props.setModalOpen(false, `${props.color[0]}b`)}
                 >
-                  <img src={bb} height="40px" width="40px" />
+                  <img src={pieces["b"]} height="40px" width="40px" />
                 </button>
                 <button
                   className={styles.cellBtn}
-                  onClick={() => props.setModalOpen(false)}
+                  onClick={() => props.setModalOpen(false, `${props.color[0]}n`)}
                 >
-                  <img src={bn} height="40px" width="40px" />
+                  <img src={pieces["n"]} height="40px" width="40px" />
                 </button>
               </div>
             </div>

@@ -8,11 +8,16 @@ class Board extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      modalOpen: true,
-      setModalOpen: (newValue)=>{
+      modalOpen: false,
+      promotionCell: null,
+      setModalOpen: (nModalOpen, newPromotionValue="")=>{
         this.setState({
-          modalOpen: newValue
+          modalOpen: nModalOpen
         })
+        if(newPromotionValue!==""){
+          this.state.boardData.updateBoardAfterValidMove(this.state.promotionCell, newPromotionValue);
+          this.state.updateBoard();
+        }
       },
       gameMessage: "",
       playWithWhite: true,
@@ -29,7 +34,13 @@ class Board extends React.Component {
           });
         },
         clickCell: (cell)=>{
-          this.state.boardData.selectPiece(cell);
+          const doPromotion = this.state.boardData.selectPiece(cell);
+          if(doPromotion){
+            this.setState({
+              promotionCell: cell
+            });
+            this.state.setModalOpen(true);
+          }
           this.state.updateBoard();
         },
         updateBoard: ()=>{
@@ -96,7 +107,7 @@ class Board extends React.Component {
     return <div>
       {this.state.brand}
       {this.displayContent()}
-      {this.state.modalOpen && <Modal setModalOpen={this.state.setModalOpen}></Modal>}
+      {this.state.modalOpen && <Modal setModalOpen={this.state.setModalOpen} color={this.state.promotionCell.y===0 ? 'white': 'black'}></Modal>}
     </div>;
   }
 }

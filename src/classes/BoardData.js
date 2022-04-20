@@ -92,10 +92,21 @@ class BoardData {
     }
     //check if valid movement
     else if(this.validMovement(this.selectedPiece, cell)){
+      // if is it a promotion move then dont complete the move, return false to indicate in board component that this is a promotion move
+      // return true to indicate this is a promotion move
+      if((this.selectedPiece.piece==="wp" && cell.y===0) || (this.selectedPiece.piece==="bp" && cell.y===7)) return true;
+      this.updateBoardAfterValidMove(cell, this.selectedPiece.piece);
+    }
+    // return false to indicate this is not a promotion move
+    return false;
+  }
+
+
+  updateBoardAfterValidMove = (cell, newPiece)=>{
       //if valid movement the reove last movement color from last movement cells
       // update last movement cells 
       // remove selected color from the last selectedPiece
-      cell.piece = this.selectedPiece.piece;
+      cell.piece = newPiece;
       this.selectedPiece.piece="";
       if(this.lastMovement1!==null) this.lastMovement1.removeColor("last-move");
       if(this.lastMovement2!==null) this.lastMovement2.removeColor("last-move");
@@ -106,7 +117,6 @@ class BoardData {
       this.selectedPiece.removeColor("selected");
       this.selectedPiece=null;
       this.whitePlaying = !this.whitePlaying;
-    }
   }
 
   // this method is called after user click a second cell and after checking it doesnt click another piece of the same color
