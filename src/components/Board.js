@@ -10,10 +10,12 @@ class Board extends React.Component {
     this.state = {
       modalOpen: false,
       promotionCell: null,
+      // update modalOpen which determina if the modal is open
       setModalOpen: (nModalOpen, newPromotionValue="")=>{
         this.setState({
           modalOpen: nModalOpen
         })
+        // newPromotionValue is assigned when user click a promotion piece in the modal and then the modal is closed
         if(newPromotionValue!==""){
           this.state.boardData.updateBoardAfterValidMove(this.state.promotionCell, newPromotionValue);
           this.state.updateBoard();
