@@ -14,6 +14,7 @@ class BoardData {
     this.whiteShortCastling = true;
     this.lastMovement1 = null;
     this.lastMovement2 = null;
+    this.isPromotionMove = null;
     this.lastMovementCoordinates="";
     // cells variable is used for getArrayCells() function to set the original position of the board
     this.cells = [
@@ -144,7 +145,8 @@ class BoardData {
     else if(this.validMovement(this.selectedPiece, cell)){
       // if is it a promotion move then dont complete the move, return false to indicate in board component that this is a promotion move
       // return true to indicate this is a promotion move
-      if((this.selectedPiece.piece==="wp" && cell.y===0) || (this.selectedPiece.piece==="bp" && cell.y===7)) return true;
+      if(this.isPromotionMove) return true;
+      // otherwise, complete the move to update board
       this.updateBoardAfterValidMove(cell, this.selectedPiece.piece);
     }
     // return false to indicate this is not a promotion move
@@ -152,15 +154,22 @@ class BoardData {
   }
 
   validMovement = (cell1, cell2)=>{
-    const newlastMove = `${cell1.piece},${cell1.y},${cell1.x},${cell1.piece},${cell2.y},${cell2.x}`;
+    // by default, after update the espected piece in the second selected cell will be the piece of the first cell
+    let secondPiece = cell1.piece;
+    // if promotion move, replace second piece with queen and check if it is between valid moves
+    // if it is a valid promotion for queen then it will be for any other promotion
+    if(cell1.piece==="wp" && cell2.y===0) secondPiece="wq";
+    else if(cell1.piece==="bp" && cell2.y===7) secondPiece="bq";
+    
+    
+    const newlastMove = `${cell1.piece},${cell1.y},${cell1.x},${secondPiece},${cell2.y},${cell2.x}`;
     const isValid = this.availableMoves.some((move)=> {
       return move.split(",").slice(0,6).join(",")===newlastMove
     });
     if(isValid){
-      if(cell1.piece==="wr" || cell1.piece==="br") this.update_available_castling(cell1);
-      else if(cell1.piece==="wk" || cell1.piece==="bk") this.check_castling(cell1, cell2);
-      else if(cell1.piece==="wp") this.check_white_en_passant(cell1, cell2);
-      else if(cell1.piece==="bp") this.check_black_en_passant(cell1, cell2);
+      // next line only true if it is a valid promotion move
+      if(secondPiece!==cell1.piece) this.isPromotionMove=true;
+      else this.isPromotionMove=false;
     }
     return isValid;
   }
@@ -250,8 +259,21 @@ class BoardData {
   last_movement_reduced = (move) => {
     return move.split(",", -1).map(pos=> pos.substring(0,2)).join(",");
   };
-  // cell is second click to choose destiny from piece to move
+  // cell is second clicked cell to choose destiny from piece to move
   updateBoardAfterValidMove = (cell, newPiece)=>{
+    // move to corner has as keys the coordinates of board corners
+    // the value is a function to update the castling of the corner to false
+    const moveToCorner = {"00": ()=> this.blackLongCastling=false,"07": ()=> this.blackShortCastling=false,"70": ()=> this.whiteLongCastling=false,"77": ()=> this.whiteShortCastling=false};
+    // if movement to a corner then update castling to that corner to false and remove castling color from the corner
+    if(Object.keys(moveToCorner).includes(`${cell.y}${cell.x}`)){
+      moveToCorner[`${cell.y}${cell.x}`]();
+      this.objectCells[cell.y][cell.x].removeColor("castling-available");
+    }
+    if(this.selectedPiece.piece==="wr" || this.selectedPiece.piece==="br") this.update_available_castling(this.selectedPiece);
+    else if(this.selectedPiece.piece==="wk" || this.selectedPiece.piece==="bk") this.check_castling(this.selectedPiece, cell);
+    else if(this.selectedPiece.piece==="wp") this.check_white_en_passant(this.selectedPiece, cell);
+    else if(this.selectedPiece.piece==="bp") this.check_black_en_passant(this.selectedPiece, cell);
+
     this.lastMovementCoordinates=`${this.selectedPiece.piece},${this.selectedPiece.y},${this.selectedPiece.x},${newPiece},${cell.y},${cell.x},`;
       //if valid movement the reove last movement color from last movement cells
       // update last movement cells 
