@@ -36,6 +36,8 @@ class Board extends React.Component {
           });
         },
         clickCell: (cell)=>{
+          // If message is empty then games hasnt started yet
+          if(this.state.gameMessage==="") return;
           const doPromotion = this.state.boardData.selectPiece(cell);
           if(doPromotion){
             this.setState({
