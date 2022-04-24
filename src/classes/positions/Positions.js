@@ -651,7 +651,7 @@ class Positions {
     }
     if (pawn.y == 6) {
       let cell_ = this.valid_position(pawn.y - 1, pawn.x);
-      let cell2_ = this.valid_position(pawn.y - 1, pawn.x);
+      let cell2_ = this.valid_position(pawn.y - 2, pawn.x);
       if (cell_ == "" && cell2_ == "") {
         this.temp_cells = JSON.parse(JSON.stringify(this.cells));
         this.temp_cells[pawn.y][pawn.x] = "";

@@ -62,9 +62,9 @@ class Game {
     return this.current_board;
   };
 
-  is_it_game_over = (total_movements) => {
+  is_it_game_over = () => {
     if (
-      total_movements == 0 ||
+      this.board.movements_available == 0 ||
       Object.keys(this.positions.black_pieces).length +
       Object.keys(this.positions.white_pieces).length ==
         2 ||
@@ -79,7 +79,6 @@ class Game {
     let set_movements = color=="white" ? this.positions.available_white_moves() : this.positions.available_black_moves();
     let movements = Array.from(set_movements);
     const total_movements = movements.length;
-    const game_finished = this.is_it_game_over(total_movements) ? true : false;
     this.board = new BoardData(this.give_current_board(),
                              Object.keys(this.positions.black_pieces).length,
                              Object.keys(this.positions.white_pieces).length,
@@ -90,8 +89,10 @@ class Game {
                              this.last_movement_reduced(),
                              total_movements,
                              color,
-                             game_finished,
+                             false,
                              movements);
+    const game_finished = this.is_it_game_over() ? true : false;
+    this.board.game_finished = game_finished;
   };
 
   last_movement_reduced = () => {

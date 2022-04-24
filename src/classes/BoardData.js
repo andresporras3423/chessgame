@@ -1,9 +1,12 @@
 import CellData from "./CellData.js";
 import Positions from "./positions/Positions.js";
+import Game from "./positions/Game.js";
 import Cell from "./positions/Cell.js";
 // this class contains all the information about board situation
 class BoardData {
-  constructor(nPlayWithWhite=true) {
+  constructor(nPlayWithWhite=true, nGameStarted="") {
+    this.game = new Game();
+    this.game.positions = new Positions();
     this.selectedPiece = null; // clicked piece by player to move
     this.whitePlaying = true; // indicates whether the current turn is for white or not
     this.playWithWhite = nPlayWithWhite; // indicates whether the human player is using white color or not
@@ -16,6 +19,7 @@ class BoardData {
     this.lastMovement2 = null;
     this.isPromotionMove = null;
     this.lastMovementCoordinates="";
+    this.gameMessage=nGameStarted;
     // cells variable is used for getArrayCells() function to set the original position of the board
     this.cells = [
       ["br", "bn", "bb", "bq", "bk", "bb", "bn", "br"],
@@ -35,42 +39,42 @@ class BoardData {
 
   getAllAvailableMoves = ()=>{
     // create global instance of class positions
-    this.positions = new Positions();
+    this.game.positions = new Positions();
 
     // update array positions.white_pieces and positions.black_pieces with the current state of the board
     this.updateCells();
-    this.positions.black_long_castling = this.blackLongCastling;
-    this.positions.black_short_castling = this.blackShortCastling;
-    this.positions.white_long_castling = this.whiteLongCastling;
-    this.positions.white_short_castling = this.whiteShortCastling;
-    this.positions.last_movement = this.lastMovementCoordinates;
-    this.positions.set_board();
-    let movements = this.lastMovementCoordinates[0]==="w" ? this.positions.available_black_moves() : this.positions.available_white_moves();
-    return Array.from(movements).map((move)=>this.last_movement_reduced(move));
+    this.game.positions.black_long_castling = this.blackLongCastling;
+    this.game.positions.black_short_castling = this.blackShortCastling;
+    this.game.positions.white_long_castling = this.whiteLongCastling;
+    this.game.positions.white_short_castling = this.whiteShortCastling;
+    this.game.positions.last_movement = this.lastMovementCoordinates;
+    this.game.positions.set_board();
+    this.lastMovementCoordinates[0]==="w" ? this.game.add_recent_board("black") : this.game.add_recent_board("white");
+    return Array.from(this.game.board.movements).map((move)=>this.last_movement_reduced(move));
   }
 
   // update positions.white_pieces and positions.black_pieces using objectCells
   updateCells = ()=>{
     const list_index = {"bq": 1, "br": 1, "bb": 1, "bn": 1, "bp": 1, "wq": 1, "wr": 1, "wb": 1, "wn": 1, "wp": 1};
-    this.positions.white_pieces={};
-    this.positions.black_pieces={};
+    this.game.positions.white_pieces={};
+    this.game.positions.black_pieces={};
     this.objectCells.forEach((row, i)=>{
       row.forEach((cell,j)=>{
         if(cell.piece[0]==="b"){
           if(cell.piece==="bk"){
-            this.positions.black_pieces[`bk`] = new Cell(i,j);
+            this.game.positions.black_pieces[`bk`] = new Cell(i,j);
           }
           else{
-            this.positions.black_pieces[`${cell.piece}${list_index[cell.piece]}`] = new Cell(i,j);
+            this.game.positions.black_pieces[`${cell.piece}${list_index[cell.piece]}`] = new Cell(i,j);
             list_index[cell.piece]++;
           }
         }
         else if(cell.piece[0]==="w"){
           if(cell.piece==="wk"){
-            this.positions.white_pieces[`wk`] = new Cell(i,j);
+            this.game.positions.white_pieces[`wk`] = new Cell(i,j);
           }
           else{
-            this.positions.white_pieces[`${cell.piece}${list_index[cell.piece]}`] = new Cell(i,j);
+            this.game.positions.white_pieces[`${cell.piece}${list_index[cell.piece]}`] = new Cell(i,j);
             list_index[cell.piece]++;
           }
         }
@@ -164,7 +168,7 @@ class BoardData {
     
     const newlastMove = `${cell1.piece},${cell1.y},${cell1.x},${secondPiece},${cell2.y},${cell2.x}`;
     const isValid = this.availableMoves.some((move)=> {
-      return move.split(",").slice(0,6).join(",")===newlastMove
+      return move===newlastMove
     });
     if(isValid){
       // next line only true if it is a valid promotion move
@@ -257,7 +261,7 @@ class BoardData {
   }
 
   last_movement_reduced = (move) => {
-    return move.split(",", -1).map(pos=> pos.substring(0,2)).join(",");
+    return move.split(",").slice(0,6).map(pos=> pos.substring(0,2)).join(",");
   };
   // cell is second clicked cell to choose destiny from piece to move
   updateBoardAfterValidMove = (cell, newPiece)=>{
@@ -290,6 +294,12 @@ class BoardData {
       this.selectedPiece=null;
       this.whitePlaying = !this.whitePlaying;
       this.availableMoves = this.getAllAvailableMoves();
+      if(this.game.board.game_finished){
+        if(this.game.board.movements_available>0) this.gameMessage = "gdraw because of lack of pieces";
+        else if(this.game.positions.last_movement[0]==="b" && this.game.positions.white_king_attacked(this.game.positions.white_pieces.wk)) this.gameMessage= "black wins";
+        else if(this.game.positions.last_movement[0]==="w" && this.game.positions.black_king_attacked(this.game.positions.black_pieces.bk)) this.gameMessage= "white wins";
+        else this.gameMessage = "draw because of stalemate";
+      }
   }
 }
 

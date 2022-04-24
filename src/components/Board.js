@@ -21,7 +21,6 @@ class Board extends React.Component {
           this.state.updateBoard();
         }
       },
-      gameMessage: "",
       playWithWhite: true,
       boardData : new BoardData(),
         updateHumanColor: ()=>{
@@ -31,13 +30,13 @@ class Board extends React.Component {
         },
         startGame: ()=>{
           this.setState({
-            boardData: new BoardData(this.state.playWithWhite),
-            gameMessage: "Game started"
+            boardData: new BoardData(this.state.playWithWhite, "Game started")
           });
         },
         clickCell: (cell)=>{
-          // If message is empty then games hasnt started yet
-          if(this.state.gameMessage==="") return;
+          // If message is empty then games hasn't started yet and user shouldn't been able todo any move
+          if(this.state.boardData.gameMessage==="") return;
+          // id this is a promotion move then extra steps, otherwise the board was already updated and just need to re-render the view
           const doPromotion = this.state.boardData.selectPiece(cell);
           if(doPromotion){
             this.setState({
@@ -79,7 +78,7 @@ class Board extends React.Component {
           >
             start
           </button>
-          <h3>{this.state.gameMessage}</h3>
+          <h3>{this.state.boardData.gameMessage}</h3>
             </div>
           </div>
           <div className="board">
