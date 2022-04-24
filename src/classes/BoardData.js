@@ -195,50 +195,47 @@ class BoardData {
 }
 
   check_castling = (cell1, cell2)=>{
-      // check if movement is black long castling and it is still available
-    if(cell1.piece==="bk" && cell2.y===0 && cell2.x===2){ 
-      // if long black castling then remove purple from king cell and black rock for long castling
-      this.objectCells[0][0].removeColor("castling-available");
-      // move black rock to castling position
-      this.objectCells[0][0].piece="";
-      this.objectCells[0][3].piece="br";
-      // now both long and short castling are not possible moves
-      this.blackLongCastling=false;
-      this.blackShortCastling=false;
-    }
-    // check if movement is black short castling and it is still available
-    if(cell1.piece==="bk" && cell2.y===0 && cell2.x===6){ 
-      // if short black castling then remove purple from king cell and black rock for long castling
-      this.objectCells[0][7].removeColor("castling-available");
-      // move black rock to castling position
-      this.objectCells[0][7].piece="";
-      this.objectCells[0][5].piece="br";
-      // now both long and short castling are not possible moves
-      this.blackLongCastling=false;
-      this.blackShortCastling=false;
-    }
-    // check if movement is white long castling and it is still available
-    if(cell1.piece==="wk" && cell2.y===7 && cell2.x===2){ 
-      // if long white castling then remove purple from king cell and black rock for long castling
-      this.objectCells[7][0].removeColor("castling-available");
+      if(cell1.piece==="bk"){
+        // check if movement is black long castling and it is still available
+        if(cell2.y===0 && cell2.x===2){ 
+          // move black rock to castling position
+          this.objectCells[0][0].piece="";
+          this.objectCells[0][3].piece="br";
+        }
+        // check if movement is black short castling and it is still available
+        else if(cell2.y===0 && cell2.x===6){ 
+          // move black rock to castling position
+          this.objectCells[0][7].piece="";
+          this.objectCells[0][5].piece="br";
+        }
+        // remove purple color in both black side corners
+        this.objectCells[0][0].removeColor("castling-available");
+        this.objectCells[0][7].removeColor("castling-available");
+        // now both long and short castling are not possible moves
+        this.blackLongCastling=false;
+        this.blackShortCastling=false;
+      }
+    
+      if(cell1.piece==="wk"){
+        // check if movement is white long castling and it is still available
+    if(cell1.piece==="wk" && cell2.y===7 && cell2.x===2){
       // move white rock to castling position
       this.objectCells[7][0].piece="";
       this.objectCells[7][3].piece="wr";
-      // now both long and short castling are not possible moves
-      this.whiteLongCastling=false;
-      this.whiteShortCastling=false;
     }
     // check if movement is white short castling and is still available
-    if(cell1.piece==="wk" && cell2.y===7 && cell2.x===6){ 
-      // if short white castling then remove purple from king cell and black rock for long castling
-      this.objectCells[7][7].removeColor("castling-available");
+    else if(cell1.piece==="wk" && cell2.y===7 && cell2.x===6){ 
       // move white rock to castling position
       this.objectCells[7][7].piece="";
       this.objectCells[7][5].piece="wr";
-      // now both long and short castling are not possible moves
-      this.whiteLongCastling=false;
-      this.whiteShortCastling=false;
     }
+    // remove purple color in both white side corners
+    this.objectCells[7][0].removeColor("castling-available");
+    this.objectCells[7][7].removeColor("castling-available");
+    // now both long and short castling are not possible moves
+    this.whiteLongCastling=false;
+    this.whiteShortCastling=false;
+      }
   }
 
   update_available_castling = (cell1)=>{
@@ -295,7 +292,7 @@ class BoardData {
       this.whitePlaying = !this.whitePlaying;
       this.availableMoves = this.getAllAvailableMoves();
       if(this.game.board.game_finished){
-        if(this.game.board.movements_available>0) this.gameMessage = "gdraw because of lack of pieces";
+        if(this.game.board.movements_available>0) this.gameMessage = "draw because of lack of pieces";
         else if(this.game.positions.last_movement[0]==="b" && this.game.positions.white_king_attacked(this.game.positions.white_pieces.wk)) this.gameMessage= "black wins";
         else if(this.game.positions.last_movement[0]==="w" && this.game.positions.black_king_attacked(this.game.positions.black_pieces.bk)) this.gameMessage= "white wins";
         else this.gameMessage = "draw because of stalemate";
