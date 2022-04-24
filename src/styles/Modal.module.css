@@ -26,21 +26,9 @@
   box-shadow: 0 5px 20px 0 rgba(0, 0, 0, 0.04);
 }
 
-.modalHeader {
-  height: 50px;
-  background: white;
-  overflow: hidden;
-  border-top-left-radius: 16px;
-  border-top-right-radius: 16px;
-}
-
-.heading {
-  margin: 0;
-  padding: 10px;
-  color: #2c3e50;
-  font-weight: 500;
-  font-size: 18px;
-  text-align: center;
+.cellSize{
+  width: 40px;
+  height: 40px;
 }
 
 .modalContent {
@@ -103,4 +91,24 @@
   box-shadow: 0 10px 20px -10px rgba(255, 62, 78, 0.6);
   transform: translateY(-5px);
   background: rgb(205,205,205);
+}
+
+@media only screen and (max-width: 450px) {
+  .closeBtn {
+    font-size: 14px;
+  }
+
+  .modal {
+    width: 240px;
+    height: 80px;
+  }
+  
+  .modalContent {
+    font-size: 12px;
+  }
+
+  .cellSize{
+    width: 28px;
+    height: 28px;
+  }
 }

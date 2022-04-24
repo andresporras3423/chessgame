@@ -49,25 +49,25 @@ class Modal extends React.Component{
               <div className={styles.actionsContainer}>
                 <button className={styles.cellBtn} 
                 onClick={() => props.setModalOpen(false, `${props.color[0]}q`)}>
-                <img src={pieces["q"]} height="40px" width="40px" />
+                <img src={pieces["q"]} className={styles.cellSize} />
                 </button>
                 <button
                   className={styles.cellBtn}
                   onClick={() => props.setModalOpen(false, `${props.color[0]}r`)}
                 >
-                  <img src={pieces["r"]} height="40px" width="40px" />
+                  <img src={pieces["r"]} className={styles.cellSize} />
                 </button>
                 <button
                   className={styles.cellBtn}
                   onClick={() => props.setModalOpen(false, `${props.color[0]}b`)}
                 >
-                  <img src={pieces["b"]} height="40px" width="40px" />
+                  <img src={pieces["b"]} className={styles.cellSize} />
                 </button>
                 <button
                   className={styles.cellBtn}
                   onClick={() => props.setModalOpen(false, `${props.color[0]}n`)}
                 >
-                  <img src={pieces["n"]} height="40px" width="40px" />
+                  <img src={pieces["n"]} className={styles.cellSize} />
                 </button>
               </div>
             </div>
