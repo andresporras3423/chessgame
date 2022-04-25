@@ -31,8 +31,8 @@ class BoardData {
       ["wp", "wp", "wp", "wp", "wp", "wp", "wp", "wp"],
       ["wr", "wn", "wb", "wq", "wk", "wb", "wn", "wr"],
     ];
-    this.arrayCells = this.getArrayCells();
-    this.objectCells = this.getObjectCells();
+    this.arrayCells = this.getArrayCells(); // order can be reversed
+    this.objectCells = this.getObjectCells(); // always keep original order
     this.availableMoves = this.getAllAvailableMoves();
     if(!this.playWithWhite) this.turnBoard();
   }
@@ -238,6 +238,7 @@ class BoardData {
       }
   }
 
+  // method called when there is a valid black rock or white rock move
   update_available_castling = (cell1)=>{
     if(cell1.piece==="br" && cell1.y===0 && cell1.x===0){
       this.objectCells[0][0].removeColor("castling-available");
