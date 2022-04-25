@@ -9,8 +9,7 @@ class BoardData {
     this.game.positions = new Positions();
     this.selectedPiece = null; // clicked piece by player to move
     this.whitePlaying = true; // indicates whether the current turn is for white or not
-    this.playWithWhite = nPlayWithWhite; // indicates whether the human player is using white color or not
-    // next four variables indicate if these castlings are still available or not
+    this.playWithWhite = nPlayWithWhite; // indicates if board use white perspective or black perspective
     this.blackLongCastling = true;
     this.blackShortCastling = true;
     this.whiteLongCastling = true;
