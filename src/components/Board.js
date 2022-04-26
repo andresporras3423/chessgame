@@ -23,11 +23,16 @@ class Board extends React.Component {
       },
       playWithWhite: true,
       boardData : new BoardData(),
+      // flip board to change perspective, default is white
         updateHumanColor: ()=>{
           this.setState({
             playWithWhite: !this.state.playWithWhite
           });
         },
+        // first argument indicates white perspective
+        // second argument assigns gameMessage
+        // allow select pieces by setting "Game started" as initial message
+        // a different message blocks selection of any piece
         startGame: ()=>{
           this.setState({
             boardData: new BoardData(this.state.playWithWhite, "Game started")
