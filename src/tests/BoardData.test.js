@@ -26,6 +26,43 @@ function scholarMate(){
   boardData.selectPiece(boardData.objectCells[3][7]);
   boardData.selectPiece(boardData.objectCells[1][5]);
 }
+function clearBoard(){
+  boardData.objectCells[1][0].piece="";
+  boardData.objectCells[1][1].piece="";
+  boardData.objectCells[1][2].piece="";
+  boardData.objectCells[1][3].piece="";
+  boardData.objectCells[1][4].piece="";
+  boardData.objectCells[1][5].piece="";
+  boardData.objectCells[1][6].piece="";
+  boardData.objectCells[1][7].piece="";
+  boardData.objectCells[0][0].piece="";
+  boardData.objectCells[0][1].piece="";
+  boardData.objectCells[0][2].piece="";
+  boardData.objectCells[0][3].piece="";
+  boardData.objectCells[0][5].piece="";
+  boardData.objectCells[0][6].piece="";
+  boardData.objectCells[0][7].piece="";
+  boardData.objectCells[6][0].piece="";
+  boardData.objectCells[6][1].piece="";
+  boardData.objectCells[6][2].piece="";
+  boardData.objectCells[6][3].piece="";
+  boardData.objectCells[6][4].piece="";
+  boardData.objectCells[6][5].piece="";
+  boardData.objectCells[6][6].piece="";
+  boardData.objectCells[6][7].piece="";
+  boardData.objectCells[7][0].piece="";
+  boardData.objectCells[7][1].piece="";
+  boardData.objectCells[7][2].piece="";
+  boardData.objectCells[7][3].piece="";
+  boardData.objectCells[7][5].piece="";
+  boardData.objectCells[7][6].piece="";
+  boardData.objectCells[7][7].piece="";
+  boardData.blackLongCastling = false;
+  boardData.blackShortCastling = false;
+  boardData.whiteLongCastling = false;
+  boardData.whiteShortCastling = false;
+  boardData.availableMoves = boardData.getAllAvailableMoves();
+}
 beforeEach(() => {
   boardData = new BoardData(true, "Game started");
 });
@@ -115,4 +152,20 @@ it('after scholar checkmate, even if black tries to make a move, gameMessage rem
   boardData.selectPiece(boardData.objectCells[0][4]);
   boardData.selectPiece(boardData.objectCells[1][5]);
   expect(boardData.gameMessage).toBe("white wins");
+});
+it('if board is clear and only have the kings, game is over because of lack of pieces', () => {
+  clearBoard();
+  boardData.selectPiece(boardData.objectCells[7][4]);
+  boardData.selectPiece(boardData.objectCells[6][4]);
+  expect(boardData.gameMessage).toBe("draw because of lack of pieces");
+});
+it('if board is clear and only have the kings, game is over because of lack of pieces', () => {
+  clearBoard();
+  boardData.objectCells[7][4].piece="";
+  boardData.objectCells[3][4].piece="wk";
+  boardData.objectCells[1][4].piece="wp";
+  boardData.availableMoves = boardData.getAllAvailableMoves();
+  boardData.selectPiece(boardData.objectCells[3][4]);
+  boardData.selectPiece(boardData.objectCells[2][4]);
+  expect(boardData.gameMessage).toBe("draw because of stalemate");
 });
