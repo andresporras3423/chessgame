@@ -17,7 +17,7 @@ class BoardData {
     this.lastMovement1 = null;
     this.lastMovement2 = null;
     this.isPromotionMove = null;
-    this.lastMovementCoordinates="";
+    this.lastMovementCoordinates=""; // use the next structure piece1,y1,x1,piece2,y2,x2
     this.gameMessage=nGameStarted;
     // cells variable is used for getArrayCells() function to set the original position of the board
     this.cells = [
@@ -30,9 +30,12 @@ class BoardData {
       ["wp", "wp", "wp", "wp", "wp", "wp", "wp", "wp"],
       ["wr", "wn", "wb", "wq", "wk", "wb", "wn", "wr"],
     ];
-    this.arrayCells = this.getArrayCells(); // order can be reversed
-    this.objectCells = this.getObjectCells(); // always keep original order
-    this.availableMoves = this.getAllAvailableMoves();
+    this.arrayCells=[];
+    this.objectCells=[];
+    this.availableMoves=[];
+    this.getArrayCells(); // order can be reversed
+    this.getObjectCells(); // always keep original order
+    this.getAllAvailableMoves();
     if(!this.playWithWhite) this.turnBoard();
   }
 
@@ -49,7 +52,17 @@ class BoardData {
     this.game.positions.last_movement = this.lastMovementCoordinates;
     this.game.positions.set_board();
     this.lastMovementCoordinates[0]==="w" ? this.game.add_recent_board("black") : this.game.add_recent_board("white");
-    return Array.from(this.game.board.movements).map((move)=>this.last_movement_reduced(move));
+    this.availableMoves = Array.from(this.game.board.movements).map((move)=>this.last_movement_reduced(move));
+    this.updateGameStatus();
+  }
+
+  updateGameStatus = ()=>{
+    if(this.game.board.game_finished){
+      if(this.game.board.movements_available>0) this.gameMessage = "draw because of lack of pieces";
+      else if(this.game.positions.last_movement[0]==="b" && this.game.positions.white_king_attacked(this.game.positions.white_pieces.wk)) this.gameMessage= "black wins";
+      else if(this.game.positions.last_movement[0]==="w" && this.game.positions.black_king_attacked(this.game.positions.black_pieces.bk)) this.gameMessage= "white wins";
+      else this.gameMessage = "draw because of stalemate";
+    }
   }
 
   // update positions.white_pieces and positions.black_pieces using objectCells
@@ -92,7 +105,7 @@ class BoardData {
         arr.at(-1).push(new CellData(i, j, cell));
       });
     });
-    return arr;
+  this.arrayCells = arr;
   };
 
   // initialize the value of objectCells variables
@@ -108,7 +121,7 @@ class BoardData {
         obj.at(-1).push(cellObject);
       });
     });
-    return obj;
+    this.objectCells = obj;
   };
 
   // turn board by reversing the order of cells in arrayCells
@@ -290,13 +303,7 @@ class BoardData {
       this.selectedPiece.removeColor("selected");
       this.selectedPiece=null;
       this.whitePlaying = !this.whitePlaying;
-      this.availableMoves = this.getAllAvailableMoves();
-      if(this.game.board.game_finished){
-        if(this.game.board.movements_available>0) this.gameMessage = "draw because of lack of pieces";
-        else if(this.game.positions.last_movement[0]==="b" && this.game.positions.white_king_attacked(this.game.positions.white_pieces.wk)) this.gameMessage= "black wins";
-        else if(this.game.positions.last_movement[0]==="w" && this.game.positions.black_king_attacked(this.game.positions.black_pieces.bk)) this.gameMessage= "white wins";
-        else this.gameMessage = "draw because of stalemate";
-      }
+      this.getAllAvailableMoves();
   }
 }
 

@@ -61,7 +61,11 @@ function clearBoard(){
   boardData.blackShortCastling = false;
   boardData.whiteLongCastling = false;
   boardData.whiteShortCastling = false;
-  boardData.availableMoves = boardData.getAllAvailableMoves();
+  // next line runs the method that pass to boardData.game.position the next info:
+  // current board, last move and castling availables
+  // all available moves for the current board are returned as a list of strings
+  // further board details in boardData.game.board 
+  boardData.getAllAvailableMoves();
 }
 beforeEach(() => {
   boardData = new BoardData(true, "Game started");
@@ -159,13 +163,22 @@ it('if board is clear and only have the kings, game is over because of lack of p
   boardData.selectPiece(boardData.objectCells[6][4]);
   expect(boardData.gameMessage).toBe("draw because of lack of pieces");
 });
-it('if board is clear and only have the kings, game is over because of lack of pieces', () => {
+it('if black has to move but it doesnt have available moves the game is over because of stalemate', () => {
   clearBoard();
   boardData.objectCells[7][4].piece="";
   boardData.objectCells[3][4].piece="wk";
   boardData.objectCells[1][4].piece="wp";
-  boardData.availableMoves = boardData.getAllAvailableMoves();
+  boardData.getAllAvailableMoves();
   boardData.selectPiece(boardData.objectCells[3][4]);
   boardData.selectPiece(boardData.objectCells[2][4]);
+  expect(boardData.gameMessage).toBe("draw because of stalemate");
+});
+it('if white has to move but it doesnt have available moves the game is over because of stalemate', () => {
+  clearBoard();
+  boardData.lastMovementCoordinates="bk,4,4,bk,5,4";
+  boardData.objectCells[0][4].piece="";
+  boardData.objectCells[5][4].piece="bk";
+  boardData.objectCells[6][4].piece="bp";
+  boardData.getAllAvailableMoves();
   expect(boardData.gameMessage).toBe("draw because of stalemate");
 });
