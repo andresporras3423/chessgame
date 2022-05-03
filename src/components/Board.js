@@ -21,13 +21,12 @@ class Board extends React.Component {
           this.state.updateBoard();
         }
       },
-      playWithWhite: true,
       boardData : new BoardData(),
       // flip board to change perspective, default is white
-        updateHumanColor: ()=>{
-          this.setState({
-            playWithWhite: !this.state.playWithWhite
-          });
+        updateBoardSide: ()=>{
+          this.state.boardData.playWithWhite = !this.state.boardData.playWithWhite;
+          this.state.boardData.turnBoard();
+          this.state.updateBoard();
         },
         // first argument indicates white perspective
         // second argument assigns gameMessage
@@ -35,7 +34,7 @@ class Board extends React.Component {
         // a different message blocks selection of any piece
         startGame: ()=>{
           this.setState({
-            boardData: new BoardData(this.state.playWithWhite, "Game started")
+            boardData: new BoardData(this.state.boardData.playWithWhite, "Game started")
           });
         },
         clickCell: (cell)=>{
@@ -65,15 +64,15 @@ class Board extends React.Component {
           <div className="form-check">
             <div>
             <input type="radio" value="white" name="color" className="form-check-input"
-            checked={this.state.playWithWhite}
-              onChange={()=>this.state.updateHumanColor()} /> 
-              <label className="form-check-label">Play with white</label>
+            checked={this.state.boardData.playWithWhite}
+              onChange={()=>this.state.updateBoardSide()} /> 
+              <label className="form-check-label">White's perspective</label>
             </div>
             <div>
             <input type="radio" value="black" name="color" className="form-check-input"
-            checked={!this.state.playWithWhite}
-            onChange={()=>this.state.updateHumanColor()}  /> 
-            <label className="form-check-label">Play with black</label>
+            checked={!this.state.boardData.playWithWhite}
+            onChange={()=>this.state.updateBoardSide()}  /> 
+            <label className="form-check-label">Black's perspective</label>
             </div>
             <div className="margin-start-button">
             <button

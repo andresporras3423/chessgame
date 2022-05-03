@@ -132,7 +132,6 @@ class BoardData {
       reverseCells.push(row.reverse());
     });
     this.arrayCells = reverseCells;
-    this.playWithWhite = !this.playWithWhite;
   };
 
   // method called after user click any cell in the board
