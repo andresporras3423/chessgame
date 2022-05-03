@@ -206,49 +206,49 @@ class BoardData {
     }
 }
 
-  check_castling = (cell1, cell2)=>{
-      if(cell1.piece==="bk"){
-        // check if movement is black long castling and it is still available
-        if(cell2.y===0 && cell2.x===2){ 
-          // move black rock to castling position
-          this.objectCells[0][0].piece="";
-          this.objectCells[0][3].piece="br";
-        }
-        // check if movement is black short castling and it is still available
-        else if(cell2.y===0 && cell2.x===6){ 
-          // move black rock to castling position
-          this.objectCells[0][7].piece="";
-          this.objectCells[0][5].piece="br";
-        }
-        // remove purple color in both black side corners
-        this.objectCells[0][0].removeColor("castling-available");
-        this.objectCells[0][7].removeColor("castling-available");
-        // now both long and short castling are not possible moves
-        this.blackLongCastling=false;
-        this.blackShortCastling=false;
-      }
-    
-      if(cell1.piece==="wk"){
-        // check if movement is white long castling and it is still available
-    if(cell1.piece==="wk" && cell2.y===7 && cell2.x===2){
-      // move white rock to castling position
-      this.objectCells[7][0].piece="";
-      this.objectCells[7][3].piece="wr";
+check_castling = (cell1, cell2)=>{
+  if(cell1.piece==="bk"){
+    // check if movement is black long castling and it is still available
+    if(cell1.y===0 && cell1.x===4 && cell2.y===0 && cell2.x===2){ 
+      // move black rock to castling position
+      this.objectCells[0][0].piece="";
+      this.objectCells[0][3].piece="br";
     }
-    // check if movement is white short castling and is still available
-    else if(cell1.piece==="wk" && cell2.y===7 && cell2.x===6){ 
-      // move white rock to castling position
-      this.objectCells[7][7].piece="";
-      this.objectCells[7][5].piece="wr";
+    // check if movement is black short castling and it is still available
+    else if(cell1.y===0 && cell1.x===4 && cell2.y===0 && cell2.x===6){ 
+      // move black rock to castling position
+      this.objectCells[0][7].piece="";
+      this.objectCells[0][5].piece="br";
     }
-    // remove purple color in both white side corners
-    this.objectCells[7][0].removeColor("castling-available");
-    this.objectCells[7][7].removeColor("castling-available");
+    // remove purple color in both black side corners
+    this.objectCells[0][0].removeColor("castling-available");
+    this.objectCells[0][7].removeColor("castling-available");
     // now both long and short castling are not possible moves
-    this.whiteLongCastling=false;
-    this.whiteShortCastling=false;
-      }
+    this.blackLongCastling=false;
+    this.blackShortCastling=false;
   }
+
+  if(cell1.piece==="wk"){
+    // check if movement is white long castling and it is still available
+if(cell1.y===7 && cell1.x===4 && cell2.y===7 && cell2.x===2){
+  // move white rock to castling position
+  this.objectCells[7][0].piece="";
+  this.objectCells[7][3].piece="wr";
+}
+// check if movement is white short castling and is still available
+else if(cell1.y===7 && cell1.x===4 && cell2.y===7 && cell2.x===6){ 
+  // move white rock to castling position
+  this.objectCells[7][7].piece="";
+  this.objectCells[7][5].piece="wr";
+}
+// remove purple color in both white side corners
+this.objectCells[7][0].removeColor("castling-available");
+this.objectCells[7][7].removeColor("castling-available");
+// now both long and short castling are not possible moves
+this.whiteLongCastling=false;
+this.whiteShortCastling=false;
+  }
+}
 
   // method called when there is a valid black rock or white rock move
   update_available_castling = (cell1)=>{
